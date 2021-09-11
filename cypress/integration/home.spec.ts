@@ -11,3 +11,5 @@ describe('Homepage', () => {
     });
   })
 })
+
+export {}

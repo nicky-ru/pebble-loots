@@ -6,3 +6,5 @@ describe('Pebble page', () => {
 
   });
 })
+
+export {}
