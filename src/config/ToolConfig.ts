@@ -16,5 +16,11 @@ export const ToolConfig = [
     path: '/erc20',
     component: ERC20,
     tags: ['ERC20']
-  })
+  }),
+  new Tool({
+    name: 'Pebble data',
+    path: '/pebble',
+    component: ERC20,
+    tags: ['IoT', 'Pebble']
+  }),
 ];
