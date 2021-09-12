@@ -28,8 +28,8 @@ export const getDevices = /* Graphql */ `
 `
 
 export const deviceRecords = /* Graphql */ `
-  query records {
-    deviceRecords(where: { imei: "103381234567402" }) {
+  query records($imei: String!) {
+    deviceRecords(imei: $imei) {
       raw # Protobuf encoded sensors values
       imei
       signature
