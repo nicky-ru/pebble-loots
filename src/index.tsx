@@ -14,6 +14,7 @@ import { Box, Text } from '@chakra-ui/layout';
 import { Toaster } from 'react-hot-toast';
 import { ToolConfig } from './config/ToolConfig';
 import { WalletSelecter } from './components/WalletSelecter/index';
+import { Pebble } from './pages/Pebble';
 
 const ErrorFallback = ({ error, resetErrorBoundary }) => {
   return (
@@ -51,6 +52,9 @@ export const App = observer(() => {
               {ToolConfig.map((item) => (
                 <Route exact path={item.path} key={item.path} component={item.component} />
               ))}
+              <Route path={"/devices/:address"} exact key={"/devices/:address"}>
+                <Pebble/>
+              </Route>
             </Switch>
           </Router>
         </Web3ReactProvider>
