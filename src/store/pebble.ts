@@ -22,4 +22,9 @@ export class PebbleStore {
   setDevices(devices: Array<Device>) {
     this.devices = devices;
   }
+
+  deviceByImei(address: string): Device {
+    return this.devices
+      .filter((device) => !device.address.localeCompare(address))[0];
+  }
 }
