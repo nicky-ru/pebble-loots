@@ -2,8 +2,8 @@ describe('Devices page', () => {
   beforeEach(() => {
     cy.visit('/devices')
   })
-  it('should exist', function() {
-
+  it('should contain devices list', function() {
+    cy.get('li')
   });
 })
 
