@@ -1,5 +1,4 @@
 import { ERC20 } from '../pages/ERC20';
-import { Pebble } from '../pages/Pebble';
 import { Devices } from '../pages/Devices';
 
 class Tool {
