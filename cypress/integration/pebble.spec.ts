@@ -1,9 +1,10 @@
 describe('Pebble page', () => {
+  const deviceAddress = '0x94ac89a5da0935bcbfade18762a8c5de75fa8ae3';
   beforeEach(() => {
-    cy.visit('/pebble')
+    cy.visit('/devices/' + deviceAddress)
   })
-  it('should exist', function() {
-
+  it('should contain device address', function() {
+    cy.contains(deviceAddress);
   });
 })
 
