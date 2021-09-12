@@ -2,12 +2,12 @@ describe('Homepage', () => {
   beforeEach(() => {
     cy.visit('/')
   })
-  it('should contain Pebble article', function() {
-    cy.contains('article', 'Pebble data')
+  it('should contain Devices article', function() {
+    cy.contains('article', 'Devices')
   });
   context('Pebble article', () => {
-    it('should link to pebble page', function() {
-      cy.contains('a', 'Pebble data').should('have.attr', 'href', '/pebble')
+    it('should link to devices page', function() {
+      cy.contains('a', 'Devices').should('have.attr', 'href', '/devices')
     });
   })
 })
