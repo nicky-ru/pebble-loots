@@ -1,4 +1,8 @@
 import { makeAutoObservable } from 'mobx';
+import protobuf from 'protobufjs'
+import { proto } from '@/store/standard/proto';
+
+let root = protobuf.parse(proto).root;
 
 class DeviceRecord {
   imei: "103381234567402"
@@ -15,5 +19,13 @@ export class RecordStore {
 
   setRecords(records: Array<DeviceRecord>) {
     this.records = records;
+  }
+
+  decodeRecord(record: string) {
+    const SensorData = root.lookupType("SensorData")
+    record = record.substr(2, record.length);
+    const hex = Uint8Array.from(Buffer.from(record, 'hex'));
+    let decoded = SensorData.decode(hex);
+    console.log(JSON.stringify(decoded))
   }
 }
