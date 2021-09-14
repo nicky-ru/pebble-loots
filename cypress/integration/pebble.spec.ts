@@ -6,6 +6,9 @@ describe('Pebble page', () => {
   it('should contain device address', function() {
     cy.contains(deviceAddress);
   });
+  it('should contain device data', function() {
+    cy.contains('div', 'temperature')
+  });
 })
 
 export {}
