@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx';
-import protobuf from 'protobufjs'
+import protobuf from 'protobufjs';
 import { proto } from '@/store/standard/proto';
 
 let root = protobuf.parse(proto).root;
@@ -10,8 +10,25 @@ class DeviceRecord {
   signature: "0xe7166f3af88bb1f75d0e54c0faa64cc9274ba6ee8154ffdd5083babd135f8d1e176ad488251f7839739c126f1c45403b3be0fbdaa433fc517031d4bcf18f3a271c"
 }
 
+class DecodedRecord {
+  snr: 1100;
+  vbat: 162;
+  latitude: 385305176;
+  longitude: 1269551392;
+  gasResistance: 556300;
+  temperature: 3006;
+  pressure: 11915;
+  humidity: 7213;
+  light: 166950;
+  temperature2: 3818;
+  gyroscope: [6,-5,-4021];
+  accelerometer: [2115,4304,4021];
+  random: "323799a2aa47a007";
+}
+
 export class RecordStore {
   records = Array<DeviceRecord>();
+  decodedRecords = Array<DecodedRecord>();
 
   constructor() {
     makeAutoObservable(this);
@@ -21,11 +38,15 @@ export class RecordStore {
     this.records = records;
   }
 
-  decodeRecord(record: string) {
+  decodeRecord(record: string): DecodedRecord {
     const SensorData = root.lookupType("SensorData")
     record = record.substr(2, record.length);
     const hex = Uint8Array.from(Buffer.from(record, 'hex'));
-    let decoded = SensorData.decode(hex);
-    console.log(JSON.stringify(decoded))
+    let decoded = JSON.stringify(SensorData.decode(hex));
+    return JSON.parse(decoded);
+  }
+
+  setDecodedRecords() {
+    this.decodedRecords = this.records.map(record => this.decodeRecord(record.raw));
   }
 }
