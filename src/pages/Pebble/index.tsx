@@ -4,7 +4,7 @@ import { deviceRecords, getDevices } from '../../graphql/queries';
 import gql from 'graphql-tag';
 import _ from 'lodash';
 import { observer } from 'mobx-react-lite';
-import { Container, Heading } from '@chakra-ui/react';
+import { Container, Heading, Divider } from '@chakra-ui/react';
 import { useParams } from "react-router-dom";
 import { useStore } from '@/store/index';
 import { Dashboard } from '@/components/Dashboard';
@@ -27,14 +27,16 @@ export const Pebble = observer(() => {
         variables: {imei: imei}
       })
       rec.setRecords(_.get(data, 'data.deviceRecords'))
+      rec.setDecodedRecords();
     }
 
     getDeviceRecords();
   }, [])
 
   return(
-    <Container>
-      <Heading>Device address: {address}</Heading>
+    <Container maxW={'container.xl'}>
+      <Heading my={5}>Device address: {address}</Heading>
+      <Divider/>
       <Dashboard/>
     </Container>
   );
