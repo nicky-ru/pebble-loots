@@ -2513,6 +2513,11 @@
     "@nodelib/fs.scandir" "2.1.4"
     fastq "^1.6.0"
 
+"@openzeppelin/contracts@2.5":
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-2.5.1.tgz#c76e3fc57aa224da3718ec351812a4251289db31"
+  integrity sha512-qIy6tLx8rtybEsIOAlrM4J/85s2q2nPkDqj/Rx46VakBZ0LwtFhXIVub96LXHczQX0vaqmAueDqNPXtbSXSaYQ==
+
 "@popperjs/core@2.4.4":
   version "2.4.4"
   resolved "https://registry.npm.taobao.org/@popperjs/core/download/@popperjs/core-2.4.4.tgz?cache=0&sync_timestamp=1617290324040&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40popperjs%2Fcore%2Fdownload%2F%40popperjs%2Fcore-2.4.4.tgz#11d5db19bd178936ec89cd84519c4de439574398"
