@@ -15,23 +15,36 @@ export const Pebble = observer(() => {
 
   useEffect(() => {
     async function getDeviceRecords() {
-      const devices = await apolloClient.query({
-        query: gql(getDevices)
-      })
-      pebble.setDevices(_.get(devices, 'data.devices'));
-
-      const imei = pebble.deviceByImei(address).id;
-
-      const data = await apolloClient.query({
-        query: gql(deviceRecords),
-        variables: {imei: imei}
-      })
-      rec.setRecords(_.get(data, 'data.deviceRecords'))
-      rec.setDecodedRecords();
+      await queryDevices();
+      await queryRecords();
     }
-
     getDeviceRecords();
+    startInterval();
   }, [])
+
+  const queryDevices = async () => {
+    const devices = await apolloClient.query({
+      query: gql(getDevices)
+    })
+    pebble.setDevices(_.get(devices, 'data.devices'));
+  }
+
+  const queryRecords = async () => {
+    const imei = pebble.deviceByImei(address).id;
+
+    const data = await apolloClient.query({
+      query: gql(deviceRecords),
+      variables: {imei: imei}
+    })
+    rec.setRecords(_.get(data, 'data.deviceRecords'))
+    rec.setDecodedRecords();
+  }
+
+  const startInterval = () => {
+    setInterval(() => {
+      queryRecords();
+    }, 5000)
+  }
 
   return(
     <Container maxW={'container.xl'}>
