@@ -10,7 +10,7 @@ export const HumidityChart = observer(() => {
     <Container width="100%" height="100%">
       <LineChart
         width={500}
-        height={300}
+        height={100}
         data={rec.decodedRecords.slice(-10)}
         // margin={{
         //   top: 5,
