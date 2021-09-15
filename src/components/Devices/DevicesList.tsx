@@ -1,28 +1,33 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Container, UnorderedList, ListItem, Link, Stack, Text } from '@chakra-ui/react';
+import { Container, UnorderedList, ListItem, Link, Stack, Text, Table, Thead, Tr, Th, Td, Tbody } from '@chakra-ui/react';
 import { useStore } from '@/store/index';
 
 export const DevicesList = observer(() => {
   const { pebble } = useStore();
 
   return(
-    <Container maxW="container.lg" id={'devices-list'}>
-      <UnorderedList>
-        {pebble.devices?.map(device => (
-          <ListItem listStyleType={'none'} key={device.address}>
-            <Link href={`/devices/${device.address}`}>
-              <Stack isInline>
-                {/*<Text>Id: {device.id}</Text>*/}
-                {/*<Text>Name: {device.name}</Text>*/}
-                <Text>Address: {device.address}</Text>
-                {/*<Text>Owner: {device.owner}</Text>*/}
-              </Stack>
-
-            </Link>
-          </ListItem>
-        ))}
-      </UnorderedList>
+    <Container mt={10} maxW="container.lg" id={'devices-list'}>
+      <Table size="sm">
+        <Thead>
+          <Tr>
+            <Th>Id</Th>
+            <Th>Name</Th>
+            <Th>Address</Th>
+            <Th>Owner</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {pebble.devices?.map(device => (
+            <Tr key={device.id}>
+              <Td><Link href={`/devices/${device.address}`}>{device.id}</Link></Td>
+              <Td><Link href={`/devices/${device.address}`}>{device.name}</Link></Td>
+              <Td><Link href={`/devices/${device.address}`}>{device.address}</Link></Td>
+              <Td><Link href={`/devices/${device.address}`}>{device.owner}</Link></Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
     </Container>
     );
 });
