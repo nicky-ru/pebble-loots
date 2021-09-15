@@ -3,7 +3,7 @@ import apolloClient from '../../apollo/client';
 import { getDevices } from '../../graphql/queries';
 import _ from 'lodash';
 import { observer } from 'mobx-react-lite';
-import { Container, Heading, Divider } from '@chakra-ui/react';
+import { Container, Heading } from '@chakra-ui/react';
 import gql from 'graphql-tag';
 import { useStore } from '@/store/index';
 import { DevicesList } from '@/components/Devices/DevicesList';
@@ -23,8 +23,7 @@ export const Devices = observer(() => {
 
   return (
     <Container maxW="container.lg" textAlign={'center'}>
-      <Heading as={'h1'}>My devices</Heading>
-      <Divider/>
+      <Heading as={'h1'}>All devices</Heading>
       <DevicesList/>
     </Container>
   );
