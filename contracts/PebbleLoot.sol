@@ -5,8 +5,9 @@ pragma solidity ^0.5.13;
 import "@openzeppelin/contracts/ownership/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721Metadata.sol";
 
-contract PebbleLoot is ERC721Enumerable, ReentrancyGuard, Ownable {
+contract PebbleLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Metadata {
 
   uint256 private distance = 0;
 
@@ -67,7 +68,7 @@ contract PebbleLoot is ERC721Enumerable, ReentrancyGuard, Ownable {
     return string(buffer);
   }
 
-  constructor() ERC721("Pebble Loot", "PLOOT") public Ownable() {}
+  constructor() ERC721Metadata("Pebble Loot", "PLOOT") public Ownable() {}
 }
 
 /// [MIT License]
