@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/ownership/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721Enumerable.sol";
 
-contract Loot is ERC721Enumerable, ReentrancyGuard, Ownable {
+contract PebbleLoot is ERC721Enumerable, ReentrancyGuard, Ownable {
 
   uint256 private distance = 0;
 
