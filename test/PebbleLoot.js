@@ -41,7 +41,7 @@ contract("PebbleLoot", (accounts) => {
     it('should show tokenURI', async () => {
       const tokenId = 1;
       const tokenUri = await contractInstance.tokenURI(tokenId);
-      // console.log(tokenUri)
+      console.log(tokenUri)
     });
   })
   context("User", () => {
