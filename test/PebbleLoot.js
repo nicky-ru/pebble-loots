@@ -38,12 +38,17 @@ contract("PebbleLoot", (accounts) => {
       const totalSupply = await contractInstance.totalSupply();
       BigInt(totalSupply).should.equal(intendedTS);
     });
+    it('should show tokenURI', async () => {
+      const tokenId = 1;
+      const tokenUri = await contractInstance.tokenURI(tokenId);
+      // console.log(tokenUri)
+    });
   })
   context("User", () => {
     beforeEach(async () => {
       contractInstance = await PebbleLoot.new({from: admin});
     });
-    it.only('is able to claim a token', async () => {
+    it('is able to claim a token', async () => {
       const tokenId = 1;
       const intendedBalance = BigInt(1);
       await contractInstance.claim(tokenId, {from: alice});
