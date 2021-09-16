@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-
 pragma solidity ^0.5.13;
 
 import "@openzeppelin/contracts/ownership/Ownable.sol";
@@ -9,14 +8,14 @@ import "@openzeppelin/contracts/token/ERC721/ERC721Metadata.sol";
 
 contract PebbleLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Metadata {
 
-  uint256 private distance = 0;
+  uint256 private distance = 1;
 
   function random(string memory input) internal pure returns (uint256) {
     return uint256(keccak256(abi.encodePacked(input)));
   }
 
   function getDistance() public view returns (string memory) {
-    string memory output = string(abi.encodePacked("Distance: ", distance));
+    string memory output = string(abi.encodePacked("Distance: ", toString(distance)));
     return output;
   }
 
