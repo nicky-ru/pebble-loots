@@ -7,8 +7,9 @@ import { BSCTestnetConfig } from './BSCTestnetConfig';
 import { IotexMainnetConfig } from './IotexMainnetConfig';
 import { IotexTestnetConfig } from './IotexTestnetConfig';
 import { PolygonMainnetConfig } from './PolygonMainnetConfig';
+import { Local7545 } from './Local7545';
 
-const EthChains = [BSCMainnetConfig, BSCTestnetConfig, ETHMainnetConfig, ETHKovanConfig, IotexTestnetConfig, IotexMainnetConfig, PolygonMainnetConfig];
+const EthChains = [BSCMainnetConfig, BSCTestnetConfig, ETHMainnetConfig, ETHKovanConfig, IotexTestnetConfig, IotexMainnetConfig, PolygonMainnetConfig, Local7545];
 
 export const EthNetworkConfig = new EthNetworkState({
   allowChains: EthChains.map((i) => i.chainId),
