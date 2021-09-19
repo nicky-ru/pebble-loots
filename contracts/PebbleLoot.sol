@@ -22,7 +22,7 @@ contract PebbleLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Metadat
     string memory name = string(abi.encodePacked('"name": "Pebble #', toString(tokenId), '"'));
     string memory description = string(abi.encodePacked('"description": "Pebble Loot is a real world data stored on chain. Stats, images, and other functionality are intentionally omitted for others to interpret. Feel free to use Pebble Loot in any way you want."'));
 
-    string memory json = Base64.encode(bytes(string(abi.encodePacked('{', name, ',', description, '"image": "data:image/svg+xml;base64,', Base64.encode(bytes(output)), '"}'))));
+    string memory json = Base64.encode(bytes(string(abi.encodePacked('{', name, ',', description, ',"image": "data:image/svg+xml;base64,', Base64.encode(bytes(output)), '"}'))));
     output = string(abi.encodePacked('data:application/json;base64,', json));
 
     return output;
