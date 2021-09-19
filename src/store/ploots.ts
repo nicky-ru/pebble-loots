@@ -1,29 +1,32 @@
 import * as PebbleLootJSON from '../../build/contracts/PebbleLoot.json';
 import { makeAutoObservable } from 'mobx';
 import { NetworkState } from '@/store/lib/NetworkState';
-import { ethers } from 'ethers';
+import { PebbleLootState } from '@/store/lib/PebbleLootState';
+import { Local7545 } from '../config/Local7545';
+import pebbleLoots from '../constants/contracts/pebbleLoots.json';
+import { RootStore } from '@/store/root';
+import { EthNetworkConfig } from '../config/NetworkConfig';
 
 export class ContractStore {
+  rootStore: RootStore;
   address: string = "0x6b9806f475C63AF139b5c635edeCCA810c903DEd";
   abi: any[] = PebbleLootJSON.abi;
   network: NetworkState;
   balance: number = 5;
-  contract;
+  contracts: { [key: number]: PebbleLootState } = {};
 
-  constructor() {
-    makeAutoObservable(this);
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
+    this.contracts = {
+      [Local7545.chainId]: new PebbleLootState({...pebbleLoots, network: EthNetworkConfig} )
+    }
+
+    makeAutoObservable(this, {
+      rootStore: false
+    });
   }
 
-  init(rpc: string) {
-    const provider = ethers.getDefaultProvider(rpc);
-    this.contract = new ethers.Contract(this.address, this.abi, provider);
-  }
-
-  setContract(contract) {
-    this.contract = contract;
-  }
-
-  setBalance(balance: number) {
-    this.balance = 10;
+  get god() {
+    return this.rootStore.god;
   }
 }
