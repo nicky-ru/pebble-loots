@@ -1,5 +1,6 @@
 import { ERC20 } from '../pages/ERC20';
 import { Devices } from '../pages/Devices';
+import { MyLoots } from '../pages/Loots';
 
 class Tool {
   name: string;
@@ -24,4 +25,10 @@ export const ToolConfig = [
     component: Devices,
     tags: ['IoT', 'Pebble']
   }),
+  new Tool({
+    name: 'My Loots',
+    path: '/myloots',
+    component: MyLoots,
+    tags: ['NFT', 'Pebble']
+  })
 ];
