@@ -5,7 +5,7 @@ export const Local7545 = new ChainState({
   name: 'Local7545',
   chainId: 1337,
   networkKey: 'local7545',
-  rpcUrl: 'HTTP://127.0.0.1:7545',
+  rpcUrl: 'http://localhost:7545',
   logoUrl: '/images/ganache.svg',
   explorerURL: 'https://bscscan.com',
   explorerName: 'BscScan',
