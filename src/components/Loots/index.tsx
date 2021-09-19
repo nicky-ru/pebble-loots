@@ -2,27 +2,18 @@ import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Container, Text } from '@chakra-ui/react';
 import { useStore } from '@/store/index';
+import { TokenState } from '@/store/lib/TokenState';
 
-export const LootCards = observer(() => {
-  const { god, ploot } = useStore();
+interface PropsType {
+  bal: number;
+  name: string;
+  symbol: string;
+}
 
-  useEffect(() => {
-    loadLoots();
-  })
-
-  async function loadLoots() {
-    const _balance = await ploot.contract.balanceOf(god.currentNetwork.account);
-    ploot.setBalance(_balance.toNumber());
-
-    console.log("calfl", _balance);
-    // const tokenUri = await lootContract.tokenURI(1);
-    // const meta = await axios.get(tokenUri);
-    // console.log(meta.data.image)
-  }
-
+export const LootCards = observer((props: PropsType) => {
   return(
     <Container>
-      My balance is {ploot.balance}
+      My balance is {props.bal} name is {props.name} symbol is {props.symbol}
     </Container>
   );
 });
