@@ -1,17 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { observer } from 'mobx-react-lite';
-import { ethers } from 'ethers'
+import React, {useEffect} from 'react';
+import { observer, useLocalObservable } from 'mobx-react-lite';
 import { Container} from '@chakra-ui/react';
 import { useStore } from '@/store/index';
 import { LootCards } from '@/components/Loots';
-import axios from 'axios';
+import { TransactionResponse } from '@ethersproject/providers';
 
 export const MyLoots = observer(() => {
-  const { god, ploot } = useStore();
+  const { ploot } = useStore();
+
+  const observable = useLocalObservable(() => ({
+    tokenIds: [],
+  }))
 
   useEffect(() => {
-    ploot.init(god.currentChain.rpcUrl);
-  }, []);
+    if (ploot.god.currentNetwork.account) {
+      bla();
+    }
+  }, [ploot.god.currentChain.chainId]);
+
+  async function bla() {
+    const chainId = ploot.god.currentChain.chainId;
+
+  }
 
   return(
     <Container>
