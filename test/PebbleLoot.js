@@ -29,14 +29,14 @@ contract("PebbleLoot", (accounts) => {
       actuallOwner.should.equal(admin);
     });
     it('should show balance', async () => {
-      const intendedBalance = BigInt(0);
+      const intendedBalance = 0;
       const actuallBalance = await contractInstance.balanceOf(alice);
-      BigInt(actuallBalance).should.equal(intendedBalance)
+      actuallBalance.toNumber().should.equal(intendedBalance)
     });
     it('should showTotalSupply', async () => {
-      const intendedTS = BigInt(0);
+      const intendedTS = 0;
       const totalSupply = await contractInstance.totalSupply();
-      BigInt(totalSupply).should.equal(intendedTS);
+      totalSupply.toNumber().should.equal(intendedTS);
     });
     it('should show tokenURI', async () => {
       const tokenId = 1;
@@ -50,10 +50,25 @@ contract("PebbleLoot", (accounts) => {
     });
     it('is able to claim a token', async () => {
       const tokenId = 1;
-      const intendedBalance = BigInt(1);
+      const intendedBalance = 1;
       await contractInstance.claim(tokenId, {from: alice});
       const aliceBalance = await contractInstance.balanceOf(alice);
-      BigInt(aliceBalance).should.equal(intendedBalance);
+      aliceBalance.toNumber().should.equal(intendedBalance);
+    });
+    it('should show users tokens', async () => {
+      const tokenId1 = 100;
+      const tokenId2 = 1001;
+      await contractInstance.claim(tokenId1, {from: alice});
+      await contractInstance.claim(tokenId2, {from: alice});
+
+      const aliceBalance = await contractInstance.balanceOf(alice);
+      let tokens = new Array(aliceBalance.toNumber());
+
+      tokens[0] = await contractInstance.tokenOfOwnerByIndex(alice, 0);
+      tokens[1] = await contractInstance.tokenOfOwnerByIndex(alice, 1);
+
+      tokens[0].toNumber().should.equal(tokenId1);
+      tokens[1].toNumber().should.equal(tokenId2);
     });
   })
 })
