@@ -11,5 +11,5 @@ export class RootStore {
   token = new TokenStore(this);
   pebble = new PebbleStore();
   rec = new RecordStore();
-  ploot = new ContractStore();
+  ploot = new ContractStore(this);
 }
