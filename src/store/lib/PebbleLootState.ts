@@ -3,6 +3,7 @@ import { NetworkState } from '@/store/lib/NetworkState';
 import { BigNumberState } from '@/store/standard/BigNumberState';
 import { BooleanState } from '@/store/standard/base';
 import { makeObservable, observable } from 'mobx';
+import { CallParams } from '../../../type';
 
 export class PebbleLootState {
   abi = PebbleLootJSON.abi;
@@ -33,5 +34,14 @@ export class PebbleLootState {
 
   get nftSymbol() {
     return this.network.execContract(Object.assign({address: this.address, abi: this.abi, method: 'symbol'}))
+  }
+
+  claim(args: Partial<CallParams>) {
+    return this.network.execContract(Object.assign({
+      address: this.address,
+      abi: this.abi,
+      method: 'claim'
+    },
+      args))
   }
 }
