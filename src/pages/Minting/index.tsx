@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { Container, Input, Button, FormControl, FormLabel, FormHelperText, Heading } from '@chakra-ui/react';
 import { useStore } from '@/store/index';
+import BigNumber from 'bignumber.js';
 
 export const Minting = observer(() => {
   const { ploot } = useStore();
@@ -24,9 +25,9 @@ export const Minting = observer(() => {
   }, [ploot.god.currentChain.chainId]);
 
   async function handleClaim() {
-    const tokenIdNum = parseInt(observable.tokenId);
+    const tokenIdNum = new BigNumber(observable.tokenId);
     await ploot.contracts[observable.chainId].claim({
-      params: [tokenIdNum]
+      params: [tokenIdNum.toNumber()]
     })
     observable.setTokenId("");
   }
