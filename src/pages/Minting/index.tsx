@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { observer, useLocalObservable } from 'mobx-react-lite';
-import { Container, Input, Button, FormControl, FormLabel, FormHelperText } from '@chakra-ui/react';
+import { Container, Input, Button, FormControl, FormLabel, FormHelperText, Heading } from '@chakra-ui/react';
 import { useStore } from '@/store/index';
 
 export const Minting = observer(() => {
@@ -28,11 +28,13 @@ export const Minting = observer(() => {
     await ploot.contracts[observable.chainId].claim({
       params: [tokenIdNum]
     })
+    observable.setTokenId("");
   }
 
 
   return (
-    <Container>
+    <Container textAlign={"center"} maxW={'container.lg'} mt={10}>
+      <Heading>Here you can mint a Loot for your device</Heading>
       <FormControl id="deviceId">
         <FormLabel>Device id to mint</FormLabel>
         <Input
