@@ -9,8 +9,6 @@ import { EthNetworkConfig } from '../config/NetworkConfig';
 
 export class ContractStore {
   rootStore: RootStore;
-  address: string = "0x6b9806f475C63AF139b5c635edeCCA810c903DEd";
-  abi: any[] = PebbleLootJSON.abi;
   network: NetworkState;
   balance: number = 5;
   contracts: { [key: number]: PebbleLootState } = {};
