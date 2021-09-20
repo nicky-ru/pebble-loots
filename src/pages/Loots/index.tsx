@@ -10,22 +10,25 @@ export const MyLoots = observer(() => {
 
   const observable = useLocalObservable(() => ({
     tokenIds: [],
+    chainId: 0,
+    setChainId(newChainId: number) {
+      this.chainId = newChainId;
+    }
   }))
 
   useEffect(() => {
     if (ploot.god.currentNetwork.account) {
-      bla();
+      observable.setChainId(ploot.god.currentChain.chainId);
     }
   }, [ploot.god.currentChain.chainId]);
 
-  async function bla() {
-    const chainId = ploot.god.currentChain.chainId;
-
-  }
-
   return(
     <Container>
-      <LootCards/>
+      <LootCards
+        bal={0}
+        name={observable.chainId? ploot.contracts[observable.chainId].name : ""}
+        symbol={observable.chainId? ploot.contracts[observable.chainId].symbol : ""}
+      />
     </Container>
   );
 });
