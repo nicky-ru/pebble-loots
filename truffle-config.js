@@ -18,10 +18,10 @@
  *
  */
 
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
-//
-// const fs = require('fs');
-// const mnemonic = fs.readFileSync(".secret").toString().trim();
+const HDWalletProvider = require('@truffle/hdwallet-provider');
+
+const fs = require('fs');
+const privateKey = fs.readFileSync("./.secret").toString().trim();
 
 module.exports = {
   /**
@@ -46,6 +46,18 @@ module.exports = {
      port: 7545,            // Standard Ethereum port (default: none)
      network_id: "*",       // Any network (default: none)
     },
+    iotextest: {
+      provider: () =>
+        new HDWalletProvider({
+          privateKeys: [privateKey],
+          providerOrUrl: "https://babel-api.testnet.iotex.io",
+          shareNonce: true
+        }),
+      network_id: 4690,    // IOTEX mainnet chain id 4689, testnet is 4690
+      gas: 8500000,
+      gasPrice: 1000000000000,
+      skipDryRun: true
+    }
     // Another network with more advanced options...
     // advanced: {
     // port: 8777,             // Custom port
