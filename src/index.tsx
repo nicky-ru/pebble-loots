@@ -52,7 +52,7 @@ export const App = observer(() => {
               {ToolConfig.map((item) => (
                 <Route exact path={item.path} key={item.path} component={item.component} />
               ))}
-              <Route path={"/devices/:address"} exact key={"/devices/:address"}>
+              <Route path={"/devices/:imei"} exact key={"/devices/:imei"}>
                 <Pebble/>
               </Route>
             </Switch>

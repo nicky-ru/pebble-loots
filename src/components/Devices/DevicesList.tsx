@@ -20,10 +20,10 @@ export const DevicesList = observer(() => {
         <Tbody>
           {pebble.devices?.map(device => (
             <Tr key={device.id}>
-              <Td><Link href={`/devices/${device.address}`}>{device.id}</Link></Td>
-              <Td><Link href={`/devices/${device.address}`}>{device.name}</Link></Td>
-              <Td><Link href={`/devices/${device.address}`}>{device.address}</Link></Td>
-              <Td><Link href={`/devices/${device.address}`}>{device.owner}</Link></Td>
+              <Td><Link href={`/devices/${device.id}`}>{device.id}</Link></Td>
+              <Td><Link href={`/devices/${device.id}`}>{device.name}</Link></Td>
+              <Td><Link href={`/devices/${device.id}`}>{device.address}</Link></Td>
+              <Td><Link href={`/devices/${device.id}`}>{device.owner}</Link></Td>
             </Tr>
           ))}
         </Tbody>

@@ -12,14 +12,15 @@ export const Devices = observer(() => {
   const { pebble } = useStore()
 
   useEffect(() => {
-    async function init_pebble() {
-      const data = await apolloClient.query({
-        query: gql(getDevices)
-      })
-      pebble.setDevices(_.get(data, 'data.devices'));
-    }
     init_pebble();
   }, [])
+
+  async function init_pebble() {
+    const data = await apolloClient.query({
+      query: gql(getDevices)
+    })
+    pebble.setDevices(_.get(data, 'data.devices'));
+  }
 
   return (
     <Container maxW="container.lg" textAlign={'center'}>
