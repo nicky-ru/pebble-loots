@@ -1,6 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Container, Box, Heading, Wrap, WrapItem } from '@chakra-ui/react';
+import { Container, Box, Heading, Wrap, WrapItem, LinkBox, Text, LinkOverlay, Image } from '@chakra-ui/react';
 
 interface PropsType {
   balance: number;
@@ -15,13 +15,20 @@ export const LootCards = observer((props: PropsType) => {
       <Heading mb={4}>
         My balance is {props.balance} name is {props.name} symbol is {props.symbol}
       </Heading>
-      <Wrap spacing="30px" justify="center">
+      <Wrap justify="center">
         {props.tokenUris?.map(uri => (
           <WrapItem key={uri.data.name}>
-            <Box w={"350px"} h={"350px"}>
-              <img src={uri.data.image}/>
-              {uri.data.name}
-            </Box>
+            <LinkBox as="article"  p={5} pb={10} borderWidth="1px" rounded="md">
+              <Box w={"350px"} h={"350px"}>
+                <Image src={uri.data.image}/>
+                <Text my={2}>
+                  <LinkOverlay href={`/devices/${uri.data.name.toString().split("#")[1]}`}>
+                    {uri.data.name}
+                  </LinkOverlay>
+                </Text>
+              </Box>
+            </LinkBox>
+
           </WrapItem>
         ))}
       </Wrap>
