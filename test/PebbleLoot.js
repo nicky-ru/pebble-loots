@@ -49,15 +49,15 @@ contract("PebbleLoot", (accounts) => {
       contractInstance = await PebbleLoot.new({from: admin});
     });
     it('is able to claim a token', async () => {
-      const tokenId = 1;
+      const tokenId = 100000000000005;
       const intendedBalance = 1;
       await contractInstance.claim(tokenId, {from: alice});
       const aliceBalance = await contractInstance.balanceOf(alice);
       aliceBalance.toNumber().should.equal(intendedBalance);
     });
     it('should show users tokens', async () => {
-      const tokenId1 = 100;
-      const tokenId2 = 1001;
+      const tokenId1 = 100000000000005;
+      const tokenId2 = 100000000000006;
       await contractInstance.claim(tokenId1, {from: alice});
       await contractInstance.claim(tokenId2, {from: alice});
 

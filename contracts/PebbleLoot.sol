@@ -29,7 +29,7 @@ contract PebbleLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Metadat
   }
 
   function claim(uint256 tokenId) public nonReentrant {
-    require(tokenId > 0 && tokenId < 7778, "Token ID invalid");
+    require(tokenId > (10 ** 14 - 1) && tokenId < 10 ** 15, "Token ID invalid");
     _safeMint(_msgSender(), tokenId);
   }
 
