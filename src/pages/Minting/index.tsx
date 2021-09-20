@@ -23,6 +23,13 @@ export const Minting = observer(() => {
     }
   }, [ploot.god.currentChain.chainId]);
 
+  async function handleClaim() {
+    const tokenIdNum = parseInt(observable.tokenId);
+    await ploot.contracts[observable.chainId].claim({
+      params: [tokenIdNum]
+    })
+  }
+
 
   return (
     <Container>
@@ -39,7 +46,7 @@ export const Minting = observer(() => {
         <FormHelperText>You need to be the owner of the device</FormHelperText>
         <Button
           mt={4}
-          onClick={() => {}}
+          onClick={() => {handleClaim()}}
         >
           Submit
         </Button>
