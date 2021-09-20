@@ -1,5 +1,12 @@
 {
-  "address": "0x409F8c2d23CC5111b859adAe803669C9282b8fDB",
-  "name": "Pebble Loots",
-  "symbol": "PlOOT"
+  "1337": {
+    "address": "0x409F8c2d23CC5111b859adAe803669C9282b8fDB",
+    "name": "Pebble Loots",
+    "symbol": "PlOOT"
+  },
+  "4690": {
+    "address": "0xB17F3a134E03CF9e92b69325EB83Bbe3A25f3Bb3",
+    "name": "Pebble Loots",
+    "symbol": "PlOOT"
+  }
 }
