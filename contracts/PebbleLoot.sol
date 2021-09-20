@@ -6,7 +6,15 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721Metadata.sol";
 
+contract Registration {
+  function find(string calldata imei) external view returns (address, address);
+}
+
 contract PebbleLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Metadata {
+
+  address regAddress = 0x2C39DA40c0D67AA16dBbCCD22FFc065549b6c8F6;
+
+  Registration registration = Registration(regAddress);
 
   function tokenURI(uint256 tokenId) public view returns (string memory) {
     string[3] memory parts;
@@ -30,12 +38,10 @@ contract PebbleLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Metadat
 
   function claim(uint256 tokenId) public nonReentrant {
     require(tokenId > (10 ** 14 - 1) && tokenId < 10 ** 15, "Token ID invalid");
+    address deviceOwner;
+    (,deviceOwner) = registration.find(toString(tokenId));
+    require(_msgSender() == deviceOwner, "You should own the device to mint this loot");
     _safeMint(_msgSender(), tokenId);
-  }
-
-  function ownerClaim(uint256 tokenId) public nonReentrant onlyOwner {
-    require(tokenId > 7777 && tokenId < 8001, "Token ID invalid");
-    _safeMint(owner(), tokenId);
   }
 
   function toString(uint256 value) internal pure returns (string memory) {
