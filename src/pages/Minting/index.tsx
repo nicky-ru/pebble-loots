@@ -35,7 +35,7 @@ export const Minting = observer(() => {
 
   return (
     <Container textAlign={"center"} maxW={'container.lg'} mt={10}>
-      <Heading>Here you can mint a Loot for your device</Heading>
+      <Heading>Here you can mint a Loot of your device</Heading>
       <FormControl id="deviceId">
         <FormLabel>Device id to mint</FormLabel>
         <Input
@@ -46,7 +46,7 @@ export const Minting = observer(() => {
             observable.setTokenId(e.target.value);
           }}
         />
-        <FormHelperText>You need to be the owner of the device</FormHelperText>
+        <FormHelperText>You need to be an owner of the device</FormHelperText>
         <Button
           mt={4}
           onClick={() => {handleClaim()}}
