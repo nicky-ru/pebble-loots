@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Container } from '@chakra-ui/react';
+import { Container, Stack } from '@chakra-ui/react';
 import { TriangleUpIcon, StarIcon } from "@chakra-ui/icons"
-import ReactMapGl, { Marker } from "react-map-gl";
+import ReactMapGl, { Marker, ScaleControl, NavigationControl } from "react-map-gl";
 import { useStore } from '@/store/index';
 
 export const MapBox = observer(() => {
@@ -35,6 +35,10 @@ export const MapBox = observer(() => {
           setViewport(viewport);}}
 
       >
+        <Stack spacing="24px">
+          <ScaleControl/>
+          <NavigationControl/>
+        </Stack>
         {rec.decodedRecords?.map((record) => (
           <Marker
             key={record.random}
@@ -49,6 +53,8 @@ export const MapBox = observer(() => {
           <StarIcon color={"red"}/>
         </Marker>
       </ReactMapGl>
+      <TriangleUpIcon/> - all datapoints
+      <StarIcon ml={5} color={"red"}/> - last datapoint
     </Container>
   );
 });
