@@ -1,6 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import protobuf from 'protobufjs';
 import { proto } from '@/store/standard/proto';
+import BigNumber from 'bignumber.js';
 
 let root = protobuf.parse(proto).root;
 
@@ -13,8 +14,8 @@ class DeviceRecord {
 class DecodedRecord {
   snr: 1100;
   vbat: 162;
-  latitude: 385305176;
-  longitude: 1269551392;
+  latitude: BigNumber;
+  longitude: BigNumber;
   gasResistance: 556300;
   temperature: 3006;
   pressure: 11915;
@@ -43,7 +44,10 @@ export class RecordStore {
     record = record.substr(2, record.length);
     const hex = Uint8Array.from(Buffer.from(record, 'hex'));
     let decoded = JSON.stringify(SensorData.decode(hex));
-    return JSON.parse(decoded);
+    let dataJson = JSON.parse(decoded);
+    dataJson.latitude = new BigNumber(dataJson.latitude)
+    dataJson.longitude = new BigNumber(dataJson.longitude)
+    return dataJson;
   }
 
   setDecodedRecords() {

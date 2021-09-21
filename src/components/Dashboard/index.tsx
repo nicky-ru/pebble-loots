@@ -1,6 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Container, Wrap, WrapItem, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
+import { Container, Wrap, WrapItem, Tabs, TabList, TabPanels, Tab, TabPanel, Center } from '@chakra-ui/react';
 import { VbatChart } from '@/components/Dashboard/vbat';
 import { SnrChart } from '@/components/Dashboard/snr';
 import { GeoChart } from '@/components/Dashboard/geo';
@@ -11,6 +11,7 @@ import { HumidityChart } from '@/components/Dashboard/humidity';
 import { LightChart } from '@/components/Dashboard/light';
 import { GyroChart } from '@/components/Dashboard/gyro';
 import { AccelChart } from '@/components/Dashboard/accel';
+import { MapBox } from "../Map";
 
 export const Dashboard = observer(() => {
 
@@ -26,7 +27,11 @@ export const Dashboard = observer(() => {
 
         <TabPanels>
           <TabPanel>
-            <GeoChart/>
+            <Wrap>
+              <WrapItem>
+                <MapBox/>
+              </WrapItem>
+            </Wrap>
           </TabPanel>
 
           <TabPanel>
