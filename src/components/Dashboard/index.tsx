@@ -1,7 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Container, Wrap, WrapItem } from '@chakra-ui/react';
-import { useStore } from '@/store/index';
+import { Container, Wrap, WrapItem, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import { VbatChart } from '@/components/Dashboard/vbat';
 import { SnrChart } from '@/components/Dashboard/snr';
 import { GeoChart } from '@/components/Dashboard/geo';
@@ -14,52 +13,79 @@ import { GyroChart } from '@/components/Dashboard/gyro';
 import { AccelChart } from '@/components/Dashboard/accel';
 
 export const Dashboard = observer(() => {
-  const { rec } = useStore()
 
   return(
     <Container maxW={'full'} mt={10}>
-      <Wrap>
-        <WrapItem>
-          <VbatChart/>
-        </WrapItem>
+      <Tabs isFitted>
+        <TabList>
+          <Tab>GPS</Tab>
+          <Tab>Climate</Tab>
+          <Tab>Motion</Tab>
+          <Tab>Other</Tab>
+        </TabList>
 
-        <WrapItem>
-          <SnrChart/>
-        </WrapItem>
+        <TabPanels>
+          <TabPanel>
+            <GeoChart/>
+          </TabPanel>
 
-        <WrapItem>
-          <GeoChart/>
-        </WrapItem>
+          <TabPanel>
+            <Wrap mt={5} spacing="50px">
 
-        <WrapItem>
-          <GasChart/>
-        </WrapItem>
+              <WrapItem>
+                <HumidityChart/>
+              </WrapItem>
 
-        <WrapItem>
-          <TemperatureChart/>
-        </WrapItem>
+              <WrapItem>
+                <PressureChart/>
+              </WrapItem>
 
-        <WrapItem>
-          <PressureChart/>
-        </WrapItem>
+              <WrapItem>
+                <TemperatureChart/>
+              </WrapItem>
 
-        <WrapItem>
-          <HumidityChart/>
-        </WrapItem>
+              <WrapItem>
+                <GasChart/>
+              </WrapItem>
 
-        <WrapItem>
-          <LightChart/>
-        </WrapItem>
+            </Wrap>
+          </TabPanel>
 
-        <WrapItem>
-          <GyroChart/>
-        </WrapItem>
+          <TabPanel>
+            <Wrap mt={5} spacing="50px">
 
-        <WrapItem>
-          <AccelChart/>
-        </WrapItem>
+              <WrapItem>
+                <GyroChart/>
+              </WrapItem>
 
-      </Wrap>
+              <WrapItem>
+                <AccelChart/>
+              </WrapItem>
+
+            </Wrap>
+          </TabPanel>
+
+          <TabPanel>
+            <Wrap mt={5} spacing="50px" justify="center">
+
+              <WrapItem>
+                <LightChart/>
+              </WrapItem>
+
+              <WrapItem>
+                <VbatChart/>
+              </WrapItem>
+
+              <WrapItem>
+                <SnrChart/>
+              </WrapItem>
+
+            </Wrap>
+          </TabPanel>
+
+        </TabPanels>
+      </Tabs>
+
     </Container>
   );
 });
