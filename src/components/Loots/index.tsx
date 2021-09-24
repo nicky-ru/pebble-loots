@@ -1,6 +1,7 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { Container, Box, Heading, Wrap, WrapItem, LinkBox, Text, LinkOverlay, Image } from '@chakra-ui/react';
+import { Link } from "react-router-dom";
 
 interface PropsType {
   balance: number;
@@ -22,7 +23,7 @@ export const LootCards = observer((props: PropsType) => {
               <Box w={"350px"} h={"350px"}>
                 <Image src={uri.data.image}/>
                 <Text my={2}>
-                  <LinkOverlay href={`/devices/${uri.data.name.toString().split("#")[1]}`}>
+                  <LinkOverlay as={Link} to={`/devices/${uri.data.name.toString().split("#")[1]}`}>
                     {uri.data.name}
                   </LinkOverlay>
                 </Text>

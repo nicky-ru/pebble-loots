@@ -30,13 +30,11 @@ export class RecordStore {
     makeAutoObservable(this);
   }
 
-  setDecodedRecords(decrecords: Array<string>) {
-    this.decodedRecords = decrecords.map((data: string) => {
-      const parsed = JSON.parse(data);
-      parsed.latitude = new BigNumber(parsed.latitude);
-      parsed.longitude = new BigNumber(parsed.longitude);
-      console.log(parsed);
-      return parsed;
+  setDecodedRecords(decrecords: Array<DecodedRecord>) {
+    this.decodedRecords = decrecords.map((record) => {
+      record.latitude = new BigNumber(record.latitude);
+      record.longitude = new BigNumber(record.longitude);
+      return record;
     });
   }
 }

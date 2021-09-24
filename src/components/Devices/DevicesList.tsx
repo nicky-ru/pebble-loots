@@ -1,6 +1,7 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Container, UnorderedList, ListItem, Link, Stack, Text, Table, Thead, Tr, Th, Td, Tbody } from '@chakra-ui/react';
+import { Container, Link, Table, Thead, Tr, Th, Td, Tbody } from '@chakra-ui/react';
+import { Link as ReactLink } from "react-router-dom";
 import { useStore } from '@/store/index';
 
 export const DevicesList = observer(() => {
@@ -20,10 +21,10 @@ export const DevicesList = observer(() => {
         <Tbody>
           {pebble.devices?.map(device => (
             <Tr key={device.id}>
-              <Td><Link href={`/devices/${device.id}`}>{device.id}</Link></Td>
-              <Td><Link href={`/devices/${device.id}`}>{device.name}</Link></Td>
-              <Td><Link href={`/devices/${device.id}`}>{device.address}</Link></Td>
-              <Td><Link href={`/devices/${device.id}`}>{device.owner}</Link></Td>
+              <Td><Link as={ReactLink} to={`/devices/${device.id}`}>{device.id}</Link></Td>
+              <Td><Link as={ReactLink} to={`/devices/${device.id}`}>{device.name}</Link></Td>
+              <Td><Link as={ReactLink} to={`/devices/${device.id}`}>{device.address}</Link></Td>
+              <Td><Link as={ReactLink} to={`/devices/${device.id}`}>{device.owner}</Link></Td>
             </Tr>
           ))}
         </Tbody>
