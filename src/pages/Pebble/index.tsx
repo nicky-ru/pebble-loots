@@ -35,14 +35,15 @@ export const Pebble = observer(() => {
 
 
   const readproto = async (records) => {
-    const url = "https://protoreader.herokuapp.com/telemetry";
+    const url = import.meta.env.MODE === "development" ? "http://localhost:3001/telemetry" : "https://protoreader.herokuapp.com/telemetry";
+    console.log(url);
     return await Promise.all(records.map((record) => axios.post(url, `raw=${record.raw}`)))
   }
 
   const startInterval = () => {
     setInterval(() => {
       queryRecords();
-    }, 5000)
+    }, 10000)
   }
 
   return(
