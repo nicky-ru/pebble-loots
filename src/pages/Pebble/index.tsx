@@ -1,8 +1,4 @@
 import React, { useEffect } from 'react';
-import apolloClient from '../../apollo/client';
-import { deviceRecords } from '../../graphql/queries';
-import gql from 'graphql-tag';
-import _ from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { Container, Heading, Divider } from '@chakra-ui/react';
 import { useParams } from "react-router-dom";
@@ -21,23 +17,8 @@ export const Pebble = observer(() => {
 
 
   const queryRecords = async () => {
-    const data = await apolloClient.query({
-      query: gql(deviceRecords),
-      variables: {imei: imei}
-    });
-    const records = _.get(data, 'data.deviceRecords');
-    const responses = await readproto(records);
-    const decodedData = responses.map((res) => {// @ts-ignore
-      return JSON.stringify(res.data)});
-
-    rec.setDecodedRecords(decodedData);
-  }
-
-
-  const readproto = async (records) => {
-    const url = import.meta.env.MODE === "development" ? "http://localhost:3001/telemetry" : "https://protoreader.herokuapp.com/telemetry";
-    console.log(url);
-    return await Promise.all(records.map((record) => axios.post(url, `raw=${record.raw}`)))
+    const data = await axios.get(`https://protoreader.herokuapp.com/api/devices/${imei}`);
+    rec.setDecodedRecords(data.data);
   }
 
   const startInterval = () => {
