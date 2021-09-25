@@ -36,11 +36,7 @@ export const Header = observer(() => {
           <Flex flex={{ base: 1, md: 'auto' }} justify={{ base: 'center', md: 'start' }}>
             <Link to={'/'}>
               <Stack as={'a'} direction={'row'} alignItems={'center'} spacing={{ base: 2, sm: 4 }}>
-                {/*<Icon as={Logo} w={{ base: 8 }} h={{ base: 8 }} />*/}
                 <Image src={useColorModeValue("/images/pebbleglitch.svg", "/images/pebblelogo.svg")} h={10} py={2}/>
-                {/*<Heading as={'h1'} fontSize={'xl'} display={{ base: 'none', md: 'block' }}>*/}
-                {/*  Dapp Sample V2*/}
-                {/*</Heading>*/}
               </Stack>
             </Link>
           </Flex>
