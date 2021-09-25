@@ -1,6 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Container, Wrap, WrapItem, Tabs, TabList, TabPanels, Tab, TabPanel, Skeleton } from '@chakra-ui/react';
+import { Container, Wrap, WrapItem, Tabs, TabList, TabPanels, Tab, TabPanel, Skeleton, Center } from '@chakra-ui/react';
 import { VbatChart } from '@/components/Dashboard/vbat';
 import { SnrChart } from '@/components/Dashboard/snr';
 import { GasChart } from '@/components/Dashboard/gas';
@@ -20,10 +20,12 @@ interface PropsType {
 }
 
 export const Dashboard = observer((props: PropsType) => {
+  const chartW = 750;
+  const chartH = 150;
 
   return(
-    <Container maxW={'full'} mt={10}>
-      <Tabs isFitted>
+    <>
+      <Tabs isFitted variant={"unstyled"}>
         <TabList>
           <Tab>Climate</Tab>
           <Tab>Motion</Tab>
@@ -36,33 +38,18 @@ export const Dashboard = observer((props: PropsType) => {
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallback}>
               <Skeleton isLoaded={!props.loading.value}>
-                <Wrap mt={5} spacing="50px">
-                  <WrapItem>
-                    <HumidityChart/>
+                <Wrap>
+                  <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
+                    <HumidityChart height={chartH} width={chartW}/>
                   </WrapItem>
-                  <WrapItem>
-                    <PressureChart/>
+                  <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
+                    <PressureChart width={chartW} height={chartH}/>
                   </WrapItem>
-                  <WrapItem>
-                    <TemperatureChart/>
+                  <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
+                    <TemperatureChart width={chartW} height={chartH}/>
                   </WrapItem>
-                  <WrapItem>
-                    <GasChart/>
-                  </WrapItem>
-                </Wrap>
-              </Skeleton>
-            </ErrorBoundary>
-          </TabPanel>
-
-          <TabPanel>
-            <ErrorBoundary FallbackComponent={ErrorFallback}>
-              <Skeleton isLoaded={!props.loading.value}>
-                <Wrap mt={5} spacing="50px">
-                  <WrapItem>
-                    <GyroChart/>
-                  </WrapItem>
-                  <WrapItem>
-                    <AccelChart/>
+                  <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
+                    <GasChart width={chartW} height={chartH}/>
                   </WrapItem>
                 </Wrap>
               </Skeleton>
@@ -73,7 +60,22 @@ export const Dashboard = observer((props: PropsType) => {
             <ErrorBoundary FallbackComponent={ErrorFallback}>
               <Skeleton isLoaded={!props.loading.value}>
                 <Wrap>
-                  <WrapItem>
+                  <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
+                    <GyroChart width={chartW} height={chartH * 2}/>
+                  </WrapItem>
+                  <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
+                    <AccelChart width={chartW} height={chartH * 2}/>
+                  </WrapItem>
+                </Wrap>
+              </Skeleton>
+            </ErrorBoundary>
+          </TabPanel>
+
+          <TabPanel>
+            <ErrorBoundary FallbackComponent={ErrorFallback}>
+              <Skeleton isLoaded={!props.loading.value}>
+                <Wrap>
+                  <WrapItem width={"full"}>
                     <MapBox/>
                   </WrapItem>
                 </Wrap>
@@ -84,15 +86,15 @@ export const Dashboard = observer((props: PropsType) => {
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallback}>
               <Skeleton isLoaded={!props.loading.value}>
-                <Wrap mt={5} spacing="50px" justify="center">
-                  <WrapItem>
-                    <LightChart/>
+                <Wrap>
+                  <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
+                    <LightChart width={chartW} height={chartH * 1.3}/>
                   </WrapItem>
-                  <WrapItem>
-                    <VbatChart/>
+                  <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
+                    <VbatChart width={chartW} height={chartH * 1.3}/>
                   </WrapItem>
-                  <WrapItem>
-                    <SnrChart/>
+                  <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
+                    <SnrChart width={chartW} height={chartH * 1.3}/>
                   </WrapItem>
                 </Wrap>
               </Skeleton>
@@ -102,6 +104,6 @@ export const Dashboard = observer((props: PropsType) => {
         </TabPanels>
       </Tabs>
 
-    </Container>
+    </>
   );
 });

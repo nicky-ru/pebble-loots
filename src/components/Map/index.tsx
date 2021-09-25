@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Container, Stack } from '@chakra-ui/react';
+import { Center, Stack } from '@chakra-ui/react';
 import { TriangleUpIcon, StarIcon } from "@chakra-ui/icons"
 import ReactMapGl, { Marker, ScaleControl, NavigationControl } from "react-map-gl";
 import { useStore } from '@/store/index';
@@ -12,8 +12,8 @@ export const MapBox = observer(() => {
     latitude: 0,
     longitude: 0,
     zoom: 10,
-    width: '80vw',
-    height: '50vh'
+    width: '500px',
+    height: '500px'
   })
 
   useEffect(() => {
@@ -27,8 +27,10 @@ export const MapBox = observer(() => {
   }, [rec.decodedRecords]);
 
   return(
-    <Container>
+    <Center width={"765px"} height={"650px"}>
       <ReactMapGl
+        mapStyle={"mapbox://styles/nickyru/cku03xgm61x4x17oype7yzsl5"}
+        // mapbox://styles/nickyru/cku03y3cp2bjx18mxgfwdemx0
         {...viewport}
         mapboxApiAccessToken={"pk.eyJ1Ijoibmlja3lydSIsImEiOiJja3R0b2gwcHExcjgxMnBvMnNpdGRzZ3h0In0.SVZh89vCelDpCAjIjy-HBQ"}
         onViewportChange={(viewport) => {
@@ -53,8 +55,6 @@ export const MapBox = observer(() => {
           <StarIcon color={"red"}/>
         </Marker>
       </ReactMapGl>
-      <TriangleUpIcon/> - all datapoints
-      <StarIcon ml={5} color={"red"}/> - last datapoint
-    </Container>
+    </Center>
   );
 });
