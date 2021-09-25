@@ -111,7 +111,7 @@ export const MyLoots = observer(() => {
           :
           <Center w={"full"} flexDirection={"column"}>
             <Text>This dapp currently works only on IoTeX Testnet</Text>
-            <Button mt={5} onClick={() => {store.setChain(4690)}}>Switch to IoTeX Testnet</Button>
+            <Button colorScheme={"teal"} mt={5} onClick={() => {store.setChain(4690)}}>Switch to IoTeX Testnet</Button>
           </Center>
         }
       </Container>
