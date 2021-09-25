@@ -5,6 +5,8 @@ import { useStore } from '@/store/index';
 import { LootCards } from '@/components/Loots';
 import { TransactionResponse } from '@ethersproject/providers';
 import axios from 'axios';
+import { ErrorFallback } from '@/components/ErrorFallback';
+import { ErrorBoundary } from 'react-error-boundary';
 
 export const MyLoots = observer(() => {
   const { ploot } = useStore();
@@ -64,13 +66,15 @@ export const MyLoots = observer(() => {
   }
 
   return(
-    <Container maxW={'container.xl'} mt={10}>
-      <LootCards
-        balance={observable.balance}
-        name={observable.chainId? ploot.contracts[observable.chainId].name : ""}
-        symbol={observable.chainId? ploot.contracts[observable.chainId].symbol : ""}
-        tokenUris={observable.tokenUris}
-      />
-    </Container>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <Container maxW={'container.xl'} mt={10}>
+        <LootCards
+          balance={observable.balance}
+          name={observable.chainId? ploot.contracts[observable.chainId].name : ""}
+          symbol={observable.chainId? ploot.contracts[observable.chainId].symbol : ""}
+          tokenUris={observable.tokenUris}
+        />
+      </Container>
+    </ErrorBoundary>
   );
 });
