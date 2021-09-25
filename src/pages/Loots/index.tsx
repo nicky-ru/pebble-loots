@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { observer, useLocalObservable } from 'mobx-react-lite';
-import { Container } from '@chakra-ui/react';
+import { observer, useLocalObservable, useLocalStore } from 'mobx-react-lite';
+import { Container, Text, Center, Button, createStandaloneToast } from '@chakra-ui/react';
 import { useStore } from '@/store/index';
 import { LootCards } from '@/components/Loots';
 import { TransactionResponse } from '@ethersproject/providers';
@@ -8,9 +8,35 @@ import axios from 'axios';
 import { ErrorFallback } from '@/components/ErrorFallback';
 import { ErrorBoundary } from 'react-error-boundary';
 import { BooleanState } from '@/store/standard/base';
+import { metamaskUtils } from '@/lib/metaskUtils';
+
+const toast = createStandaloneToast();
 
 export const MyLoots = observer(() => {
-  const { ploot } = useStore();
+  const { ploot, god } = useStore();
+
+  const store = useLocalStore(() => ({
+    async setChain(val) {
+      const chain = god.currentNetwork.chain.map[val];
+      console.log(chain);
+      if (chain.networkKey !== 'eth') {
+        await metamaskUtils.setupNetwork({
+          chainId: chain.chainId,
+          blockExplorerUrls: [chain.explorerURL],
+          chainName: chain.name,
+          nativeCurrency: {
+            decimals: chain.Coin.decimals || 18,
+            name: chain.Coin.symbol,
+            symbol: chain.Coin.symbol
+          },
+          rpcUrls: [chain.rpcUrl]
+        });
+        god.setChain(val);
+      } else {
+        toast({ title: 'Please connect to the  Ethereum network on metamask.', position: 'top', status: 'warning' });
+      }
+    }
+  }));
 
   const observable = useLocalObservable(() => ({
     tokenIds: [],
@@ -40,7 +66,7 @@ export const MyLoots = observer(() => {
   }, [ploot.god.currentChain.chainId]);
 
   useEffect(() => {
-    if (observable.chainId) {
+    if (observable.chainId === 4690) {
       updateBalance();
     }
   }, [observable.chainId])
@@ -75,11 +101,19 @@ export const MyLoots = observer(() => {
   return(
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <Container maxW={'container.xl'} mt={10}>
-        <LootCards
-          balance={observable.balance}
-          tokenUris={observable.tokenUris}
-          loading={observable.loading}
-        />
+        {observable.chainId === 4690
+          ?
+          <LootCards
+            balance={observable.balance}
+            tokenUris={observable.tokenUris}
+            loading={observable.loading}
+          />
+          :
+          <Center w={"full"} flexDirection={"column"}>
+            <Text>This dapp currently works only on IoTeX Testnet</Text>
+            <Button mt={5} onClick={() => {store.setChain(4690)}}>Switch to IoTeX Testnet</Button>
+          </Center>
+        }
       </Container>
     </ErrorBoundary>
   );
