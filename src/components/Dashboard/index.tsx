@@ -11,6 +11,8 @@ import { LightChart } from '@/components/Dashboard/light';
 import { GyroChart } from '@/components/Dashboard/gyro';
 import { AccelChart } from '@/components/Dashboard/accel';
 import { MapBox } from "../Map";
+import { ErrorBoundary } from 'react-error-boundary';
+import { ErrorFallback } from '@/components/ErrorFallback';
 
 export const Dashboard = observer(() => {
 
@@ -27,57 +29,61 @@ export const Dashboard = observer(() => {
         <TabPanels>
 
           <TabPanel>
-            <Wrap mt={5} spacing="50px">
-              <WrapItem>
-                <HumidityChart/>
-              </WrapItem>
-              <WrapItem>
-                <PressureChart/>
-              </WrapItem>
-              <WrapItem>
-                <TemperatureChart/>
-              </WrapItem>
-              <WrapItem>
-                <GasChart/>
-              </WrapItem>
-            </Wrap>
+            <ErrorBoundary FallbackComponent={ErrorFallback}>
+              <Wrap mt={5} spacing="50px">
+                <WrapItem>
+                  <HumidityChart/>
+                </WrapItem>
+                <WrapItem>
+                  <PressureChart/>
+                </WrapItem>
+                <WrapItem>
+                  <TemperatureChart/>
+                </WrapItem>
+                <WrapItem>
+                  <GasChart/>
+                </WrapItem>
+              </Wrap>
+            </ErrorBoundary>
           </TabPanel>
 
           <TabPanel>
-            <Wrap mt={5} spacing="50px">
-              <WrapItem>
-                <GyroChart/>
-              </WrapItem>
-              <WrapItem>
-                <AccelChart/>
-              </WrapItem>
-            </Wrap>
+            <ErrorBoundary FallbackComponent={ErrorFallback}>
+              <Wrap mt={5} spacing="50px">
+                <WrapItem>
+                  <GyroChart/>
+                </WrapItem>
+                <WrapItem>
+                  <AccelChart/>
+                </WrapItem>
+              </Wrap>
+            </ErrorBoundary>
           </TabPanel>
 
           <TabPanel>
-            <Wrap>
-              <WrapItem>
-                <MapBox/>
-              </WrapItem>
-            </Wrap>
+            <ErrorBoundary FallbackComponent={ErrorFallback}>
+              <Wrap>
+                <WrapItem>
+                  <MapBox/>
+                </WrapItem>
+              </Wrap>
+            </ErrorBoundary>
           </TabPanel>
 
           <TabPanel>
-            <Wrap mt={5} spacing="50px" justify="center">
-
-              <WrapItem>
-                <LightChart/>
-              </WrapItem>
-
-              <WrapItem>
-                <VbatChart/>
-              </WrapItem>
-
-              <WrapItem>
-                <SnrChart/>
-              </WrapItem>
-
-            </Wrap>
+            <ErrorBoundary FallbackComponent={ErrorFallback}>
+              <Wrap mt={5} spacing="50px" justify="center">
+                <WrapItem>
+                  <LightChart/>
+                </WrapItem>
+                <WrapItem>
+                  <VbatChart/>
+                </WrapItem>
+                <WrapItem>
+                  <SnrChart/>
+                </WrapItem>
+              </Wrap>
+            </ErrorBoundary>
           </TabPanel>
 
         </TabPanels>
