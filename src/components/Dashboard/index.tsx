@@ -1,9 +1,8 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Container, Wrap, WrapItem, Tabs, TabList, TabPanels, Tab, TabPanel, Center } from '@chakra-ui/react';
+import { Container, Wrap, WrapItem, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import { VbatChart } from '@/components/Dashboard/vbat';
 import { SnrChart } from '@/components/Dashboard/snr';
-import { GeoChart } from '@/components/Dashboard/geo';
 import { GasChart } from '@/components/Dashboard/gas';
 import { TemperatureChart } from '@/components/Dashboard/temperature';
 import { PressureChart } from '@/components/Dashboard/pressure';
@@ -19,54 +18,47 @@ export const Dashboard = observer(() => {
     <Container maxW={'full'} mt={10}>
       <Tabs isFitted>
         <TabList>
-          <Tab>GPS</Tab>
           <Tab>Climate</Tab>
           <Tab>Motion</Tab>
+          <Tab>GPS</Tab>
           <Tab>Other</Tab>
         </TabList>
 
         <TabPanels>
+
+          <TabPanel>
+            <Wrap mt={5} spacing="50px">
+              <WrapItem>
+                <HumidityChart/>
+              </WrapItem>
+              <WrapItem>
+                <PressureChart/>
+              </WrapItem>
+              <WrapItem>
+                <TemperatureChart/>
+              </WrapItem>
+              <WrapItem>
+                <GasChart/>
+              </WrapItem>
+            </Wrap>
+          </TabPanel>
+
+          <TabPanel>
+            <Wrap mt={5} spacing="50px">
+              <WrapItem>
+                <GyroChart/>
+              </WrapItem>
+              <WrapItem>
+                <AccelChart/>
+              </WrapItem>
+            </Wrap>
+          </TabPanel>
+
           <TabPanel>
             <Wrap>
               <WrapItem>
                 <MapBox/>
               </WrapItem>
-            </Wrap>
-          </TabPanel>
-
-          <TabPanel>
-            <Wrap mt={5} spacing="50px">
-
-              <WrapItem>
-                <HumidityChart/>
-              </WrapItem>
-
-              <WrapItem>
-                <PressureChart/>
-              </WrapItem>
-
-              <WrapItem>
-                <TemperatureChart/>
-              </WrapItem>
-
-              <WrapItem>
-                <GasChart/>
-              </WrapItem>
-
-            </Wrap>
-          </TabPanel>
-
-          <TabPanel>
-            <Wrap mt={5} spacing="50px">
-
-              <WrapItem>
-                <GyroChart/>
-              </WrapItem>
-
-              <WrapItem>
-                <AccelChart/>
-              </WrapItem>
-
             </Wrap>
           </TabPanel>
 
