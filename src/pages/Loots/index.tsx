@@ -1,12 +1,13 @@
-import React, {useEffect} from 'react';
+import React, { useEffect, useState } from 'react';
 import { observer, useLocalObservable } from 'mobx-react-lite';
-import { Container} from '@chakra-ui/react';
+import { Container, Skeleton } from '@chakra-ui/react';
 import { useStore } from '@/store/index';
 import { LootCards } from '@/components/Loots';
 import { TransactionResponse } from '@ethersproject/providers';
 import axios from 'axios';
 import { ErrorFallback } from '@/components/ErrorFallback';
 import { ErrorBoundary } from 'react-error-boundary';
+import { BooleanState } from '@/store/standard/base';
 
 export const MyLoots = observer(() => {
   const { ploot } = useStore();
@@ -16,6 +17,7 @@ export const MyLoots = observer(() => {
     chainId: 0,
     balance: 0,
     tokenUris: [],
+    loading: new BooleanState(),
     setChainId(newChainId: number) {
       this.chainId = newChainId;
     },
@@ -25,6 +27,9 @@ export const MyLoots = observer(() => {
     },
     setTokenUris(newUris) {
       this.tokenUris = newUris;
+    },
+    setLoading(newLoading: boolean) {
+      this.loading.setValue(newLoading);
     }
   }))
 
@@ -47,6 +52,7 @@ export const MyLoots = observer(() => {
   }, [observable.balance]);
 
   async function fetchLoots() {
+    observable.setLoading(true)
     const tokenIds = Array(observable.balance);
 
     for (let i = 0; i < observable.balance; i++) {
@@ -58,6 +64,7 @@ export const MyLoots = observer(() => {
     }))
 
     observable.setTokenUris(tokenUris);
+    observable.setLoading(false);
   }
 
   async function updateBalance() {
@@ -70,9 +77,8 @@ export const MyLoots = observer(() => {
       <Container maxW={'container.xl'} mt={10}>
         <LootCards
           balance={observable.balance}
-          name={observable.chainId? ploot.contracts[observable.chainId].name : ""}
-          symbol={observable.chainId? ploot.contracts[observable.chainId].symbol : ""}
           tokenUris={observable.tokenUris}
+          loading={observable.loading}
         />
       </Container>
     </ErrorBoundary>
