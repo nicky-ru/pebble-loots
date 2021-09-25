@@ -12,6 +12,7 @@ export class ContractStore {
   network: NetworkState;
   balance: number = 5;
   contracts: { [key: number]: PebbleLootState } = {};
+  tokenUris: any[];
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
@@ -27,5 +28,8 @@ export class ContractStore {
 
   get god() {
     return this.rootStore.god;
+  }
+  setTokenUris(uris: any[]) {
+    this.tokenUris = uris;
   }
 }

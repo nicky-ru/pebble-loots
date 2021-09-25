@@ -2,6 +2,7 @@ import { ERC20 } from '../pages/ERC20';
 import { Devices } from '../pages/Devices';
 import { MyLoots } from '../pages/Loots';
 import { Minting } from '../pages/Minting';
+import { LootCharts } from '../pages/LootCharts';
 
 class Tool {
   name: string;
@@ -21,7 +22,7 @@ export const ToolConfig = [
     tags: ['IoT', 'Pebble']
   }),
   new Tool({
-    name: 'My Loots',
+    name: 'Loot gallery',
     path: '/myloots',
     component: MyLoots,
     tags: ['NFT', 'Pebble']
@@ -31,5 +32,11 @@ export const ToolConfig = [
     path: '/mintLoot',
     component: Minting,
     tags: ['NFT', 'Loot', 'Minting']
+  }),
+  new Tool({
+    name: 'Loot charts',
+    path: '/lootcharts',
+    component: LootCharts,
+    tags: ['Real data', 'Loot']
   })
 ];

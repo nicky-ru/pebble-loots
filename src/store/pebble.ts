@@ -15,6 +15,7 @@ class Device {
 
 export class PebbleStore {
   devices = Array<Device>();
+  imei = "";
 
   constructor() {
     makeAutoObservable(this);
@@ -22,7 +23,10 @@ export class PebbleStore {
   setDevices(devices: Array<Device>) {
     this.devices = devices;
   }
-
+  selectImei(imei: string) {
+    console.log("selecting imei: ", imei);
+    this.imei = imei;
+  }
   deviceByImei(imei: string): Device {
     return this.devices
       .filter((device) => !device.id.localeCompare(imei))[0];
