@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Container,
@@ -12,7 +12,8 @@ import {
   Image,
   Divider,
   Skeleton,
-  Spinner
+  Spinner, Button,
+  Center
 } from '@chakra-ui/react';
 import { Link } from "react-router-dom";
 import { BooleanState } from '@/store/standard/base';
@@ -24,6 +25,8 @@ interface PropsType {
 }
 
 export const LootCards = observer((props: PropsType) => {
+  const [btnText, setBtnText] = useState("Want to mint some?");
+
   return(
     <Container textAlign={"center"} maxW={'full'}>
       <Heading mb={4}>
@@ -36,22 +39,47 @@ export const LootCards = observer((props: PropsType) => {
       </Text>
 
       <Skeleton isLoaded={!props.loading.value}>
-        <Wrap mt={10} justify="center" minH={"400px"}>
-          {props.tokenUris?.map(uri => (
-            <WrapItem key={uri.data.name}>
-              <LinkBox as="article"  p={5} pb={10} borderWidth="1px" rounded="md">
-                <Box w={"350px"} h={"350px"}>
-                  <Image src={uri.data.image}/>
-                  <Text my={2}>
-                    <LinkOverlay as={Link} to={`/devices/${uri.data.name.toString().split("#")[1]}`}>
-                      {uri.data.name}
-                    </LinkOverlay>
-                  </Text>
-                </Box>
-              </LinkBox>
-            </WrapItem>
-          ))}
-        </Wrap>
+
+          <Wrap mt={10} justify="center" minH={"400px"}>
+            {props.balance
+            ?
+              <>
+                {props.tokenUris?.map(uri => (
+                    <WrapItem key={uri.data.name}>
+                      <LinkBox as="article"  p={5} pb={10} borderWidth="1px" rounded="md">
+                        <Box w={"350px"} h={"350px"}>
+                          <Image src={uri.data.image}/>
+                          <Text my={2}>
+                            <LinkOverlay as={Link} to={`/devices/${uri.data.name.toString().split("#")[1]}`}>
+                              {uri.data.name}
+                            </LinkOverlay>
+                          </Text>
+                        </Box>
+                      </LinkBox>
+                    </WrapItem>
+                  ))}
+                </>
+            :
+              <WrapItem>
+                <Center h={"full"} flexDirection={"column"}>
+                  <Text>You have no loots yet 😱</Text>
+                  <Link to={"/mintLoot"}>
+                    <Button
+                      mt={4}
+                      minWidth={"200px"}
+                      colorScheme="teal"
+                      type="submit"
+                      onMouseEnter={() => {setBtnText("Sure!")}}
+                      onMouseLeave={() => {setBtnText("Want to mint some?")}}
+                    >
+                      {btnText}
+                    </Button>
+                  </Link>
+                </Center>
+              </WrapItem>
+            }
+          </Wrap>
+
       </Skeleton>
     </Container>
   );
