@@ -44,6 +44,7 @@ export const MyLoots = observer(() => {
     chainId: 0,
     balance: 0,
     tokenUris: [],
+    loaded: new BooleanState(),
     loading: new BooleanState(),
     setChainId(newChainId: number) {
       this.chainId = newChainId;
@@ -57,6 +58,9 @@ export const MyLoots = observer(() => {
     },
     setLoading(newLoading: boolean) {
       this.loading.setValue(newLoading);
+    },
+    setLoaded(newLoaded: boolean) {
+      this.loaded.setValue(newLoaded);
     }
   }))
 
@@ -98,6 +102,7 @@ export const MyLoots = observer(() => {
 
     observable.setTokenUris(tokenUris);
     observable.setLoading(false);
+    observable.setLoaded(true);
   }
 
   async function updateBalance() {
@@ -114,6 +119,7 @@ export const MyLoots = observer(() => {
             balance={observable.balance}
             tokenUris={observable.tokenUris}
             loading={observable.loading}
+            loaded={observable.loaded}
           />
           :
           <Center w={"full"} flexDirection={"column"}>
