@@ -3,32 +3,18 @@ import { observer } from 'mobx-react-lite';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { useStore } from '@/store/index';
 import { Header } from '@/components/Header';
-import { ChakraProvider, Button, Container, Center } from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 import { theme } from '@/lib/theme';
 import { ETHProvider } from './components/EthProvider';
 import { Home } from './pages/Home';
 import { Web3ReactProvider } from '@web3-react/core';
 import { getLibrary } from './lib/web3-react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Box, Text } from '@chakra-ui/layout';
 import { Toaster } from 'react-hot-toast';
 import { ToolConfig } from './config/ToolConfig';
 import { WalletSelecter } from './components/WalletSelecter';
 import { Pebble } from './pages/Pebble';
-
-const ErrorFallback = ({ error, resetErrorBoundary }) => {
-  return (
-    <Container role="alert">
-      <Center h="500px">
-        <Box>
-          <p>Something went wrong:</p>
-          <Text color="red.500">{error.message}</Text>
-          <Button onClick={resetErrorBoundary}>Try again</Button>
-        </Box>
-      </Center>
-    </Container>
-  );
-};
+import { ErrorFallback } from '@/components/ErrorFallback';
 
 export const App = observer(() => {
   const { lang, god } = useStore();
