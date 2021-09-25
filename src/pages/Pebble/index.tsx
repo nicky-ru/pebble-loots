@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom";
 import { useStore } from '@/store/index';
 import { Dashboard } from '@/components/Dashboard';
 import axios from 'axios';
+import { ErrorBoundary } from 'react-error-boundary';
+import { ErrorFallback } from '@/components/ErrorFallback';
 
 export const Pebble = observer(() => {
   const { rec } = useStore();
@@ -28,10 +30,12 @@ export const Pebble = observer(() => {
   }
 
   return(
-    <Container maxW={'container.xl'}>
-      <Heading my={5}>Device imei: {imei}</Heading>
-      <Divider/>
-      <Dashboard/>
-    </Container>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <Container maxW={'container.xl'}>
+        <Heading my={5}>Device imei: {imei}</Heading>
+        <Divider/>
+        <Dashboard/>
+      </Container>
+    </ErrorBoundary>
   );
 });
