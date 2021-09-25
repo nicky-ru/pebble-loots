@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 import { useStore } from '@/store/index';
 import { Header } from '@/components/Header';
 import { ChakraProvider } from '@chakra-ui/react';
