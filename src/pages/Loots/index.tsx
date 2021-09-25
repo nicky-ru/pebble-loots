@@ -11,6 +11,7 @@ import { BooleanState } from '@/store/standard/base';
 import { metamaskUtils } from '@/lib/metaskUtils';
 
 const toast = createStandaloneToast();
+const IOTX_TEST_CHAINID = 4690;
 
 export const MyLoots = observer(() => {
   const { ploot, god } = useStore();
@@ -66,7 +67,13 @@ export const MyLoots = observer(() => {
   }, [ploot.god.currentChain.chainId]);
 
   useEffect(() => {
-    if (observable.chainId === 4690) {
+    if (observable.chainId === IOTX_TEST_CHAINID) {
+      updateBalance();
+    }
+  }, [ploot.god.currentNetwork.account])
+
+  useEffect(() => {
+    if (observable.chainId === IOTX_TEST_CHAINID) {
       updateBalance();
     }
   }, [observable.chainId])
@@ -101,7 +108,7 @@ export const MyLoots = observer(() => {
   return(
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <Container maxW={'container.xl'} mt={10}>
-        {observable.chainId === 4690
+        {observable.chainId === IOTX_TEST_CHAINID
           ?
           <LootCards
             balance={observable.balance}
@@ -111,7 +118,7 @@ export const MyLoots = observer(() => {
           :
           <Center w={"full"} flexDirection={"column"}>
             <Text>This dapp currently works only on IoTeX Testnet</Text>
-            <Button colorScheme={"teal"} mt={5} onClick={() => {store.setChain(4690)}}>Switch to IoTeX Testnet</Button>
+            <Button colorScheme={"teal"} mt={5} onClick={() => {store.setChain(IOTX_TEST_CHAINID)}}>Switch to IoTeX Testnet</Button>
           </Center>
         }
       </Container>
