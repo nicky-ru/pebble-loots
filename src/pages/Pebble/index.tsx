@@ -14,7 +14,7 @@ export const Pebble = observer(() => {
 
   useEffect(() => {
     queryRecords();
-    startInterval();
+    // startInterval();
   }, []);
 
 
