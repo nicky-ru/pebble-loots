@@ -7,7 +7,7 @@ import {
   Box,
   Center,
   Image,
-  LinkBox, LinkOverlay
+  LinkBox, LinkOverlay, useColorModeValue
 } from '@chakra-ui/react';
 import { BooleanState } from '@/store/standard/base';
 import { Link } from 'react-router-dom';
@@ -15,26 +15,46 @@ import { TransactionResponse } from '@ethersproject/providers';
 import { LootDrawer } from '@/components/ChartsFrame/LootDrawer';
 import { Dashboard } from '@/components/Dashboard';
 import { useStore } from '@/store/index';
+import Timeout = NodeJS.Timeout;
 
 interface PropsType {
   balance: number;
   loading: BooleanState;
   loaded: BooleanState;
+  queryRecords: any;
 }
 
 export const ChartsFrame = observer((props: PropsType) => {
   const { pebble, ploot } = useStore();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+
   const observable = useLocalObservable(() => ({
     activeLoot: 0,
+    activeInterval: 0,
     setActiveLoot(value: number) {
       this.activeLoot = value;
-      console.log("select loot from observable: ", ploot.tokenUris.length)
-      const imei = ploot.tokenUris[value].data.name.split("#")[1];
+      const imei = this.getTokenImei(value);
       pebble.selectImei(imei);
+    },
+    activateInterval(interval: Timeout) {
+      this.activeInterval = interval;
+    },
+    deactivateInterval() {
+      clearInterval(this.activeInterval);
+    },
+    getTokenImei(value: number) {
+      return ploot.tokenUris[value].data.name.split("#")[1];
     }
   }))
+
+  useEffect(() => {
+    observable.deactivateInterval();
+    var queryInterval = setInterval(() => {
+      props.queryRecords(observable.getTokenImei(observable.activeLoot))
+    }, 5000);
+    observable.activateInterval(queryInterval);
+  }, [observable.activeLoot]);
 
   useEffect(() => {
     if (ploot.tokenUris?.length){
@@ -61,7 +81,7 @@ export const ChartsFrame = observer((props: PropsType) => {
             position={"relative"}
             top={-10}
             zIndex={0}
-            bg={"dark.100"}
+            bg={useColorModeValue("light.100", "dark.100")}
             h={"800px"}
             w={"800px"}
           >
