@@ -1,6 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Container, LinkBox, SimpleGrid, LinkOverlay, Stack, Image } from '@chakra-ui/react';
+import { Container, LinkBox, SimpleGrid, LinkOverlay, Stack, Image, useColorModeValue } from '@chakra-ui/react';
 import { Link } from "react-router-dom";
 import { ToolConfig } from '../../config/ToolConfig';
 import { Badge, Text } from '@chakra-ui/layout';
@@ -30,7 +30,9 @@ export const Home = observer(() => {
           ))}
         </SimpleGrid>
       </Container>
-      <Image mt={-24} width={"100vw"} src={"/images/pebble-loots-how-to.svg"}/>
+      <Container mt={-24} maxW={"100vw"}>
+        <Image width={"100vw"} src={"/images/pebble-loots-how-to.svg"}/>
+      </Container>
     </ErrorBoundary>
   );
 });
