@@ -23,6 +23,8 @@ interface PropsType {
   tokenUris: any[];
   loading: BooleanState;
   loaded: BooleanState;
+  onOpen: any;
+  setTokenToTransfer: any;
 }
 
 export const LootCards = observer((props: PropsType) => {
@@ -55,7 +57,10 @@ export const LootCards = observer((props: PropsType) => {
                               {uri.data.name}
                             </LinkOverlay>
                           </Text>
-                          <Button>Transfer</Button>
+                          <Button onClick={() => {
+                            props.setTokenToTransfer(uri.data.name.toString().split("#")[1])
+                            props.onOpen()
+                          }}>Transfer</Button>
                         </Box>
                       </LinkBox>
                     </WrapItem>
