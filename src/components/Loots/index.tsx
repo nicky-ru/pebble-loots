@@ -41,7 +41,7 @@ export const LootCards = observer((props: PropsType) => {
         Pebble Loot{props.balance === 1 ? "" : "s"}
       </Text>
 
-      <Skeleton isLoaded={props.loaded.value}>
+      <Skeleton isLoaded={!props.loading.value}>
 
           <Wrap mt={10} justify="center" minH={"400px"}>
             {props.balance
