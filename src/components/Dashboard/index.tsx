@@ -13,13 +13,8 @@ import { AccelChart } from '@/components/Dashboard/accel';
 import { MapBox } from "../Map";
 import { ErrorBoundary } from 'react-error-boundary';
 import { ErrorFallback } from '@/components/ErrorFallback';
-import { BooleanState } from '@/store/standard/base';
 
-interface PropsType {
-  loading: BooleanState;
-}
-
-export const Dashboard = observer((props: PropsType) => {
+export const Dashboard = observer(() => {
   const chartW = 750;
   const chartH = 150;
 
@@ -37,67 +32,59 @@ export const Dashboard = observer((props: PropsType) => {
 
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallback}>
-              <Skeleton isLoaded={!props.loading.value}>
-                <Wrap>
-                  <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
-                    <HumidityChart height={chartH} width={chartW}/>
-                  </WrapItem>
-                  <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
-                    <PressureChart width={chartW} height={chartH}/>
-                  </WrapItem>
-                  <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
-                    <TemperatureChart width={chartW} height={chartH}/>
-                  </WrapItem>
-                  <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
-                    <GasChart width={chartW} height={chartH}/>
-                  </WrapItem>
-                </Wrap>
-              </Skeleton>
+              <Wrap>
+                <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
+                  <HumidityChart height={chartH} width={chartW}/>
+                </WrapItem>
+                <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
+                  <PressureChart width={chartW} height={chartH}/>
+                </WrapItem>
+                <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
+                  <TemperatureChart width={chartW} height={chartH}/>
+                </WrapItem>
+                <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
+                  <GasChart width={chartW} height={chartH}/>
+                </WrapItem>
+              </Wrap>
             </ErrorBoundary>
           </TabPanel>
 
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallback}>
-              <Skeleton isLoaded={!props.loading.value}>
-                <Wrap>
-                  <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
-                    <GyroChart width={chartW} height={chartH * 2}/>
-                  </WrapItem>
-                  <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
-                    <AccelChart width={chartW} height={chartH * 2}/>
-                  </WrapItem>
-                </Wrap>
-              </Skeleton>
+              <Wrap>
+                <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
+                  <GyroChart width={chartW} height={chartH * 2}/>
+                </WrapItem>
+                <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
+                  <AccelChart width={chartW} height={chartH * 2}/>
+                </WrapItem>
+              </Wrap>
             </ErrorBoundary>
           </TabPanel>
 
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallback}>
-              <Skeleton isLoaded={!props.loading.value}>
-                <Wrap>
-                  <WrapItem width={"full"}>
-                    <MapBox/>
-                  </WrapItem>
-                </Wrap>
-              </Skeleton>
+              <Wrap>
+                <WrapItem width={"full"}>
+                  <MapBox/>
+                </WrapItem>
+              </Wrap>
             </ErrorBoundary>
           </TabPanel>
 
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallback}>
-              <Skeleton isLoaded={!props.loading.value}>
-                <Wrap>
-                  <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
-                    <LightChart width={chartW} height={chartH * 1.3}/>
-                  </WrapItem>
-                  <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
-                    <VbatChart width={chartW} height={chartH * 1.3}/>
-                  </WrapItem>
-                  <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
-                    <SnrChart width={chartW} height={chartH * 1.3}/>
-                  </WrapItem>
-                </Wrap>
-              </Skeleton>
+              <Wrap>
+                <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
+                  <LightChart width={chartW} height={chartH * 1.3}/>
+                </WrapItem>
+                <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
+                  <VbatChart width={chartW} height={chartH * 1.3}/>
+                </WrapItem>
+                <WrapItem borderWidth={"1px"} rounded={"md"} width={"full"}>
+                  <SnrChart width={chartW} height={chartH * 1.3}/>
+                </WrapItem>
+              </Wrap>
             </ErrorBoundary>
           </TabPanel>
 

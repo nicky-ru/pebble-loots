@@ -52,8 +52,8 @@ export const ChartsFrame = observer((props: PropsType) => {
         isOpen={isOpen}
       />
       <Container maxW={"container.xl"}>
-        <Button variant={"outline"} onClick={onOpen}>
-          Choose Loot
+        <Button variant={"outline"} colorScheme={"teal"} onClick={onOpen}>
+          Reveal data
         </Button>
         <Center>
           <Box
@@ -67,7 +67,7 @@ export const ChartsFrame = observer((props: PropsType) => {
           >
             <Image position={"absolute"} src={ploot.tokenUris?.[observable.activeLoot]?.data.image}/>
             <Box position={"absolute"} mt={16}>
-              <Dashboard loading={props.loading}/>
+              <Dashboard/>
             </Box>
           </Box>
         </Center>
