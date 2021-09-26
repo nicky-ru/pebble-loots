@@ -7,7 +7,7 @@ import {
   Box,
   Center,
   Image,
-  LinkBox, LinkOverlay
+  LinkBox, LinkOverlay, useColorModeValue
 } from '@chakra-ui/react';
 import { BooleanState } from '@/store/standard/base';
 import { Link } from 'react-router-dom';
@@ -27,6 +27,7 @@ interface PropsType {
 export const ChartsFrame = observer((props: PropsType) => {
   const { pebble, ploot } = useStore();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
 
   const observable = useLocalObservable(() => ({
     activeLoot: 0,
@@ -80,7 +81,7 @@ export const ChartsFrame = observer((props: PropsType) => {
             position={"relative"}
             top={-10}
             zIndex={0}
-            bg={"dark.100"}
+            bg={useColorModeValue("light.100", "dark.100")}
             h={"800px"}
             w={"800px"}
           >

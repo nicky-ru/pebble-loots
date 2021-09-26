@@ -30,7 +30,7 @@ export const Home = observer(() => {
           ))}
         </SimpleGrid>
       </Container>
-      <Image mt={-24} width={"100vw"} src={"public/images/pebble-loots-how-to.svg"}/>
+      <Image mt={-24} width={"100vw"} src={"/images/pebble-loots-how-to.svg"}/>
     </ErrorBoundary>
   );
 });
