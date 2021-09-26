@@ -26,7 +26,7 @@ export const MintForm = observer((props: PropsType) => {
     <>
       <Heading>Here you can mint a Loot of your device</Heading>
       <Formik
-        initialValues={{ imei: "100000000000001" }}
+        initialValues={{ imei: "" }}
         onSubmit={async (values, actions) => {
           await props.handleClaim(values.imei)
           actions.setSubmitting(false);
@@ -38,7 +38,7 @@ export const MintForm = observer((props: PropsType) => {
               {({ field, form }) => (
                 <FormControl isInvalid={form.errors.imei && form.touched.imei}>
                   <FormLabel htmlFor="imei">Device IMEI to mint</FormLabel>
-                  <Input {...field} id="imei" placeholder="Input your device IMEI" />
+                  <Input {...field} id="imei" placeholder="e.g 100000000000001" />
                   <FormErrorMessage>{form.errors.imei}</FormErrorMessage>
                 </FormControl>
               )}

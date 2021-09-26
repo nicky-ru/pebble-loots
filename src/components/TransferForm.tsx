@@ -35,7 +35,7 @@ export const TransferForm = observer((props: PropsType) => {
     <Container textAlign={"center"}>
 
       <Formik
-        initialValues={{ address: "0xE9cebA328C78a43A492463f72DE80e4e1a2Df04d" }}
+        initialValues={{ address: "" }}
         onSubmit={async (values, actions) => {
           await handleTransfer(values.address);
           actions.setSubmitting(false);
@@ -47,7 +47,7 @@ export const TransferForm = observer((props: PropsType) => {
               {({ field, form }) => (
                 <FormControl isInvalid={form.errors.address && form.touched.address}>
                   <FormLabel htmlFor="address">New owner address</FormLabel>
-                  <Input {...field} id="address" placeholder="Input an address of the new owner" />
+                  <Input {...field} id="address" placeholder="e.g 0xE9cebA328C78a43A492463f72DE80e4e1a2Df04d" />
                   <FormErrorMessage>{form.errors.address}</FormErrorMessage>
                 </FormControl>
               )}
