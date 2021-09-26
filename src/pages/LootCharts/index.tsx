@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
-import { observer, useLocalObservable, useLocalStore } from 'mobx-react-lite';
+import { observer, useLocalObservable } from 'mobx-react-lite';
 import { Container, Text, Center, Button, createStandaloneToast } from '@chakra-ui/react';
 import { useStore } from '@/store/index';
-import { LootCards } from '@/components/Loots';
 import { TransactionResponse } from '@ethersproject/providers';
 import axios from 'axios';
 import { ErrorFallback } from '@/components/ErrorFallback';
@@ -74,8 +73,11 @@ export const LootCharts = observer(() => {
 
   const queryRecords = async (imei: string) => {
     observable.setLoading(true);
+    console.log("querying data for: ", imei);
     const data = await axios.get(`https://protoreader.herokuapp.com/api/devices/${imei}`);
+    // const data = await axios.get(`http://localhost:3001/api/devices/${imei}`);
     rec.setDecodedRecords(data.data);
+    console.log(data.data)
     observable.setLoading(false);
   }
 
@@ -131,6 +133,7 @@ export const LootCharts = observer(() => {
             balance={observable.balance}
             loading={observable.loading}
             loaded={observable.loaded}
+            queryRecords={queryRecords}
           />
           :
           <Center w={"full"} flexDirection={"column"}>
