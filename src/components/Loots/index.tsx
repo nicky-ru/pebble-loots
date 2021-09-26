@@ -23,6 +23,8 @@ interface PropsType {
   tokenUris: any[];
   loading: BooleanState;
   loaded: BooleanState;
+  onOpen: any;
+  setTokenToTransfer: any;
 }
 
 export const LootCards = observer((props: PropsType) => {
@@ -39,7 +41,7 @@ export const LootCards = observer((props: PropsType) => {
         Pebble Loot{props.balance === 1 ? "" : "s"}
       </Text>
 
-      <Skeleton isLoaded={props.loaded.value}>
+      <Skeleton isLoaded={!props.loading.value}>
 
           <Wrap mt={10} justify="center" minH={"400px"}>
             {props.balance
@@ -48,13 +50,17 @@ export const LootCards = observer((props: PropsType) => {
                 {props.tokenUris?.map(uri => (
                     <WrapItem key={uri.data.name}>
                       <LinkBox as="article"  p={5} pb={10} borderWidth="1px" rounded="md">
-                        <Box w={"350px"} h={"350px"}>
+                        <Box w={"350px"} h={"400px"}>
                           <Image src={uri.data.image}/>
                           <Text my={2}>
-                            <LinkOverlay as={Link} to={`/devices/${uri.data.name.toString().split("#")[1]}`}>
+                            <LinkOverlay as={Link} to={"/lootcharts"}>
                               {uri.data.name}
                             </LinkOverlay>
                           </Text>
+                          <Button onClick={() => {
+                            props.setTokenToTransfer(uri.data.name.toString().split("#")[1])
+                            props.onOpen()
+                          }}>Transfer</Button>
                         </Box>
                       </LinkBox>
                     </WrapItem>

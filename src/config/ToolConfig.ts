@@ -34,7 +34,7 @@ export const ToolConfig = [
     tags: ['NFT', 'Loot', 'Minting']
   }),
   new Tool({
-    name: 'Loot charts',
+    name: 'Loot charts 🔥',
     path: '/lootcharts',
     component: LootCharts,
     tags: ['Real data', 'Loot']

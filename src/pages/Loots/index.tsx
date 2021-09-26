@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { observer, useLocalObservable, useLocalStore } from 'mobx-react-lite';
-import { Container, Text, Center, Button, createStandaloneToast } from '@chakra-ui/react';
+import { Container, Text, Center, Button, createStandaloneToast, useDisclosure } from '@chakra-ui/react';
 import { useStore } from '@/store/index';
 import { LootCards } from '@/components/Loots';
 import { TransactionResponse } from '@ethersproject/providers';
@@ -9,12 +9,14 @@ import { ErrorFallback } from '@/components/ErrorFallback';
 import { ErrorBoundary } from 'react-error-boundary';
 import { BooleanState } from '@/store/standard/base';
 import { metamaskUtils } from '@/lib/metaskUtils';
+import { TransferModal } from '@/components/Loots/TransferModal';
 
 const toast = createStandaloneToast();
 const IOTX_TEST_CHAINID = 4690;
 
 export const MyLoots = observer(() => {
   const { ploot, god } = useStore();
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const store = useLocalStore(() => ({
     async setChain(val) {
@@ -46,6 +48,7 @@ export const MyLoots = observer(() => {
     tokenUris: [],
     loaded: new BooleanState(),
     loading: new BooleanState(),
+    tokenToTransfer: "",
     setChainId(newChainId: number) {
       this.chainId = newChainId;
     },
@@ -61,6 +64,9 @@ export const MyLoots = observer(() => {
     },
     setLoaded(newLoaded: boolean) {
       this.loaded.setValue(newLoaded);
+    },
+    setTokenToTransfer(value: string) {
+      this.tokenToTransfer = value;
     }
   }))
 
@@ -120,6 +126,8 @@ export const MyLoots = observer(() => {
             tokenUris={observable.tokenUris}
             loading={observable.loading}
             loaded={observable.loaded}
+            onOpen={onOpen}
+            setTokenToTransfer={observable.setTokenToTransfer}
           />
           :
           <Center w={"full"} flexDirection={"column"}>
@@ -128,6 +136,7 @@ export const MyLoots = observer(() => {
           </Center>
         }
       </Container>
+      <TransferModal isOpen={isOpen} onClose={onClose} tokenToTransfer={observable.tokenToTransfer}/>
     </ErrorBoundary>
   );
 });

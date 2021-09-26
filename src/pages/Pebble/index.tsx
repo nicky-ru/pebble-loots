@@ -45,7 +45,7 @@ export const Pebble = observer(() => {
       <Container maxW={'container.xl'}>
         <Heading my={5}>Device imei: {imei}</Heading>
         <Divider/>
-        <Dashboard loading={observable.loading}/>
+        <Dashboard/>
       </Container>
     </ErrorBoundary>
   );
