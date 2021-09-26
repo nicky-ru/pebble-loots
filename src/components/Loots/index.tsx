@@ -53,7 +53,7 @@ export const LootCards = observer((props: PropsType) => {
                         <Box w={"350px"} h={"400px"}>
                           <Image src={uri.data.image}/>
                           <Text my={2}>
-                            <LinkOverlay as={Link} to={`/devices/${uri.data.name.toString().split("#")[1]}`}>
+                            <LinkOverlay as={Link} to={"/devices/lootcharts"}>
                               {uri.data.name}
                             </LinkOverlay>
                           </Text>
