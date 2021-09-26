@@ -48,13 +48,14 @@ export const LootCards = observer((props: PropsType) => {
                 {props.tokenUris?.map(uri => (
                     <WrapItem key={uri.data.name}>
                       <LinkBox as="article"  p={5} pb={10} borderWidth="1px" rounded="md">
-                        <Box w={"350px"} h={"350px"}>
+                        <Box w={"350px"} h={"400px"}>
                           <Image src={uri.data.image}/>
                           <Text my={2}>
                             <LinkOverlay as={Link} to={`/devices/${uri.data.name.toString().split("#")[1]}`}>
                               {uri.data.name}
                             </LinkOverlay>
                           </Text>
+                          <Button>Transfer</Button>
                         </Box>
                       </LinkBox>
                     </WrapItem>
