@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 import { useStore } from '@/store/index';
 import { Header } from '@/components/Header';
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, Alert, AlertIcon, Link, Text } from '@chakra-ui/react';
 import { theme } from '@/lib/theme';
 import { ETHProvider } from './components/EthProvider';
 import { Home } from './pages/Home';
@@ -30,6 +30,14 @@ export const App = observer(() => {
           <ETHProvider />
           <Toaster />
           <Router>
+            <Alert status="warning">
+              <AlertIcon />
+              <Text>
+                SEP 27, 2021 08:31 UTC: Due to Heroku Database availability issues,
+                there may be some problems with data fetching. Join our {" "}
+                <Link href={"https://discord.gg/UPkurTvc"}>Discord</Link> channel for more info.
+              </Text>
+            </Alert>
             <Header />
             <Switch>
               <Route path="/" exact key="/">
