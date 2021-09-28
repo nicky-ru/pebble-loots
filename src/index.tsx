@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 import { useStore } from '@/store/index';
 import { Header } from '@/components/Header';
-import { ChakraProvider, Alert, AlertIcon, Link, Text } from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 import { theme } from '@/lib/theme';
 import { ETHProvider } from './components/EthProvider';
 import { Home } from './pages/Home';
@@ -13,7 +13,6 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Toaster } from 'react-hot-toast';
 import { ToolConfig } from './config/ToolConfig';
 import { WalletSelecter } from './components/WalletSelecter';
-import { Pebble } from './pages/Pebble';
 import { ErrorFallback } from '@/components/ErrorFallback';
 
 export const App = observer(() => {
@@ -30,14 +29,6 @@ export const App = observer(() => {
           <ETHProvider />
           <Toaster />
           <Router>
-            <Alert status="warning">
-              <AlertIcon />
-              <Text>
-                SEP 27, 2021 08:31 UTC: Due to Heroku Database availability issues,
-                there may be some problems with data fetching. Join our {" "}
-                <Link href={"https://discord.gg/UPkurTvc"}>Discord</Link> channel for more info.
-              </Text>
-            </Alert>
             <Header />
             <Switch>
               <Route path="/" exact key="/">
@@ -46,9 +37,6 @@ export const App = observer(() => {
               {ToolConfig.map((item) => (
                 <Route exact path={item.path} key={item.path} component={item.component} />
               ))}
-              <Route path={"/devices/:imei"} exact key={"/devices/:imei"}>
-                <Pebble/>
-              </Route>
             </Switch>
           </Router>
         </Web3ReactProvider>
