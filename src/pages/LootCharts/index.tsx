@@ -76,7 +76,7 @@ export const LootCharts = observer(() => {
     console.log("querying data for: ", imei);
     const data = await axios.get(`https://protoreader.herokuapp.com/api/devices/${imei}`);
     // const data = await axios.get(`http://localhost:3001/api/devices/${imei}`);
-    rec.setDecodedRecords(data.data);
+    rec.setDecodedRecords(data.data.decoded);
     console.log(data.data)
     observable.setLoading(false);
   }
