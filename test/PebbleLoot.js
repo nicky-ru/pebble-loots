@@ -10,7 +10,7 @@ contract("PebbleLoot", (accounts) => {
   //
   // });
 
-  context("Contract", () => {
+  context.skip("Contract", () => {
     beforeEach(async () => {
       contractInstance = await PebbleLoot.new({from: admin});
     });
@@ -44,7 +44,7 @@ contract("PebbleLoot", (accounts) => {
       console.log(tokenUri)
     });
   })
-  context("User", () => {
+  context.skip("User", () => {
     beforeEach(async () => {
       contractInstance = await PebbleLoot.new({from: admin});
     });
