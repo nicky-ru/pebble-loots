@@ -8,9 +8,26 @@ import "@openzeppelin/contracts/token/ERC721/ERC721Metadata.sol";
 
 contract TrustedDataLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Metadata {
 
+  struct TrustedRecord {
+    bytes32 hash;
+    uint256 snr;
+    uint256 vbat;
+    uint256 latitude;
+    uint256 longitude;
+    uint256 gasResistance;
+    uint256 temperature;
+    uint256 pressure;
+    uint256 humidity;
+    uint256 light;
+    uint256 temperature2;
+    int256[3] gyroscope;
+    uint256[3] accelerometer;
+    string random;
+  }
+
   uint256 private incrementalTokenId = 0;
 
-  mapping (uint256 => bytes32) private _tokenToDataHash;
+  mapping (uint256 => TrustedRecord) private _tokenToTrustedRecord;
   mapping (bytes32 => bool) private _mintedHashes;
 
   event Minted(uint256 tokenId, bytes32 hash);
@@ -23,8 +40,21 @@ contract TrustedDataLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Me
     }
   }
 
+  modifier onlyExistedToken(uint256 tokenId) {
+    require(_exists(tokenId), "ERC721: set hash query for nonexistent token");
+    _;
+  }
+
+  modifier onlyTokenOwnerOrApproved(uint256 tokenId) {
+    address owner = ownerOf(tokenId);
+    require(_msgSender() == owner || isApprovedForAll(owner, _msgSender()),
+      "ERC721: approve caller is not owner nor approved for all"
+    );
+    _;
+  }
+
   function getDataHash(uint256 tokenId) public view returns (string memory) {
-    bytes32 _bytes32 = _tokenToDataHash[tokenId];
+    bytes32 _bytes32 = _tokenToTrustedRecord[tokenId].hash;
 
     uint8 i = 0;
     bytes memory bytesArray = new bytes(64);
@@ -40,9 +70,7 @@ contract TrustedDataLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Me
     return string(bytesArray);
   }
 
-  function tokenURI(uint256 tokenId) public view returns (string memory) {
-    require(_tokenToDataHash[tokenId] != 0, "Token with this ID is not minted yet");
-
+  function tokenURI(uint256 tokenId) public view onlyExistedToken(tokenId) returns (string memory) {
     string memory hash = getDataHash(tokenId);
 
     string[5] memory parts;
@@ -68,15 +96,84 @@ contract TrustedDataLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Me
     return output;
   }
 
-  function claim(uint32 _type, bytes memory data, uint32 timestamp) public nonReentrant {
-    bytes32 hash = sha256(abi.encodePacked(_type, data, timestamp));
-    require(!_mintedHashes[hash], "This datapoint has been minted already");
-    _mintedHashes[hash] = true;
+  function claim() public nonReentrant {
     incrementalTokenId = incrementalTokenId.add(1);
     _safeMint(_msgSender(), incrementalTokenId);
-    _tokenToDataHash[incrementalTokenId] = hash;
-    emit Minted(incrementalTokenId, hash);
   }
+
+  function setTokenHash(uint256 tokenId, uint32 _type, bytes memory data, uint32 timestamp)
+  public onlyExistedToken(tokenId) onlyTokenOwnerOrApproved(tokenId) {
+    bytes32 hash = sha256(abi.encodePacked(_type, data, timestamp));
+    require(!_mintedHashes[hash], "This datapoint has been minted already");
+
+    _mintedHashes[hash] = true;
+    _tokenToTrustedRecord[tokenId].hash = hash;
+  }
+
+  function setTokenMotion(
+    uint256 tokenId,
+    int256[3] memory gyroscope,
+    uint256[3] memory accelerometer
+  )
+  public onlyExistedToken(tokenId) onlyTokenOwnerOrApproved(tokenId) {
+    _tokenToTrustedRecord[tokenId].gyroscope = gyroscope;
+    _tokenToTrustedRecord[tokenId].accelerometer = accelerometer;
+  }
+
+  function setTokenClimate(
+    uint256 tokenId,
+    uint256 pressure,
+    uint256 humidity,
+    uint256 temperature2,
+    uint256 temperature,
+    uint256 gasResistance
+  )
+  public onlyExistedToken(tokenId) onlyTokenOwnerOrApproved(tokenId) {
+    _tokenToTrustedRecord[tokenId].gasResistance = gasResistance;
+    _tokenToTrustedRecord[tokenId].temperature = temperature;
+    _tokenToTrustedRecord[tokenId].pressure = pressure;
+    _tokenToTrustedRecord[tokenId].humidity = humidity;
+    _tokenToTrustedRecord[tokenId].temperature2 = temperature2;
+  }
+
+  function setTokenLocation(uint256 tokenId, uint256 latitude, uint256 longitude)
+  public onlyExistedToken(tokenId) onlyTokenOwnerOrApproved(tokenId) {
+    _tokenToTrustedRecord[tokenId].latitude = latitude;
+    _tokenToTrustedRecord[tokenId].longitude = longitude;
+  }
+
+  function setTokenLight(
+    uint256 tokenId,
+    uint256 light
+  )
+  public onlyExistedToken(tokenId) onlyTokenOwnerOrApproved(tokenId) {
+    _tokenToTrustedRecord[tokenId].light = light;
+  }
+
+  function setTokenRandom(
+    uint256 tokenId,
+    string memory random
+  )
+  public onlyExistedToken(tokenId) onlyTokenOwnerOrApproved(tokenId) {
+    _tokenToTrustedRecord[tokenId].random = random;
+  }
+
+  function setTokenSNR(
+    uint256 tokenId,
+    uint256 snr
+  )
+  public onlyExistedToken(tokenId) onlyTokenOwnerOrApproved(tokenId) {
+    _tokenToTrustedRecord[tokenId].snr = snr;
+  }
+
+  function setTokenVBAT(
+    uint256 tokenId,
+    uint256 vbat
+  )
+  public onlyExistedToken(tokenId) onlyTokenOwnerOrApproved(tokenId) {
+    _tokenToTrustedRecord[tokenId].vbat = vbat;
+  }
+
 
   function toString(uint256 value) internal pure returns (string memory) {
     // Inspired by OraclizeAPI's implementation - MIT license
