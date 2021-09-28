@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721Metadata.sol";
 
-contract RealDataLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Metadata {
+contract TrustedDataLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Metadata {
 
   uint256 private incrementalTokenId = 0;
 
@@ -100,7 +100,7 @@ contract RealDataLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Metad
     return string(buffer);
   }
 
-  constructor() ERC721Metadata("Real Data Loot", "RDLT") public Ownable() {}
+  constructor() ERC721Metadata("Trusted Data Loot", "TDLT") public Ownable() {}
 }
 
 /// [MIT License]

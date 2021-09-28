@@ -1,8 +1,8 @@
-const RealDataLoot = artifacts.require("RealDataLoot")
+const TrustedDataLoot = artifacts.require("TrustedDataLoot")
 const should = require("chai").should();
 const utils = require("./helpers/utils");
 
-contract("RealDataLoot", (accounts) => {
+contract("TrustedDataLoot", (accounts) => {
   let contractInstance;
   let admin = accounts[0];
   let alice = accounts[1];
@@ -13,15 +13,15 @@ contract("RealDataLoot", (accounts) => {
 
   context("Contract", () => {
     beforeEach(async () => {
-      contractInstance = await RealDataLoot.new({from: admin});
+      contractInstance = await TrustedDataLoot.new({from: admin});
     });
     it('should have name', async () => {
-      const intendedName = "Real Data Loot";
+      const intendedName = "Trusted Data Loot";
       const actuallName = await contractInstance.name();
       actuallName.should.equal(intendedName);
     });
     it('should have token symbol', async () => {
-      const intendedSymbol = 'RDLT';
+      const intendedSymbol = 'TDLT';
       const actuallSymbol = await contractInstance.symbol();
       actuallSymbol.should.equal(intendedSymbol);
     });
@@ -57,7 +57,7 @@ contract("RealDataLoot", (accounts) => {
     }
 
     beforeEach(async () => {
-      contractInstance = await RealDataLoot.new({from: admin});
+      contractInstance = await TrustedDataLoot.new({from: admin});
     });
     it('is able to claim a token', async () => {
       const intendedBalance = 1;
