@@ -1,17 +1,19 @@
 describe('Devices page', () => {
-  beforeEach(() => {
-    cy.visit('/devices')
-  })
-  it('should have title', function() {
-    cy.contains('h1', 'My devices')
-  });
-  it('should have links to devices', function() {
-    cy.get('#devices-list').within(() => {
-      cy.get('a')
-    })
-  });
-  it('should contain devices list', function() {
-    cy.get('li')
+  // beforeEach(() => {
+  //   cy.visit('#/devices')
+  // });
+  it('should fetch devices', function() {
+    cy.server()
+    cy.route(
+      'GET',
+      'https://protoreader.herokuapp.com/api/devices',
+      'fixture:devices'
+    ).as('devices')
+
+    cy.visit('#/devices')
+    cy.get('tr')
+      .should('have.length', 4);
+    
   });
 })
 
