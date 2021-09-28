@@ -13,7 +13,6 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Toaster } from 'react-hot-toast';
 import { ToolConfig } from './config/ToolConfig';
 import { WalletSelecter } from './components/WalletSelecter';
-import { Pebble } from './pages/Pebble';
 import { ErrorFallback } from '@/components/ErrorFallback';
 
 export const App = observer(() => {
@@ -38,9 +37,6 @@ export const App = observer(() => {
               {ToolConfig.map((item) => (
                 <Route exact path={item.path} key={item.path} component={item.component} />
               ))}
-              <Route path={"/devices/:imei"} exact key={"/devices/:imei"}>
-                <Pebble/>
-              </Route>
             </Switch>
           </Router>
         </Web3ReactProvider>
