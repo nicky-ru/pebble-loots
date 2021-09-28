@@ -1,6 +1,6 @@
 describe('Pebble Loot Gallery page', () => {
   beforeEach(() => {
-    cy.visit('/myloots')
+    cy.visit('#/myloots')
   })
   it('should exist', function() {
 

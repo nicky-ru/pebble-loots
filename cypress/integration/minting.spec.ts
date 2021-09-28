@@ -1,6 +1,6 @@
 describe('Minting page', () => {
   beforeEach(() => {
-    cy.visit('/mintLoot')
+    cy.visit('#/mintLoot')
   })
   it('should exist', function() {
 

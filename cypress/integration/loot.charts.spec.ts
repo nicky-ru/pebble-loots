@@ -1,6 +1,6 @@
 describe('Loot charts page', () => {
   beforeEach(() => {
-    cy.visit('/lootcharts')
+    cy.visit('#/lootcharts')
   })
   it('should exist', function() {
 
