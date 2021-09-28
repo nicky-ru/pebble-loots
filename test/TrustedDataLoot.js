@@ -129,13 +129,37 @@ contract("TrustedDataLoot", (accounts) => {
       location.latitude.toNumber().should.equal(latitude);
       location.longitude.toNumber().should.equal(longitude);
     })
-    it.only('should be able to add light data', async () => {
+    it('should be able to add light data', async () => {
       const tokenId = 1;
       const light = records.decoded[0].light;
       await contractInstance.claim({from: alice});
       await contractInstance.setTokenLight(tokenId, light, {from: alice});
       const queriedLight = await contractInstance.getLight(tokenId);
       queriedLight.toNumber().should.equal(light);
+    })
+    it('should be able to add snr data', async () => {
+      const tokenId = 1;
+      const snr = records.decoded[0].snr;
+      await contractInstance.claim({from: alice});
+      await contractInstance.setTokenSNR(tokenId, snr, {from: alice});
+      const queriedSnr = await contractInstance.getSnr(tokenId);
+      queriedSnr.toNumber().should.equal(snr);
+    })
+    it('should be able to add random data', async () => {
+      const tokenId = 1;
+      const _random = records.decoded[0].random;
+      await contractInstance.claim({from: alice});
+      await contractInstance.setTokenRandom(tokenId, _random, {from: alice});
+      const queriedRandom = await contractInstance.getRandom(tokenId);
+      queriedRandom.toString().should.equal(_random);
+    })
+    it.only('should be able to add vbat data', async () => {
+      const tokenId = 1;
+      const vbat = records.decoded[0].vbat;
+      await contractInstance.claim({from: alice});
+      await contractInstance.setTokenVBAT(tokenId, vbat, {from: alice});
+      const queriedVbat = await contractInstance.getVbat(tokenId);
+      queriedVbat.toNumber().should.equal(vbat);
     })
   })
 })
