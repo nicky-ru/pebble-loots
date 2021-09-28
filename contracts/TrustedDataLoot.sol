@@ -70,6 +70,40 @@ contract TrustedDataLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Me
     return string(bytesArray);
   }
 
+  function getMotion(uint256 tokenId) public view returns (int256[3] memory gyroscope, uint256[3] memory accelerometer) {
+    gyroscope = _tokenToTrustedRecord[tokenId].gyroscope;
+    accelerometer = _tokenToTrustedRecord[tokenId].accelerometer;
+  }
+
+  function getClimate(uint256 tokenId) public view returns (uint256 pressure, uint256 humidity, uint256 temperature2, uint256 temperature, uint256 gasResistance) {
+    gasResistance = _tokenToTrustedRecord[tokenId].gasResistance;
+    temperature = _tokenToTrustedRecord[tokenId].temperature;
+    pressure = _tokenToTrustedRecord[tokenId].pressure;
+    humidity = _tokenToTrustedRecord[tokenId].humidity;
+    temperature2 = _tokenToTrustedRecord[tokenId].temperature2;
+  }
+
+  function getLocation(uint256 tokenId) public view returns (uint256 latitude, uint256 longitude) {
+    latitude = _tokenToTrustedRecord[tokenId].latitude;
+    longitude = _tokenToTrustedRecord[tokenId].longitude;
+  }
+
+  function getLight(uint256 tokenId) public view returns (uint256 light) {
+    light = _tokenToTrustedRecord[tokenId].light;
+  }
+
+  function getSnr(uint256 tokenId) public view returns (uint256 snr) {
+    snr = _tokenToTrustedRecord[tokenId].snr;
+  }
+
+  function getRandom(uint256 tokenId) public view returns (string memory random) {
+    random = _tokenToTrustedRecord[tokenId].random;
+  }
+
+  function getVbat(uint256 tokenId) public view returns (uint256 vbat) {
+    vbat = _tokenToTrustedRecord[tokenId].vbat;
+  }
+
   function tokenURI(uint256 tokenId) public view onlyExistedToken(tokenId) returns (string memory) {
     string memory hash = getDataHash(tokenId);
 
