@@ -7,27 +7,9 @@ import "@openzeppelin/contracts/token/ERC721/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721Metadata.sol";
 
 contract TrustedDataLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Metadata {
-
-  struct TrustedRecord {
-    bytes32 hash;
-    uint256 snr;
-    uint256 vbat;
-    uint256 latitude;
-    uint256 longitude;
-    uint256 gasResistance;
-    uint256 temperature;
-    uint256 pressure;
-    uint256 humidity;
-    uint256 light;
-    uint256 temperature2;
-    int256[3] gyroscope;
-    uint256[3] accelerometer;
-    string random;
-  }
-
   uint256 private incrementalTokenId = 0;
 
-  mapping (uint256 => TrustedRecord) internal _tokenToTrustedRecord;
+  mapping (uint256 => bytes32) internal _tokenToHash;
   mapping (bytes32 => bool) private _mintedHashes;
 
   modifier onlyExistedToken(uint256 tokenId) {
@@ -52,7 +34,7 @@ contract TrustedDataLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Me
   }
 
   function getDataHash(uint256 tokenId) public view returns (string memory) {
-    bytes32 _bytes32 = _tokenToTrustedRecord[tokenId].hash;
+    bytes32 _bytes32 = _tokenToHash[tokenId];
 
     uint8 i = 0;
     bytes memory bytesArray = new bytes(64);
@@ -77,26 +59,6 @@ contract TrustedDataLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Me
 
     parts[2] = '</text></svg>';
 
-//    parts[2] = '</text><text x="10" y="40" class="base">';
-//
-//    parts[3] = string(abi.encodePacked('snr: ', toString(getSnr(tokenId)), ' light: ', toString(getLight(tokenId)) ));
-//
-//    parts[4] = '</text><text x="10" y="60" class="base">';
-//
-//    parts[5] = string(abi.encodePacked('latitude: ', toString(latitude), ' longitude: ', toString(longitude)));
-//
-//    parts[6] = '</text><text x="10" y="80" class="base">';
-//
-//    parts[7] = string(abi.encodePacked('pressure: ', toString(pressure), ' humidity: ', toString(humidity), ' gas resistance: ', toString(gasResistance) ));
-//
-//    parts[8] = '</text><text x="10" y="100" class="base">';
-//
-//    parts[9] = string(abi.encodePacked(' temperature: ', toString(temperature), ' temperature2: ', toString(temperature2)));
-//
-//    parts[10] = '</text><text x="10" y="120" class="base">';
-//
-//    parts[11] = string(abi.encodePacked('random: ', getRandom(tokenId)));
-
     string memory output = string(abi.encodePacked(parts[0], parts[1], parts[2]));
 
     string memory name = string(abi.encodePacked('"name": "Trusted data Loot #', toString(tokenId), '"'));
@@ -119,93 +81,7 @@ contract TrustedDataLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Me
     require(!_mintedHashes[hash], "This datapoint has been minted already");
 
     _mintedHashes[hash] = true;
-    _tokenToTrustedRecord[tokenId].hash = hash;
-  }
-
-  function getMotion(uint256 tokenId) public view returns (int256[3] memory gyroscope, uint256[3] memory accelerometer) {
-    gyroscope = _tokenToTrustedRecord[tokenId].gyroscope;
-    accelerometer = _tokenToTrustedRecord[tokenId].accelerometer;
-  }
-
-  function getClimate(uint256 tokenId) public view returns (uint256 pressure, uint256 humidity, uint256 temperature2, uint256 temperature, uint256 gasResistance) {
-    gasResistance = _tokenToTrustedRecord[tokenId].gasResistance;
-    temperature = _tokenToTrustedRecord[tokenId].temperature;
-    pressure = _tokenToTrustedRecord[tokenId].pressure;
-    humidity = _tokenToTrustedRecord[tokenId].humidity;
-    temperature2 = _tokenToTrustedRecord[tokenId].temperature2;
-  }
-
-  function getLocation(uint256 tokenId) public view returns (uint256 latitude, uint256 longitude) {
-    latitude = _tokenToTrustedRecord[tokenId].latitude;
-    longitude = _tokenToTrustedRecord[tokenId].longitude;
-  }
-
-  function getLight(uint256 tokenId) public view returns (uint256 light) {
-    light = _tokenToTrustedRecord[tokenId].light;
-  }
-
-  function getSnr(uint256 tokenId) public view returns (uint256 snr) {
-    snr = _tokenToTrustedRecord[tokenId].snr;
-  }
-
-  function getRandom(uint256 tokenId) public view returns (string memory random) {
-    random = _tokenToTrustedRecord[tokenId].random;
-  }
-
-  function setTokenMotion(
-    uint256 tokenId,
-    int256[3] memory gyroscope,
-    uint256[3] memory accelerometer
-  )
-  public onlyExistedToken(tokenId) onlyTokenOwnerOrApproved(tokenId) {
-    _tokenToTrustedRecord[tokenId].gyroscope = gyroscope;
-    _tokenToTrustedRecord[tokenId].accelerometer = accelerometer;
-  }
-
-  function setTokenClimate(
-    uint256 tokenId,
-    uint256 pressure,
-    uint256 humidity,
-    uint256 temperature2,
-    uint256 temperature,
-    uint256 gasResistance
-  )
-  public onlyExistedToken(tokenId) onlyTokenOwnerOrApproved(tokenId) {
-    _tokenToTrustedRecord[tokenId].gasResistance = gasResistance;
-    _tokenToTrustedRecord[tokenId].temperature = temperature;
-    _tokenToTrustedRecord[tokenId].pressure = pressure;
-    _tokenToTrustedRecord[tokenId].humidity = humidity;
-    _tokenToTrustedRecord[tokenId].temperature2 = temperature2;
-  }
-
-  function setTokenLocation(uint256 tokenId, uint256 latitude, uint256 longitude)
-  public onlyExistedToken(tokenId) onlyTokenOwnerOrApproved(tokenId) {
-    _tokenToTrustedRecord[tokenId].latitude = latitude;
-    _tokenToTrustedRecord[tokenId].longitude = longitude;
-  }
-
-  function setTokenLight(
-    uint256 tokenId,
-    uint256 light
-  )
-  public onlyExistedToken(tokenId) onlyTokenOwnerOrApproved(tokenId) {
-    _tokenToTrustedRecord[tokenId].light = light;
-  }
-
-  function setTokenRandom(
-    uint256 tokenId,
-    string memory random
-  )
-  public onlyExistedToken(tokenId) onlyTokenOwnerOrApproved(tokenId) {
-    _tokenToTrustedRecord[tokenId].random = random;
-  }
-
-  function setTokenSNR(
-    uint256 tokenId,
-    uint256 snr
-  )
-  public onlyExistedToken(tokenId) onlyTokenOwnerOrApproved(tokenId) {
-    _tokenToTrustedRecord[tokenId].snr = snr;
+    _tokenToHash[tokenId] = hash;
   }
 
   function toString(uint256 value) internal pure returns (string memory) {
