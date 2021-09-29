@@ -27,7 +27,7 @@ contract TrustedDataLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Me
 
   uint256 private incrementalTokenId = 0;
 
-  mapping (uint256 => TrustedRecord) private _tokenToTrustedRecord;
+  mapping (uint256 => TrustedRecord) internal _tokenToTrustedRecord;
   mapping (bytes32 => bool) private _mintedHashes;
 
   modifier onlyExistedToken(uint256 tokenId) {
@@ -69,42 +69,35 @@ contract TrustedDataLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Me
   }
 
   function tokenURI(uint256 tokenId) public view onlyExistedToken(tokenId) returns (string memory) {
-    string[13] memory parts;
-
-    uint256 latitude; uint256 longitude;
-    (latitude, longitude) = getLocation(tokenId);
-
-    uint256 pressure; uint256 humidity; uint256 temperature2; uint256 temperature; uint256 gasResistance;
-    (pressure, humidity, temperature2, temperature, gasResistance) = getClimate(tokenId);
+    string[3] memory parts;
 
     parts[0] = '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><style>.base { fill: white; font-family: serif; font-size: 10px; }</style><rect width="100%" height="100%" fill="black" /><text x="10" y="20" class="base">';
 
     parts[1] = string(abi.encodePacked('0x', getDataHash(tokenId)));
 
-    parts[2] = '</text><text x="10" y="40" class="base">';
+    parts[2] = '</text></svg>';
 
-    parts[3] = string(abi.encodePacked('snr: ', toString(getSnr(tokenId)), ' vbat: ', toString(getVbat(tokenId)), ' light: ', toString(getLight(tokenId)) ));
+//    parts[2] = '</text><text x="10" y="40" class="base">';
+//
+//    parts[3] = string(abi.encodePacked('snr: ', toString(getSnr(tokenId)), ' light: ', toString(getLight(tokenId)) ));
+//
+//    parts[4] = '</text><text x="10" y="60" class="base">';
+//
+//    parts[5] = string(abi.encodePacked('latitude: ', toString(latitude), ' longitude: ', toString(longitude)));
+//
+//    parts[6] = '</text><text x="10" y="80" class="base">';
+//
+//    parts[7] = string(abi.encodePacked('pressure: ', toString(pressure), ' humidity: ', toString(humidity), ' gas resistance: ', toString(gasResistance) ));
+//
+//    parts[8] = '</text><text x="10" y="100" class="base">';
+//
+//    parts[9] = string(abi.encodePacked(' temperature: ', toString(temperature), ' temperature2: ', toString(temperature2)));
+//
+//    parts[10] = '</text><text x="10" y="120" class="base">';
+//
+//    parts[11] = string(abi.encodePacked('random: ', getRandom(tokenId)));
 
-    parts[4] = '</text><text x="10" y="60" class="base">';
-
-    parts[5] = string(abi.encodePacked('latitude: ', toString(latitude), ' longitude: ', toString(longitude)));
-
-    parts[6] = '</text><text x="10" y="80" class="base">';
-
-    parts[7] = string(abi.encodePacked('pressure: ', toString(pressure), ' humidity: ', toString(humidity), ' gas resistance: ', toString(gasResistance) ));
-
-    parts[8] = '</text><text x="10" y="100" class="base">';
-
-    parts[9] = string(abi.encodePacked(' temperature: ', toString(temperature), ' temperature2: ', toString(temperature2)));
-
-    parts[10] = '</text><text x="10" y="120" class="base">';
-
-    parts[11] = string(abi.encodePacked('random: ', getRandom(tokenId)));
-
-    parts[12] = '</text></svg>';
-
-    string memory output = string(abi.encodePacked(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6]));
-    output = string(abi.encodePacked(output, parts[7], parts[8], parts[9], parts[10], parts[11], parts[12]));
+    string memory output = string(abi.encodePacked(parts[0], parts[1], parts[2]));
 
     string memory name = string(abi.encodePacked('"name": "Trusted data Loot #', toString(tokenId), '"'));
     string memory description = string(abi.encodePacked('"description": "Trusted data loot is a real world data stored on chain. Stats, images, and other functionality are intentionally omitted for others to interpret. Feel free to use Pebble Loot in any way you want."'));
@@ -157,10 +150,6 @@ contract TrustedDataLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Me
 
   function getRandom(uint256 tokenId) public view returns (string memory random) {
     random = _tokenToTrustedRecord[tokenId].random;
-  }
-
-  function getVbat(uint256 tokenId) public view returns (uint256 vbat) {
-    vbat = _tokenToTrustedRecord[tokenId].vbat;
   }
 
   function setTokenMotion(
@@ -217,14 +206,6 @@ contract TrustedDataLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Me
   )
   public onlyExistedToken(tokenId) onlyTokenOwnerOrApproved(tokenId) {
     _tokenToTrustedRecord[tokenId].snr = snr;
-  }
-
-  function setTokenVBAT(
-    uint256 tokenId,
-    uint256 vbat
-  )
-  public onlyExistedToken(tokenId) onlyTokenOwnerOrApproved(tokenId) {
-    _tokenToTrustedRecord[tokenId].vbat = vbat;
   }
 
   function toString(uint256 value) internal pure returns (string memory) {
