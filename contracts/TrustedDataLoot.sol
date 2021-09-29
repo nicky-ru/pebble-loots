@@ -230,7 +230,7 @@ contract TrustedDataLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Me
     return string(buffer);
   }
 
-  constructor() ERC721Metadata("Trusted Data Loot", "TDLT") public Ownable() {}
+  constructor(string memory name, string memory symbol) ERC721Metadata(name, symbol) public Ownable() {}
 }
 
 /// [MIT License]

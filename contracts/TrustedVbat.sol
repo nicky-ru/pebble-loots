@@ -39,4 +39,6 @@ contract TrustedVbat is TrustedDataLoot {
 
     return output;
   }
+
+  constructor(string memory name, string memory symbol) TrustedDataLoot(name, symbol) public {}
 }

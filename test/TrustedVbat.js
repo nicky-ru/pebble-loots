@@ -12,17 +12,17 @@ contract("TrustedVbat", (accounts) => {
   //
   // });
 
-  context("Contract", () => {
+  context.only("Contract", () => {
     beforeEach(async () => {
-      contractInstance = await TrustedVbat.new({from: admin});
+      contractInstance = await TrustedVbat.new("Trusted Vbat Loot", "TVLT", {from: admin});
     });
     it('should have name', async () => {
-      const intendedName = "Trusted Data Loot";
+      const intendedName = "Trusted Vbat Loot";
       const actuallName = await contractInstance.name();
       actuallName.should.equal(intendedName);
     });
     it('should have token symbol', async () => {
-      const intendedSymbol = 'TDLT';
+      const intendedSymbol = 'TVLT';
       const actuallSymbol = await contractInstance.symbol();
       actuallSymbol.should.equal(intendedSymbol);
     });
@@ -93,7 +93,7 @@ contract("TrustedVbat", (accounts) => {
       const queriedVbat = await contractInstance.getVbat(tokenId);
       queriedVbat.toNumber().should.equal(vbat);
     })
-    it.only('should be able to show completed uri', async () => {
+    it('should be able to show completed uri', async () => {
       const expectedUri = ""
       await contractInstance.setTokenHash(tokenId, _type, _data, _timestamp, {from: alice});
       await contractInstance.setTokenVBAT(tokenId, vbat, {from: alice});
