@@ -1,8 +1,10 @@
 const PebbleLoot = artifacts.require("PebbleLoot")
+const Registration = artifacts.require("Registration")
 const should = require("chai").should();
 
 contract("PebbleLoot", (accounts) => {
   let contractInstance;
+  let registrationInstance;
   let admin = accounts[0];
   let alice = accounts[1];
 
@@ -44,7 +46,7 @@ contract("PebbleLoot", (accounts) => {
       const tokenUri = await contractInstance.tokenURI(tokenId);
       tokenUri.should.equal(expectedUri);
     });
-    it('is able to change Registration contract address', async () => {
+    it.skip('is able to change Registration contract address', async () => {
       const initialAdd = await contractInstance.regAddress();
       const newAdd = '0x2C39DA40c0D67AA16dBbCCD22FFc065549b6c8F6'
       await contractInstance.setRegistrationAddress(newAdd, {from: admin});
@@ -53,14 +55,17 @@ contract("PebbleLoot", (accounts) => {
       res.should.equal(newAdd);
     })
   })
-  // Todo: add Registration contract locally
-  contex.skip("User", () => {
+  context("User", () => {
     beforeEach(async () => {
       contractInstance = await PebbleLoot.new({from: admin});
+      registrationInstance = await Registration.new({from: admin});
     });
-    it('is able to claim a token', async () => {
+    it.only('is able to claim a token', async () => {
       const tokenId = 100000000000005;
       const intendedBalance = 1;
+
+      await contractInstance.setRegistrationAddress(registrationInstance.address, {from: admin});
+
       await contractInstance.claim(tokenId, {from: alice});
       const aliceBalance = await contractInstance.balanceOf(alice);
       aliceBalance.toNumber().should.equal(intendedBalance);
