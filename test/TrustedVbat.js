@@ -12,7 +12,7 @@ contract("TrustedVbat", (accounts) => {
   //
   // });
 
-  context.only("Contract", () => {
+  context("Contract", () => {
     beforeEach(async () => {
       contractInstance = await TrustedVbat.new("Trusted Vbat Loot", "TVLT", {from: admin});
     });
@@ -53,7 +53,7 @@ contract("TrustedVbat", (accounts) => {
     const vbat = records.decoded[0].vbat;
 
     beforeEach(async () => {
-      contractInstance = await TrustedVbat.new({from: admin});
+      contractInstance = await TrustedVbat.new("Trusted Vbat Loot", "TVLT", {from: admin});
       await contractInstance.claim({from: alice});
     });
     it('is able to claim a token', async () => {
