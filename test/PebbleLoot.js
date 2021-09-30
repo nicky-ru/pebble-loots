@@ -44,9 +44,17 @@ contract("PebbleLoot", (accounts) => {
       const tokenUri = await contractInstance.tokenURI(tokenId);
       tokenUri.should.equal(expectedUri);
     });
+    it('is able to change Registration contract address', async () => {
+      const initialAdd = await contractInstance.regAddress();
+      const newAdd = '0x2C39DA40c0D67AA16dBbCCD22FFc065549b6c8F6'
+      await contractInstance.setRegistrationAddress(newAdd, {from: admin});
+      const res = await contractInstance.regAddress();
+      res.should.not.equal(initialAdd);
+      res.should.equal(newAdd);
+    })
   })
   // Todo: add Registration contract locally
-  context.skip("User", () => {
+  contex.skip("User", () => {
     beforeEach(async () => {
       contractInstance = await PebbleLoot.new({from: admin});
     });
