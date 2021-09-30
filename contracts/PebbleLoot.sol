@@ -12,7 +12,7 @@ abstract contract Registration {
 
 contract PebbleLoot is ERC721, ReentrancyGuard, Ownable {
 
-  address public regAddress;
+  address public regAddress = 0x2C39DA40c0D67AA16dBbCCD22FFc065549b6c8F6;
 
   Registration registration = Registration(regAddress);
 
