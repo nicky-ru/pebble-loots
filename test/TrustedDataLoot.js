@@ -14,7 +14,7 @@ contract("TrustedDataLoot", (accounts) => {
 
   context("Contract", () => {
     beforeEach(async () => {
-      contractInstance = await TrustedDataLoot.new({from: admin});
+      contractInstance = await TrustedDataLoot.new("Trusted Data Loot", "TDLT", {from: admin});
     });
     it('should have name', async () => {
       const intendedName = "Trusted Data Loot";
@@ -42,16 +42,21 @@ contract("TrustedDataLoot", (accounts) => {
     });
     it('should throw when token not minted yet', async () => {
       const tokenId = 1;
-      utils.shouldThrow(contractInstance.tokenURI(tokenId));
+      await utils.shouldThrow(contractInstance.tokenURI(tokenId));
     });
   })
   context("User", () => {
+    const tokenId = 1;
+    const _type = 0;
+    const _data = records.encoded[0].raw;
+    const _timestamp = parseInt(records.encoded[0].timestamp)
+
     beforeEach(async () => {
-      contractInstance = await TrustedDataLoot.new({from: admin});
+      contractInstance = await TrustedDataLoot.new("Trusted Data Loot", "TDLT", {from: admin});
+      await contractInstance.claim({from: alice});
     });
     it('is able to claim a token', async () => {
       const intendedBalance = 1;
-      await contractInstance.claim({from: alice});
       const aliceBalance = await contractInstance.balanceOf(alice);
       aliceBalance.toNumber().should.equal(intendedBalance);
     });
@@ -59,7 +64,7 @@ contract("TrustedDataLoot", (accounts) => {
       const tokenId1 = 1;
       const tokenId2 = 2;
 
-      await contractInstance.claim({from: alice});
+      // await contractInstance.claim({from: alice}); already claimed once in beforeeach
       await contractInstance.claim({from: alice});
 
       const aliceBalance = await contractInstance.balanceOf(alice);
@@ -72,70 +77,15 @@ contract("TrustedDataLoot", (accounts) => {
       tokens[1].toNumber().should.equal(tokenId2);
     });
     it('should show tokenUri', async () => {
-      const tokenId = 1;
-      const expectedUri = "data:application/json;base64,eyJuYW1lIjogIlRydXN0ZWQgZGF0YSBMb290ICMxIiwiZGVzY3JpcHRpb24iOiAiVHJ1c3RlZCBkYXRhIGxvb3QgaXMgYSByZWFsIHdvcmxkIGRhdGEgc3RvcmVkIG9uIGNoYWluLiBTdGF0cywgaW1hZ2VzLCBhbmQgb3RoZXIgZnVuY3Rpb25hbGl0eSBhcmUgaW50ZW50aW9uYWxseSBvbWl0dGVkIGZvciBvdGhlcnMgdG8gaW50ZXJwcmV0LiBGZWVsIGZyZWUgdG8gdXNlIFBlYmJsZSBMb290IGluIGFueSB3YXkgeW91IHdhbnQuIiwiaW1hZ2UiOiAiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCNGJXeHVjejBpYUhSMGNEb3ZMM2QzZHk1M015NXZjbWN2TWpBd01DOXpkbWNpSUhCeVpYTmxjblpsUVhOd1pXTjBVbUYwYVc4OUluaE5hVzVaVFdsdUlHMWxaWFFpSUhacFpYZENiM2c5SWpBZ01DQXpOVEFnTXpVd0lqNDhjM1I1YkdVK0xtSmhjMlVnZXlCbWFXeHNPaUIzYUdsMFpUc2dabTl1ZEMxbVlXMXBiSGs2SUhObGNtbG1PeUJtYjI1MExYTnBlbVU2SURFd2NIZzdJSDA4TDNOMGVXeGxQanh5WldOMElIZHBaSFJvUFNJeE1EQWxJaUJvWldsbmFIUTlJakV3TUNVaUlHWnBiR3c5SW1Kc1lXTnJJaUF2UGp4MFpYaDBJSGc5SWpFd0lpQjVQU0l5TUNJZ1kyeGhjM005SW1KaGMyVWlQbFJ5ZFhOMFpXUWdaR0YwWVNCb1lYTm9Pand2ZEdWNGRENDhkR1Y0ZENCNFBTSXhNQ0lnZVQwaU5EQWlJR05zWVhOelBTSmlZWE5sSWo0d2VEQXdNREF3TURBd01EQXdNREF3TURBd01EQXdNREF3TURBd01EQXdNREF3TURBd01EQXdNREF3TURBd01EQXdNREF3TURBd01EQXdNREF3TURBd01EQThMM1JsZUhRK1BDOXpkbWMrIn0="
-      await contractInstance.claim({from: alice});
+      const expectedUri = "data:application/json;base64,eyJuYW1lIjogIlRydXN0ZWQgZGF0YSBMb290ICMxIiwiZGVzY3JpcHRpb24iOiAiVHJ1c3RlZCBkYXRhIGxvb3QgaXMgYSByZWFsIHdvcmxkIGRhdGEgc3RvcmVkIG9uIGNoYWluLiBTdGF0cywgaW1hZ2VzLCBhbmQgb3RoZXIgZnVuY3Rpb25hbGl0eSBhcmUgaW50ZW50aW9uYWxseSBvbWl0dGVkIGZvciBvdGhlcnMgdG8gaW50ZXJwcmV0LiBGZWVsIGZyZWUgdG8gdXNlIFBlYmJsZSBMb290IGluIGFueSB3YXkgeW91IHdhbnQuIiwiaW1hZ2UiOiAiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCNGJXeHVjejBpYUhSMGNEb3ZMM2QzZHk1M015NXZjbWN2TWpBd01DOXpkbWNpSUhCeVpYTmxjblpsUVhOd1pXTjBVbUYwYVc4OUluaE5hVzVaVFdsdUlHMWxaWFFpSUhacFpYZENiM2c5SWpBZ01DQXpOVEFnTXpVd0lqNDhjM1I1YkdVK0xtSmhjMlVnZXlCbWFXeHNPaUIzYUdsMFpUc2dabTl1ZEMxbVlXMXBiSGs2SUhObGNtbG1PeUJtYjI1MExYTnBlbVU2SURFd2NIZzdJSDA4TDNOMGVXeGxQanh5WldOMElIZHBaSFJvUFNJeE1EQWxJaUJvWldsbmFIUTlJakV3TUNVaUlHWnBiR3c5SW1Kc1lXTnJJaUF2UGp4MFpYaDBJSGc5SWpFd0lpQjVQU0l5TUNJZ1kyeGhjM005SW1KaGMyVWlQakI0TURBd01EQXdNREF3TURBd01EQXdNREF3TURBd01EQXdNREF3TURBd01EQXdNREF3TURBd01EQXdNREF3TURBd01EQXdNREF3TURBd01EQXdNREF3TUR3dmRHVjRkRDQ4TDNOMlp6ND0ifQ=="
       const tokenUri = await contractInstance.tokenURI(tokenId);
       tokenUri.should.equal(expectedUri);
     });
-    it('cannot mint same token twice', async () => {
-      await contractInstance.claim({from: alice});
-      utils.shouldThrow(contractInstance.claim({from: alice}))
-    })
     it('should be able to add hash to token', async () => {
-      const tokenId = 1;
-      const _type = 0;
-      const _data = records.encoded[0].raw;
-      const _timestamp = parseInt(records.encoded[0].timestamp)
-      const expectedUri = "data:application/json;base64,eyJuYW1lIjogIlRydXN0ZWQgZGF0YSBMb290ICMxIiwiZGVzY3JpcHRpb24iOiAiVHJ1c3RlZCBkYXRhIGxvb3QgaXMgYSByZWFsIHdvcmxkIGRhdGEgc3RvcmVkIG9uIGNoYWluLiBTdGF0cywgaW1hZ2VzLCBhbmQgb3RoZXIgZnVuY3Rpb25hbGl0eSBhcmUgaW50ZW50aW9uYWxseSBvbWl0dGVkIGZvciBvdGhlcnMgdG8gaW50ZXJwcmV0LiBGZWVsIGZyZWUgdG8gdXNlIFBlYmJsZSBMb290IGluIGFueSB3YXkgeW91IHdhbnQuIiwiaW1hZ2UiOiAiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCNGJXeHVjejBpYUhSMGNEb3ZMM2QzZHk1M015NXZjbWN2TWpBd01DOXpkbWNpSUhCeVpYTmxjblpsUVhOd1pXTjBVbUYwYVc4OUluaE5hVzVaVFdsdUlHMWxaWFFpSUhacFpYZENiM2c5SWpBZ01DQXpOVEFnTXpVd0lqNDhjM1I1YkdVK0xtSmhjMlVnZXlCbWFXeHNPaUIzYUdsMFpUc2dabTl1ZEMxbVlXMXBiSGs2SUhObGNtbG1PeUJtYjI1MExYTnBlbVU2SURFd2NIZzdJSDA4TDNOMGVXeGxQanh5WldOMElIZHBaSFJvUFNJeE1EQWxJaUJvWldsbmFIUTlJakV3TUNVaUlHWnBiR3c5SW1Kc1lXTnJJaUF2UGp4MFpYaDBJSGc5SWpFd0lpQjVQU0l5TUNJZ1kyeGhjM005SW1KaGMyVWlQbFJ5ZFhOMFpXUWdaR0YwWVNCb1lYTm9Pand2ZEdWNGRENDhkR1Y0ZENCNFBTSXhNQ0lnZVQwaU5EQWlJR05zWVhOelBTSmlZWE5sSWo0d2VEYzVZbU16WlRrMlkyTTRZak0wWVRsaE1HTXdOalE1WkdSalpHVmtNMkppTWpaaU9HUXpORGt3WVRnNU5UVTNPRFl5T1RVME1qVTFaREkwTXpFME56SThMM1JsZUhRK1BDOXpkbWMrIn0="
-      await contractInstance.claim({from: alice});
+      const expectedUri = "data:application/json;base64,eyJuYW1lIjogIlRydXN0ZWQgZGF0YSBMb290ICMxIiwiZGVzY3JpcHRpb24iOiAiVHJ1c3RlZCBkYXRhIGxvb3QgaXMgYSByZWFsIHdvcmxkIGRhdGEgc3RvcmVkIG9uIGNoYWluLiBTdGF0cywgaW1hZ2VzLCBhbmQgb3RoZXIgZnVuY3Rpb25hbGl0eSBhcmUgaW50ZW50aW9uYWxseSBvbWl0dGVkIGZvciBvdGhlcnMgdG8gaW50ZXJwcmV0LiBGZWVsIGZyZWUgdG8gdXNlIFBlYmJsZSBMb290IGluIGFueSB3YXkgeW91IHdhbnQuIiwiaW1hZ2UiOiAiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCNGJXeHVjejBpYUhSMGNEb3ZMM2QzZHk1M015NXZjbWN2TWpBd01DOXpkbWNpSUhCeVpYTmxjblpsUVhOd1pXTjBVbUYwYVc4OUluaE5hVzVaVFdsdUlHMWxaWFFpSUhacFpYZENiM2c5SWpBZ01DQXpOVEFnTXpVd0lqNDhjM1I1YkdVK0xtSmhjMlVnZXlCbWFXeHNPaUIzYUdsMFpUc2dabTl1ZEMxbVlXMXBiSGs2SUhObGNtbG1PeUJtYjI1MExYTnBlbVU2SURFd2NIZzdJSDA4TDNOMGVXeGxQanh5WldOMElIZHBaSFJvUFNJeE1EQWxJaUJvWldsbmFIUTlJakV3TUNVaUlHWnBiR3c5SW1Kc1lXTnJJaUF2UGp4MFpYaDBJSGc5SWpFd0lpQjVQU0l5TUNJZ1kyeGhjM005SW1KaGMyVWlQakI0TnpsaVl6TmxPVFpqWXpoaU16UmhPV0V3WXpBMk5EbGtaR05rWldRelltSXlObUk0WkRNME9UQmhPRGsxTlRjNE5qSTVOVFF5TlRWa01qUXpNVFEzTWp3dmRHVjRkRDQ4TDNOMlp6ND0ifQ=="
       await contractInstance.setTokenHash(tokenId, _type, _data, _timestamp, {from: alice});
       const tokenUri = await contractInstance.tokenURI(tokenId);
       tokenUri.should.equal(expectedUri);
-    })
-    it('should be able to add motion data', async () => {
-      const tokenId = 1;
-      const gyro = records.decoded[0].gyroscope;
-      const accel = records.decoded[0].accelerometer;
-      await contractInstance.claim({from: alice});
-      await contractInstance.setTokenMotion(tokenId, gyro, accel, {from: alice});
-      const motion = await contractInstance.getMotion(tokenId);
-      motion.gyroscope.map((v, i) => {v.toNumber().should.equal(gyro[i])})
-      motion.accelerometer.map((v, i) => {v.toNumber().should.equal(accel[i])})
-    })
-    it('should be able to add climate data', async () => {
-      const tokenId = 1;
-      const pressure = records.decoded[0].pressure;
-      const humidity = records.decoded[0].humidity;
-      const temp = records.decoded[0].temperature;
-      const temp2 = records.decoded[0].temperature2;
-      const gas = records.decoded[0].gasResistance;
-      await contractInstance.claim({from: alice});
-      await contractInstance.setTokenClimate(tokenId, pressure, humidity, temp2, temp, gas, {from: alice});
-      const climate = await contractInstance.getClimate(tokenId);
-      climate.pressure.toNumber().should.equal(pressure);
-      climate.humidity.toNumber().should.equal(humidity);
-      climate.temperature.toNumber().should.equal(temp);
-      climate.temperature2.toNumber().should.equal(temp2);
-      climate.gasResistance.toNumber().should.equal(gas);
-    });
-    it('should be able to add location data', async () => {
-      const tokenId = 1;
-      const latitude = records.decoded[0].latitude;
-      const longitude = records.decoded[0].longitude;
-      await contractInstance.claim({from: alice});
-      await contractInstance.setTokenLocation(tokenId, latitude, longitude, {from: alice});
-      const location = await contractInstance.getLocation(tokenId);
-      location.latitude.toNumber().should.equal(latitude);
-      location.longitude.toNumber().should.equal(longitude);
-    })
-    it.only('should be able to add light data', async () => {
-      const tokenId = 1;
-      const light = records.decoded[0].light;
-      await contractInstance.claim({from: alice});
-      await contractInstance.setTokenLight(tokenId, light, {from: alice});
-      const queriedLight = await contractInstance.getLight(tokenId);
-      queriedLight.toNumber().should.equal(light);
     })
   })
 })
