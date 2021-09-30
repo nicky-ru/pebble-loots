@@ -1,12 +1,15 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.5.13;
+pragma solidity 0.7.3;
 
-import "@openzeppelin/contracts/ownership/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721Metadata.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
+import "./Base64.sol";
 
-contract TrustedDataLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Metadata {
+contract TrustedDataLoot is ERC721, ReentrancyGuard, Ownable {
+  using SafeMath for uint256;
+
   uint256 private incrementalTokenId = 0;
 
   mapping (uint256 => bytes32) internal _tokenToHash;
@@ -50,7 +53,7 @@ contract TrustedDataLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Me
     return string(bytesArray);
   }
 
-  function tokenURI(uint256 tokenId) public view onlyExistedToken(tokenId) returns (string memory) {
+  function tokenURI(uint256 tokenId) public virtual override view onlyExistedToken(tokenId) returns (string memory) {
     string[3] memory parts;
 
     parts[0] = '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><style>.base { fill: white; font-family: serif; font-size: 10px; }</style><rect width="100%" height="100%" fill="black" /><text x="10" y="20" class="base">';
@@ -106,66 +109,5 @@ contract TrustedDataLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Me
     return string(buffer);
   }
 
-  constructor(string memory name, string memory symbol) ERC721Metadata(name, symbol) public Ownable() {}
-}
-
-/// [MIT License]
-/// @title Base64
-/// @notice Provides a function for encoding some bytes in base64
-/// @author Brecht Devos <brecht@loopring.org>
-library Base64 {
-  bytes internal constant TABLE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
-  /// @notice Encodes some bytes to the base64 representation
-  function encode(bytes memory data) internal pure returns (string memory) {
-    uint256 len = data.length;
-    if (len == 0) return "";
-
-    // multiply by 4/3 rounded up
-    uint256 encodedLen = 4 * ((len + 2) / 3);
-
-    // Add some extra buffer at the end
-    bytes memory result = new bytes(encodedLen + 32);
-
-    bytes memory table = TABLE;
-
-    assembly {
-      let tablePtr := add(table, 1)
-      let resultPtr := add(result, 32)
-
-      for {
-        let i := 0
-      } lt(i, len) {
-
-      } {
-        i := add(i, 3)
-        let input := and(mload(add(data, i)), 0xffffff)
-
-        let out := mload(add(tablePtr, and(shr(18, input), 0x3F)))
-        out := shl(8, out)
-        out := add(out, and(mload(add(tablePtr, and(shr(12, input), 0x3F))), 0xFF))
-        out := shl(8, out)
-        out := add(out, and(mload(add(tablePtr, and(shr(6, input), 0x3F))), 0xFF))
-        out := shl(8, out)
-        out := add(out, and(mload(add(tablePtr, and(input, 0x3F))), 0xFF))
-        out := shl(224, out)
-
-        mstore(resultPtr, out)
-
-        resultPtr := add(resultPtr, 4)
-      }
-
-      switch mod(len, 3)
-      case 1 {
-        mstore(sub(resultPtr, 2), shl(240, 0x3d3d))
-      }
-      case 2 {
-        mstore(sub(resultPtr, 1), shl(248, 0x3d))
-      }
-
-      mstore(result, encodedLen)
-    }
-
-    return string(result);
-  }
+  constructor(string memory name, string memory symbol) ERC721(name, symbol) Ownable() {}
 }

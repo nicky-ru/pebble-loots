@@ -1,22 +1,29 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.5.13;
+pragma solidity 0.7.3;
 
 import "./TrustedDataLoot.sol";
 
 contract TrustedVbat is TrustedDataLoot {
+    struct TrustedRecord {
+      bytes32 hash;
+      uint256 vbat;
+    }
+
+  mapping (uint256 => TrustedRecord) private _tokenToRecord;
+
   function setTokenVBAT(
     uint256 tokenId,
     uint256 vbat
   )
-  public onlyExistedToken(tokenId) onlyTokenOwnerOrApproved(tokenId) {
-    _tokenToTrustedRecord[tokenId].vbat = vbat;
+  private {
+    _tokenToRecord[tokenId].vbat = vbat;
   }
 
   function getVbat(uint256 tokenId) public view returns (uint256 vbat) {
-    vbat = _tokenToTrustedRecord[tokenId].vbat;
+    vbat = _tokenToRecord[tokenId].vbat;
   }
 
-  function tokenURI(uint256 tokenId) public view onlyExistedToken(tokenId) returns (string memory) {
+  function tokenURI(uint256 tokenId) public override view onlyExistedToken(tokenId) returns (string memory) {
     string[5] memory parts;
 
     parts[0] = '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><style>.base { fill: white; font-family: serif; font-size: 10px; }</style><rect width="100%" height="100%" fill="black" /><text x="10" y="20" class="base">';
@@ -40,5 +47,5 @@ contract TrustedVbat is TrustedDataLoot {
     return output;
   }
 
-  constructor(string memory name, string memory symbol) TrustedDataLoot(name, symbol) public {}
+  constructor(string memory name, string memory symbol) TrustedDataLoot(name, symbol) {}
 }

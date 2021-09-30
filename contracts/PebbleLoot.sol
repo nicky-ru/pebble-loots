@@ -1,23 +1,26 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.5.13;
+pragma solidity 0.7.3;
 
-import "@openzeppelin/contracts/ownership/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721Metadata.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "./Base64.sol";
 
-contract Registration {
-  function find(string calldata imei) external view returns (address, address);
+abstract contract Registration {
+  function find(string calldata imei) external virtual view returns (address, address);
 }
 
-contract PebbleLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Metadata {
+contract PebbleLoot is ERC721, ReentrancyGuard, Ownable {
 
-  address regAddress = 0x2C39DA40c0D67AA16dBbCCD22FFc065549b6c8F6;
+  address public regAddress;
 
   Registration registration = Registration(regAddress);
 
-  function tokenURI(uint256 tokenId) public view returns (string memory) {
+  function setRegistrationAddress(address _regAddress) public onlyOwner {
+    regAddress = _regAddress;
+  }
+
+  function tokenURI(uint256 tokenId) public override pure returns (string memory) {
     string[3] memory parts;
 
     parts[0] = '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><style>.base { fill: white; font-family: serif; font-size: 14px; }</style><rect width="100%" height="100%" fill="black" /><text x="10" y="20" class="base">';
@@ -67,5 +70,5 @@ contract PebbleLoot is ERC721Enumerable, ReentrancyGuard, Ownable, ERC721Metadat
     return string(buffer);
   }
 
-  constructor() ERC721Metadata("Pebble Loot", "PLOOT") public Ownable() {}
+  constructor() ERC721("Pebble Loot", "PLOOT") Ownable() {}
 }
