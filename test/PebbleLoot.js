@@ -1,8 +1,10 @@
 const PebbleLoot = artifacts.require("PebbleLoot")
+const Registration = artifacts.require("Registration")
 const should = require("chai").should();
 
 contract("PebbleLoot", (accounts) => {
   let contractInstance;
+  let registrationInstance;
   let admin = accounts[0];
   let alice = accounts[1];
 
@@ -10,7 +12,7 @@ contract("PebbleLoot", (accounts) => {
   //
   // });
 
-  context.skip("Contract", () => {
+  context("Contract", () => {
     beforeEach(async () => {
       contractInstance = await PebbleLoot.new({from: admin});
     });
@@ -40,17 +42,30 @@ contract("PebbleLoot", (accounts) => {
     });
     it('should show tokenURI', async () => {
       const tokenId = 1;
+      const expectedUri = "data:application/json;base64,eyJuYW1lIjogIlBlYmJsZSAjMSIsImRlc2NyaXB0aW9uIjogIlBlYmJsZSBMb290IGlzIGEgcmVhbCB3b3JsZCBkYXRhIHN0b3JlZCBvbiBjaGFpbi4gU3RhdHMsIGltYWdlcywgYW5kIG90aGVyIGZ1bmN0aW9uYWxpdHkgYXJlIGludGVudGlvbmFsbHkgb21pdHRlZCBmb3Igb3RoZXJzIHRvIGludGVycHJldC4gRmVlbCBmcmVlIHRvIHVzZSBQZWJibGUgTG9vdCBpbiBhbnkgd2F5IHlvdSB3YW50LiIsImltYWdlIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjRiV3h1Y3owaWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzl6ZG1jaUlIQnlaWE5sY25abFFYTndaV04wVW1GMGFXODlJbmhOYVc1WlRXbHVJRzFsWlhRaUlIWnBaWGRDYjNnOUlqQWdNQ0F6TlRBZ016VXdJajQ4YzNSNWJHVStMbUpoYzJVZ2V5Qm1hV3hzT2lCM2FHbDBaVHNnWm05dWRDMW1ZVzFwYkhrNklITmxjbWxtT3lCbWIyNTBMWE5wZW1VNklERTBjSGc3SUgwOEwzTjBlV3hsUGp4eVpXTjBJSGRwWkhSb1BTSXhNREFsSWlCb1pXbG5hSFE5SWpFd01DVWlJR1pwYkd3OUltSnNZV05ySWlBdlBqeDBaWGgwSUhnOUlqRXdJaUI1UFNJeU1DSWdZMnhoYzNNOUltSmhjMlVpUGxCbFltSnNaU0JwYldWcE9pQXhQQzkwWlhoMFBqd3ZjM1puUGc9PSJ9"
       const tokenUri = await contractInstance.tokenURI(tokenId);
-      console.log(tokenUri)
+      tokenUri.should.equal(expectedUri);
     });
+    it.skip('is able to change Registration contract address', async () => {
+      const initialAdd = await contractInstance.regAddress();
+      const newAdd = '0x2C39DA40c0D67AA16dBbCCD22FFc065549b6c8F6'
+      await contractInstance.setRegistrationAddress(newAdd, {from: admin});
+      const res = await contractInstance.regAddress();
+      res.should.not.equal(initialAdd);
+      res.should.equal(newAdd);
+    })
   })
-  context.skip("User", () => {
+  context("User", () => {
     beforeEach(async () => {
       contractInstance = await PebbleLoot.new({from: admin});
+      registrationInstance = await Registration.new({from: admin});
     });
-    it('is able to claim a token', async () => {
+    it.only('is able to claim a token', async () => {
       const tokenId = 100000000000005;
       const intendedBalance = 1;
+
+      await contractInstance.setRegistrationAddress(registrationInstance.address, {from: admin});
+
       await contractInstance.claim(tokenId, {from: alice});
       const aliceBalance = await contractInstance.balanceOf(alice);
       aliceBalance.toNumber().should.equal(intendedBalance);

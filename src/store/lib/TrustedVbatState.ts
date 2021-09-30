@@ -1,12 +1,12 @@
-import * as PebbleLootJSON from '../../constants/abi/PebbleLoot.json';
+import * as TrustedVbatJSON from '../../constants/abi/TrustedVbat.json';
 import { NetworkState } from '@/store/lib/NetworkState';
 import { BigNumberState } from '@/store/standard/BigNumberState';
 import { BooleanState } from '@/store/standard/base';
 import { makeObservable, observable } from 'mobx';
 import { CallParams } from '../../../type';
 
-export class PebbleLootState {
-  abi = PebbleLootJSON.abi;
+export class TrustedVbatState {
+  abi = TrustedVbatJSON.abi;
   name: string = '';
   symbol: string = '';
   address: string = '';
@@ -20,7 +20,7 @@ export class PebbleLootState {
     loading: new BooleanState()
   }
 
-  constructor(args: Partial<PebbleLootState>) {
+  constructor(args: Partial<TrustedVbatState>) {
     Object.assign(this, args);
     this.balance = new BigNumberState({loading: true})
     makeObservable(this, {
@@ -37,21 +37,20 @@ export class PebbleLootState {
   }
 
   claim(args: Partial<CallParams>) {
-    console.log("Trying to claim token: ", args.params);
     return this.network.execContract(Object.assign({
-      address: this.address,
-      abi: this.abi,
-      method: 'claim'
-    },
+        address: this.address,
+        abi: this.abi,
+        method: 'claim'
+      },
       args))
   }
 
   balanceOf(args: Partial<CallParams>) {
     return this.network.execContract(Object.assign({
-      address: this.address,
-      abi: this.abi,
-      method: 'balanceOf'
-    },
+        address: this.address,
+        abi: this.abi,
+        method: 'balanceOf'
+      },
       args))
   }
 
@@ -75,10 +74,10 @@ export class PebbleLootState {
 
   transferFrom(args: Partial<CallParams>) {
     return this.network.execContract(Object.assign({
-      address: this.address,
-      abi: this.abi,
-      method: 'transferFrom'
-    },
+        address: this.address,
+        abi: this.abi,
+        method: 'transferFrom'
+      },
       args))
   }
 }
