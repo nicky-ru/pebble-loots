@@ -10,7 +10,7 @@ contract("PebbleLoot", (accounts) => {
   //
   // });
 
-  context.skip("Contract", () => {
+  context("Contract", () => {
     beforeEach(async () => {
       contractInstance = await PebbleLoot.new({from: admin});
     });
@@ -38,10 +38,11 @@ contract("PebbleLoot", (accounts) => {
       const totalSupply = await contractInstance.totalSupply();
       totalSupply.toNumber().should.equal(intendedTS);
     });
-    it('should show tokenURI', async () => {
+    it.only('should show tokenURI', async () => {
       const tokenId = 1;
+      const expectedUri = "data:application/json;base64,eyJuYW1lIjogIlBlYmJsZSAjMSIsImRlc2NyaXB0aW9uIjogIlBlYmJsZSBMb290IGlzIGEgcmVhbCB3b3JsZCBkYXRhIHN0b3JlZCBvbiBjaGFpbi4gU3RhdHMsIGltYWdlcywgYW5kIG90aGVyIGZ1bmN0aW9uYWxpdHkgYXJlIGludGVudGlvbmFsbHkgb21pdHRlZCBmb3Igb3RoZXJzIHRvIGludGVycHJldC4gRmVlbCBmcmVlIHRvIHVzZSBQZWJibGUgTG9vdCBpbiBhbnkgd2F5IHlvdSB3YW50LiIsImltYWdlIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjRiV3h1Y3owaWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzl6ZG1jaUlIQnlaWE5sY25abFFYTndaV04wVW1GMGFXODlJbmhOYVc1WlRXbHVJRzFsWlhRaUlIWnBaWGRDYjNnOUlqQWdNQ0F6TlRBZ016VXdJajQ4YzNSNWJHVStMbUpoYzJVZ2V5Qm1hV3hzT2lCM2FHbDBaVHNnWm05dWRDMW1ZVzFwYkhrNklITmxjbWxtT3lCbWIyNTBMWE5wZW1VNklERTBjSGc3SUgwOEwzTjBlV3hsUGp4eVpXTjBJSGRwWkhSb1BTSXhNREFsSWlCb1pXbG5hSFE5SWpFd01DVWlJR1pwYkd3OUltSnNZV05ySWlBdlBqeDBaWGgwSUhnOUlqRXdJaUI1UFNJeU1DSWdZMnhoYzNNOUltSmhjMlVpUGxCbFltSnNaU0JwYldWcE9pQXhQQzkwWlhoMFBqd3ZjM1puUGc9PSJ9"
       const tokenUri = await contractInstance.tokenURI(tokenId);
-      console.log(tokenUri)
+      tokenUri.should.equal(expectedUri);
     });
   })
   context.skip("User", () => {
