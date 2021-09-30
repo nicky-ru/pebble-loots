@@ -37,6 +37,7 @@ export class PebbleLootState {
   }
 
   claim(args: Partial<CallParams>) {
+    console.log("Trying to claim token: ", args.params);
     return this.network.execContract(Object.assign({
       address: this.address,
       abi: this.abi,
