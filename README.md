@@ -46,7 +46,7 @@ twice for the same device.
 
 ## Project Structure
 
-![7121622212283_ pic](https://user-images.githubusercontent.com/448293/120024975-d2604b80-bfa4-11eb-969c-f6f581fe11bf.jpg)
+![7121622212283_ pic](https://github.com/nicky-ru/pebble-loots/blob/3909a5b6348ae195281a1cad9bbac95b6c467cee/PLstructure.png)
 
 Frontend and Smart contracts you can find in the current repo.
 Backend is here [Api Backend](https://github.com/nicky-ru/protoreader)
