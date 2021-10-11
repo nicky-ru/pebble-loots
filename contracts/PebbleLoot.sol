@@ -9,9 +9,31 @@ import "./Base64.sol";
 
 contract PebbleLoot is ERC721, ReentrancyGuard, Ownable {
 
-  address regAddress = 0x8EcE0F6a5DF03A61D8b072Cc241595Ba44f3FE53;
+  /// @notice Registration interface
+  IRegistration public registration;
 
-  IRegistration public registration = IRegistration(regAddress);
+  /// @notice Minting fee
+  uint16 public mintingFee;
+
+  /// @notice Fee receipient
+  address payable public feeReceipient;
+
+
+  /// @notice Contract constructor
+  constructor(
+    string memory _name,
+    string memory _symbol,
+    address _registration,
+    uint16 _mintingFee,
+    address payable _feeReceipient
+  )
+  ERC721(_name, _symbol)
+  Ownable()
+  {
+    registration = IRegistration(_registration);
+    mintingFee = _mintingFee;
+    feeReceipient = _feeReceipient;
+  }
 
   /// @notice Method for updating TrueStream
   /// @dev only admin
@@ -99,10 +121,4 @@ contract PebbleLoot is ERC721, ReentrancyGuard, Ownable {
     }
     return string(buffer);
   }
-
-  /// @notice Contract constructor
-  constructor()
-  ERC721("Pebble Loot", "PLOOT")
-  Ownable()
-  {}
 }
