@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: MIT
-
-pragma solidity 0.7.3;
-pragma experimental ABIEncoderV2;
+pragma solidity ^0.8.0;
 
 interface IRegistration {
   function find(string memory imei) external view returns (address, address);
