@@ -1,4 +1,4 @@
-import * as PebbleLootJSON from '../../constants/abi/PebbleLoot.json';
+import * as PebbleLootJSON from '../../constants/artifacts/contracts/PebbleLoot.sol/PebbleLoot.json';
 import { NetworkState } from '@/store/lib/NetworkState';
 import { BigNumberState } from '@/store/standard/BigNumberState';
 import { BooleanState } from '@/store/standard/base';

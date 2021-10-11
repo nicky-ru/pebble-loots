@@ -1,4 +1,4 @@
-import * as TrustedDataLootJSON from '../../constants/abi/TrustedDataLoot.json';
+import * as TrustedDataLootJSON from '../../constants/artifacts/contracts/TrustedDataLoot.sol/TrustedDataLoot.json';
 import { NetworkState } from '@/store/lib/NetworkState';
 import { BigNumberState } from '@/store/standard/BigNumberState';
 import { BooleanState } from '@/store/standard/base';

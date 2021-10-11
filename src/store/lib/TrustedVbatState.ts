@@ -1,4 +1,4 @@
-import * as TrustedVbatJSON from '../../constants/abi/TrustedVbat.json';
+import * as TrustedVbatJSON from '../../constants/artifacts/contracts/TrustedVbat.sol/TrustedVbat.json';
 import { NetworkState } from '@/store/lib/NetworkState';
 import { BigNumberState } from '@/store/standard/BigNumberState';
 import { BooleanState } from '@/store/standard/base';
