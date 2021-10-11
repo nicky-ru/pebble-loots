@@ -82,4 +82,29 @@ describe("Pebble Loots", () => {
     });
 
   })
+
+  describe('updates', () => {
+    describe('registration', () => {
+      before('deploy new registration address', async () => {
+        this.registration = await this.Registration.deploy();
+      })
+      it('admin is able to update registration contract address', async () => {
+        await expect(
+          this.pebbleLoot
+            .connect(admin)
+            .updateRegistration(this.registration.address)
+        )
+          .to.emit(this.pebbleLoot, 'RegistrationUpdated')
+          .withArgs(this.registration.address);
+      });
+      it('should revert if non admin tries to update', async () => {
+        await expect(
+          this.pebbleLoot
+            .connect(minter)
+            .updateRegistration(this.registration.address)
+        )
+          .to.be.revertedWith('Ownable: caller is not the owner')
+      })
+    })
+  })
 })
