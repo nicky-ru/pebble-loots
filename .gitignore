@@ -12,4 +12,5 @@ yarn-error.log
 
 #Hardhat files
 cache
-artifacts
+/src/constants/artifacts/@openzeppelin/
+/src/constants/artifacts/build-info/
