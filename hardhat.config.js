@@ -19,11 +19,6 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
 
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
-//
-// const fs = require('fs');
-// const privateKey = fs.readFileSync("./.secret").toString().trim();
-
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
@@ -38,6 +33,13 @@ module.exports = {
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
+    iotexT: {
+      url: "https://babel-api.testnet.iotex.io",
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: 4690,
+      gas: 8500000,
+      gasPrice: 1000000000000
+    }
     // iotextest: {
     //   provider: () =>
     //     new HDWalletProvider({
