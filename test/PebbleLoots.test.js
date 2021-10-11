@@ -54,8 +54,32 @@ describe("Pebble Loots", () => {
   })
 
   describe('token Uri', () => {
-    it('reverts if provided IMEI is incorrect', async () => {
+    const testUri = {
+      tokenId: 1,
+      expectedUri:
+        "data:application/json;base64,eyJuYW1lIjogIlBlYmJsZ" +
+        "SAjMSIsImRlc2NyaXB0aW9uIjogIlBlYmJsZSBMb290IGlzIGE" +
+        "gcmVhbCB3b3JsZCBkYXRhIHN0b3JlZCBvbiBjaGFpbi4gU3Rhd" +
+        "HMsIGltYWdlcywgYW5kIG90aGVyIGZ1bmN0aW9uYWxpdHkgYXJ" +
+        "lIGludGVudGlvbmFsbHkgb21pdHRlZCBmb3Igb3RoZXJzIHRvI" +
+        "GludGVycHJldC4gRmVlbCBmcmVlIHRvIHVzZSBQZWJibGUgTG9" +
+        "vdCBpbiBhbnkgd2F5IHlvdSB3YW50LiIsImltYWdlIjogImRhd" +
+        "GE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjRiV3h1Y3o" +
+        "waWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzl6ZG1ja" +
+        "UlIQnlaWE5sY25abFFYTndaV04wVW1GMGFXODlJbmhOYVc1WlR" +
+        "XbHVJRzFsWlhRaUlIWnBaWGRDYjNnOUlqQWdNQ0F6TlRBZ016V" +
+        "XdJajQ4YzNSNWJHVStMbUpoYzJVZ2V5Qm1hV3hzT2lCM2FHbDB" +
+        "aVHNnWm05dWRDMW1ZVzFwYkhrNklITmxjbWxtT3lCbWIyNTBMW" +
+        "E5wZW1VNklERTBjSGc3SUgwOEwzTjBlV3hsUGp4eVpXTjBJSGR" +
+        "wWkhSb1BTSXhNREFsSWlCb1pXbG5hSFE5SWpFd01DVWlJR1pwY" +
+        "kd3OUltSnNZV05ySWlBdlBqeDBaWGgwSUhnOUlqRXdJaUI1UFN" +
+        "JeU1DSWdZMnhoYzNNOUltSmhjMlVpUGxCbFltSnNaU0JNYjI5M" +
+        "ElDTXhQQzkwWlhoMFBqd3ZjM1puUGc9PSJ9"
+    }
 
-    })
+    it.only('returns token Uri', async () => {
+      expect(await this.pebbleLoot.tokenURI(testUri.tokenId)).to.be.equal(testUri.expectedUri);
+    });
+
   })
 })
