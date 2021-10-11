@@ -1,6 +1,4 @@
 const {
-  expectRevert,
-  expectEvent,
   BN,
   ether,
   constants,
@@ -105,6 +103,50 @@ describe("Pebble Loots", () => {
         )
           .to.be.revertedWith('Ownable: caller is not the owner')
       })
+    })
+    describe('minting fee', () => {
+      const newMintingFee = 300;
+      it('admin is able to update minting fee', async () =>  {
+        await expect(
+          this.pebbleLoot
+          .connect(admin)
+          .updateMintingFee(newMintingFee)
+        )
+          .to.emit(this.pebbleLoot, 'MintingFeeUpdated')
+          .withArgs(newMintingFee);
+
+        expect(await this.pebbleLoot.mintingFee()).to.be.equal(newMintingFee);
+      });
+      it('should revert if non admin tries to update minting fee', async () => {
+        expect(
+          this.pebbleLoot
+            .connect(minter)
+            .updateMintingFee(newMintingFee)
+        )
+          .to.be.revertedWith('Ownable: caller is not the owner')
+      })
+    })
+    describe('fee receiver', () => {
+      it('should allow admin update fee receiver address', async () => {
+        await expect(
+          this.pebbleLoot
+            .connect(admin)
+            .updateFeeReceipient(admin.address)
+        )
+          .to.emit(this.pebbleLoot, 'FeeReceipientUpdated')
+          .withArgs(admin.address);
+
+        expect(await this.pebbleLoot.feeReceipient())
+          .to.be.equal(admin.address);
+      });
+      it('should revert if non admin tries to update receiver address', async () => {
+        await expect(
+          this.pebbleLoot
+            .connect(minter)
+            .updateFeeReceipient(minter.address)
+        )
+          .to.be.revertedWith('Ownable: caller is not the owner')
+      });
     })
   })
 })
