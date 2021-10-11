@@ -9,3 +9,7 @@ yarn-error.log
 *.lock
 /build/
 .secret
+
+#Hardhat files
+cache
+artifacts
