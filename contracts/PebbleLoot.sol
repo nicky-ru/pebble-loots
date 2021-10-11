@@ -9,6 +9,11 @@ import "./Base64.sol";
 
 contract PebbleLoot is ERC721, ReentrancyGuard, Ownable {
 
+  /// @dev Contract events
+  event RegistrationUpdated(
+    address indexed registration
+  );
+
   /// @notice Registration interface
   IRegistration public registration;
 
@@ -33,18 +38,6 @@ contract PebbleLoot is ERC721, ReentrancyGuard, Ownable {
     registration = IRegistration(_registration);
     mintingFee = _mintingFee;
     feeReceipient = _feeReceipient;
-  }
-
-  /// @notice Method for updating TrueStream
-  /// @dev only admin
-  /// @notice registration contract
-  /// @param _registration Registration address
-  function setRegistrationAddress(
-    address _registration
-  )
-  public onlyOwner
-  {
-    registration = IRegistration(_registration);
   }
 
   /// @notice Generator of token URI
@@ -91,6 +84,25 @@ contract PebbleLoot is ERC721, ReentrancyGuard, Ownable {
 //    require(_msgSender() == deviceOwner, "You should own the device to mint this loot");
     _safeMint(_msgSender(), tokenId);
   }
+
+  //////////
+  // Admin /
+  //////////
+
+  /// @notice Method for updating TrueStream
+  /// @dev only admin
+  /// @notice registration contract
+  /// @param _registration Registration address
+  function updateRegistration(
+    address _registration
+  )
+  public onlyOwner
+  {
+    registration = IRegistration(_registration);
+    emit RegistrationUpdated(_registration);
+  }
+
+
 
   /////////////////////////
   // Internal and Private /
