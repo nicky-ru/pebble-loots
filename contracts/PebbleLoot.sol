@@ -13,11 +13,28 @@ contract PebbleLoot is ERC721, ReentrancyGuard, Ownable {
 
   IRegistration public registration = IRegistration(regAddress);
 
-  function setRegistrationAddress(address _registration) public onlyOwner {
+  /// @notice Method for updating TrueStream
+  /// @dev only admin
+  /// @notice registration contract
+  /// @param _registration Registration address
+  function setRegistrationAddress(
+    address _registration
+  )
+  public onlyOwner
+  {
     registration = IRegistration(_registration);
   }
 
-  function tokenURI(uint256 tokenId) public override pure returns (string memory) {
+  /// @notice Generator of token URI
+  /// @param tokenId Id of NFT
+  function tokenURI(
+    uint256 tokenId
+  )
+  public
+  override
+  pure
+  returns (string memory)
+  {
     string[3] memory parts;
 
     parts[0] = '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><style>.base { fill: white; font-family: serif; font-size: 14px; }</style><rect width="100%" height="100%" fill="black" /><text x="10" y="20" class="base">';
@@ -37,7 +54,14 @@ contract PebbleLoot is ERC721, ReentrancyGuard, Ownable {
     return output;
   }
 
-  function claim(uint256 tokenId) public nonReentrant {
+  /// @notice Method for minting NFT
+  /// @param tokenId IMEI of pebble device
+  function claim(
+    uint256 tokenId
+  )
+  public
+  nonReentrant
+  {
     require(tokenId > (10 ** 14 - 1) && tokenId < 10 ** 15, "Token ID invalid");
 //    NOTE: disable ownership check during tests
 //    address deviceOwner;
@@ -46,7 +70,15 @@ contract PebbleLoot is ERC721, ReentrancyGuard, Ownable {
     _safeMint(_msgSender(), tokenId);
   }
 
-  function toString(uint256 value) internal pure returns (string memory) {
+  /// @notice Method for converting uint256 to string
+  /// @param value Number to convert
+  function toString(
+    uint256 value
+  )
+  internal
+  pure
+  returns (string memory)
+  {
     // Inspired by OraclizeAPI's implementation - MIT license
     // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
 
@@ -68,5 +100,9 @@ contract PebbleLoot is ERC721, ReentrancyGuard, Ownable {
     return string(buffer);
   }
 
-  constructor() ERC721("Pebble Loot", "PLOOT") Ownable() {}
+  /// @notice Contract constructor
+  constructor()
+  ERC721("Pebble Loot", "PLOOT")
+  Ownable()
+  {}
 }
