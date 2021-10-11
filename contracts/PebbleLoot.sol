@@ -61,7 +61,7 @@ contract PebbleLoot is ERC721, ReentrancyGuard, Ownable {
 
     parts[0] = '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><style>.base { fill: white; font-family: serif; font-size: 14px; }</style><rect width="100%" height="100%" fill="black" /><text x="10" y="20" class="base">';
 
-    parts[1] = string(abi.encodePacked("Pebble imei: ", toString(tokenId)));
+    parts[1] = string(abi.encodePacked("Pebble Loot #", toString(tokenId)));
 
     parts[2] = '</text></svg>';
 
@@ -91,6 +91,10 @@ contract PebbleLoot is ERC721, ReentrancyGuard, Ownable {
 //    require(_msgSender() == deviceOwner, "You should own the device to mint this loot");
     _safeMint(_msgSender(), tokenId);
   }
+
+  /////////////////////////
+  // Internal and Private /
+  /////////////////////////
 
   /// @notice Method for converting uint256 to string
   /// @param value Number to convert
