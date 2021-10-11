@@ -14,6 +14,14 @@ contract PebbleLoot is ERC721, ReentrancyGuard, Ownable {
     address indexed registration
   );
 
+  event MintingFeeUpdated(
+    uint16 mintingFee
+  );
+
+  event FeeReceipientUpdated(
+    address indexed feeReceipient
+  );
+
   /// @notice Registration interface
   IRegistration public registration;
 
@@ -90,8 +98,8 @@ contract PebbleLoot is ERC721, ReentrancyGuard, Ownable {
   //////////
 
   /// @notice Method for updating TrueStream
-  /// @dev only admin
   /// @notice registration contract
+  /// @dev only admin
   /// @param _registration Registration address
   function updateRegistration(
     address _registration
@@ -102,6 +110,29 @@ contract PebbleLoot is ERC721, ReentrancyGuard, Ownable {
     emit RegistrationUpdated(_registration);
   }
 
+  /// @notice Method for updating minting fee
+  /// @dev only admin
+  /// @param _mintingFee Minting fee
+  function updateMintingFee(
+    uint16 _mintingFee
+  )
+  public onlyOwner
+  {
+    mintingFee = _mintingFee;
+    emit MintingFeeUpdated(mintingFee);
+  }
+
+  /// @notice Method for updating fee receipient address
+  /// @dev only admin
+  /// @param _feeReceipient Fee receipient address
+  function updateFeeReceipient(
+    address payable _feeReceipient
+  )
+  public onlyOwner
+  {
+    feeReceipient = _feeReceipient;
+    emit FeeReceipientUpdated(feeReceipient);
+  }
 
 
   /////////////////////////
