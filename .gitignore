@@ -8,7 +8,6 @@ yarn-error.log
 .env*
 *.lock
 /build/
-.secret
 
 #Hardhat files
 cache
