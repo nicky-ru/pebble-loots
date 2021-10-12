@@ -1,9 +1,5 @@
 const {
-  BN,
-  ether,
   constants,
-  balance,
-  send
 } = require('@openzeppelin/test-helpers');
 
 const { ZERO_ADDRESS } = constants
@@ -14,14 +10,28 @@ describe("Pebble Loots", () => {
   const symbol = "PLOOT";
   const mintingFee = 250;
 
-  let feeReceipient, admin, minter;
+  let registrationAddress;
+  let feeReceipient, admin, minter, regOperator, deviceOwner1, deviceOwner2, device1, device2, device3;
 
-  before('get factories', async () => {
-    [feeReceipient, admin, minter] = await ethers.getSigners();
+  before('get factories and init registration', async () => {
+    [feeReceipient, admin, minter, regOperator, deviceOwner1, deviceOwner2, device1, device2, device3] = await ethers.getSigners();
     this.PebbleLoot = await ethers.getContractFactory('PebbleLoot');
 
     this.Registration = await ethers.getContractFactory('Registration');
-    this.registration = await this.Registration.deploy();
+    this.registration = await this.Registration.connect(admin).deploy();
+    registrationAddress = this.registration.address;
+
+    await this.registration
+      .connect(admin)
+      .grant(regOperator.address)
+
+    await this.registration
+      .connect(regOperator)
+      .ship([100000000000000], [device1.address])
+
+    await this.registration
+      .connect(regOperator)
+      .setOwner(100000000000000, deviceOwner1.address)
   })
 
   beforeEach('deploy contract', async () => {
@@ -30,7 +40,7 @@ describe("Pebble Loots", () => {
       .deploy(
         name,
         symbol,
-        this.registration.address,
+        registrationAddress,
         mintingFee,
         feeReceipient.address
       );
@@ -147,6 +157,48 @@ describe("Pebble Loots", () => {
         )
           .to.be.revertedWith('Ownable: caller is not the owner')
       });
+    })
+  })
+
+  describe('minting', () => {
+    it('should revert if provided IMEI is incorrect', async () => {
+      const idBelowRange = 99999999999999;
+      const idInRange = idBelowRange + 1;
+      const idAboveRange = idInRange * 10;
+
+      expect(
+        this.pebbleLoot
+          .connect(minter)
+          .claim(idBelowRange)
+      )
+        .to.be.revertedWith('Claim: Token ID is invalid');
+
+      expect(
+        this.pebbleLoot
+          .connect(minter)
+          .claim(idAboveRange)
+      )
+        .to.be.revertedWith('Claim: Token ID is invalid');
+    })
+    it('should revert if minter doesnt owns the device', async () => {
+      const imei = 100000000000000;
+      expect(
+        this.pebbleLoot
+          .connect(minter)
+          .claim(imei)
+      )
+        .to.be.revertedWith("You should own the device to mint this loot")
+    })
+    it('device owner should be able to mint nft', async () => {
+      const imei = 100000000000000;
+
+      await expect(
+        this.pebbleLoot
+          .connect(deviceOwner1)
+          .claim(imei)
+      )
+        .to.emit(this.pebbleLoot, 'TokenMinted')
+        .withArgs(deviceOwner1.address, imei);
     })
   })
 })
