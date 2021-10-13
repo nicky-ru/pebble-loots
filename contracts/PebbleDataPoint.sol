@@ -6,7 +6,6 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 import "./PebbleToken.sol";
 
@@ -14,7 +13,6 @@ import "./PebbleToken.sol";
 contract PebbleDataPoint is ERC721, ERC721URIStorage, Ownable {
   using SafeMath for uint256;
   using Counters for Counters.Counter;
-  using SafeERC20 for IERC20;
 
 
   struct DataPoint {
