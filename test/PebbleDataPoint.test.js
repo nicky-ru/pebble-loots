@@ -5,7 +5,21 @@ describe('PebbleNFT', () => {
   const symbol = "PDP";
   let admin, minter;
   const burnMultiplier = 10;
-  const dataPoint = ["","","","","","","","","","","","","",""];
+  const dataPoint = [
+    "2",
+    "4.0750732421875",
+    "3050.69225",
+    "11448.65815",
+    "1166811",
+    "36.23188400268555",
+    "1003.82000732421885",
+    "55.755001068115234",
+    "1639.67767",
+    "[-12, 11, 14]",
+    "[-711, -231, 8260]",
+    "3443547577"
+  ];
+  const [token1, token2, token3] = [0, 1, 2];
 
   before('get factories', async () => {
     [admin, minter] = await ethers.getSigners();
@@ -45,5 +59,18 @@ describe('PebbleNFT', () => {
         .to.emit(this.pebbleNft, "TokenMinted")
         .withArgs(minter.address, 0);
     })
+  })
+
+  describe('getters', () => {
+    beforeEach(async () => {
+      await this.pbl.connect(admin).transfer(minter.address, 1000);
+      await this.pbl.connect(minter).approve(this.pebbleNft.address, 1000);
+      await this.pebbleNft.connect(minter).safeMint(minter.address, dataPoint);
+    });
+
+    it('should show datapoint data', async () => {
+      const dp = await this.pebbleNft.tokenToDataPoint(token1);
+      expect(dp.toString()).to.be.equal(dataPoint.toString());
+    });
   })
 })
