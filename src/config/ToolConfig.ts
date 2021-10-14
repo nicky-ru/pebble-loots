@@ -3,6 +3,7 @@ import { Devices } from '../pages/Devices';
 import { MyLoots } from '../pages/Loots';
 import { Minting } from '../pages/Minting';
 import { LootCharts } from '../pages/LootCharts';
+import { PebbleCharts } from '../pages/PebbleCharts';
 
 class Tool {
   name: string;
@@ -38,5 +39,11 @@ export const ToolConfig = [
     path: '/lootcharts',
     component: LootCharts,
     tags: ['Real data', 'Loot']
+  }),
+  new Tool({
+    name: 'Pebble charts',
+    path: '/pebblecharts',
+    component: PebbleCharts,
+    tags: ['Real data', 'Pebble']
   })
 ];
