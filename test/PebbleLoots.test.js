@@ -189,7 +189,7 @@ describe("Pebble Loots", () => {
       )
         .to.be.revertedWith("You should own the device to mint this loot")
     })
-    it('device owner should be able to mint nft', async () => {
+    it.skip('device owner should be able to mint nft', async () => {
       const imei = 100000000000000;
 
       await expect(
