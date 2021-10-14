@@ -16,10 +16,6 @@ async function main() {
   );
   await stake.deployed();
 
-  const PBL = await ethers.getContractFactory('PebbleToken');
-  const pbl = await PBL.attach(PEBBLE_TOKEN_ADDRESS);
-  await pbl.transfer(stake.address, 3000000);
-
   console.log('NFT Stake contract deployed to:', stake.address);
 }
 
