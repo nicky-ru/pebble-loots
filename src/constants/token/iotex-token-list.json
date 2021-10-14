@@ -19,6 +19,14 @@
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png"
     },
     {
+      "name": "Pebble Loot",
+      "symbol": "PBL",
+      "chainId": 4690,
+      "decimals": 18,
+      "address": "0x9a5C9878E89A0dC89d1Ee6cABcfe4E5f11EdB26c",
+      "logoURI": "src/favicon.svg"
+    },
+    {
       "symbol": "ioBUSD",
       "name": "Binance USD",
       "chainId": 4690,
