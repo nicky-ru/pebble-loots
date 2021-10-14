@@ -4,6 +4,7 @@ import { MyLoots } from '../pages/Loots';
 import { Minting } from '../pages/Minting';
 import { LootCharts } from '../pages/LootCharts';
 import { PebbleCharts } from '../pages/PebbleCharts';
+import { MyNFTs } from '../pages/NFTs';
 
 class Tool {
   name: string;
@@ -45,5 +46,11 @@ export const ToolConfig = [
     path: '/pebblecharts',
     component: PebbleCharts,
     tags: ['Real data', 'Pebble']
+  }),
+  new Tool({
+    name: 'Pebble NFTs',
+    path: '/pebble-nfts',
+    component: MyNFTs,
+    tags: ['Art', 'NFT']
   })
 ];
