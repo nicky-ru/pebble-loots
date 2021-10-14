@@ -14,6 +14,11 @@ contract PebbleDataPoint is ERC721, ERC721URIStorage, Ownable {
   using SafeMath for uint256;
   using Counters for Counters.Counter;
 
+  /// @notice events for the contract
+  event TokenMinted (
+    address indexed to,
+    uint256 indexed tokenId
+  );
 
   struct DataPoint {
     string snr;
@@ -50,14 +55,15 @@ contract PebbleDataPoint is ERC721, ERC721URIStorage, Ownable {
     burnMultiplier = _burnMultiplier;
   }
 
-  function safeMint(address to, DataPoint memory dataPoint) public onlyOwner {
+  function safeMint(address to, DataPoint memory dataPoint) public {
     uint8 hashPower = calculateHashPower(dataPoint);
-    require(pbl.balanceOf(_msgSender()) >= hashPower, "PebbleDataPoint: insufficient balance for minting NFT");
+    require(pbl.balanceOf(_msgSender()) >= hashPower, "Minting: insufficient balance for minting NFT");
     pbl.burnFrom(_msgSender(), hashPower);
 
     _safeMint(to, _tokenIdCounter.current());
     tokenToDataPoint[_tokenIdCounter.current()] = dataPoint;
     tokenToHashPower[_tokenIdCounter.current()] = hashPower;
+    emit TokenMinted(to, _tokenIdCounter.current());
     _tokenIdCounter.increment();
   }
 
