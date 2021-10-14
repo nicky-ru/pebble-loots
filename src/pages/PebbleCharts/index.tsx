@@ -9,7 +9,7 @@ import { BooleanState } from '@/store/standard/base';
 import { ChartsFrameOffChain } from '@/components/ChartsFrame/ChartsFrameOffChain';
 
 export const PebbleCharts = observer(() => {
-  const { rec, pebble } = useStore();
+  const { rec, pebble, god } = useStore();
 
   const observable = useLocalObservable(() => ({
     loaded: new BooleanState(),
@@ -27,6 +27,19 @@ export const PebbleCharts = observer(() => {
       queryRecords(pebble.imei)
     }
   }, [pebble.imei])
+
+  useEffect(() => {
+    fetchDevices();
+  }, [god.currentNetwork.account]);
+
+  async function fetchDevices() {
+    observable.setLoading(true);
+    const owner = god.currentNetwork.account;
+    const url = "https://protoreader.herokuapp.com/api/my-devices/" + owner.toLowerCase();
+    const axiosResponse = await axios.get(url);
+    pebble.setDevices(axiosResponse.data);
+    observable.setLoading(false);
+  }
 
   const queryRecords = async (imei: string) => {
     observable.setLoading(true);
