@@ -4,8 +4,10 @@ import {
   useDisclosure,
   Button,
   Container,
+  Stack,
   Box,
   Center,
+  Divider,
   Image,
   LinkBox, LinkOverlay, useColorModeValue
 } from '@chakra-ui/react';
@@ -22,7 +24,7 @@ interface PropsType {
 }
 
 export const ChartsFrameOffChain = observer((props: PropsType) => {
-  const { pebble } = useStore();
+  const { pebble, pNft, rec, god, token } = useStore();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
 
@@ -44,6 +46,42 @@ export const ChartsFrameOffChain = observer((props: PropsType) => {
     observable.activateInterval(queryInterval);
   }, [pebble.imei]);
 
+  async function mint() {
+    let snr, vbat, latitude, longitude, gasResistance, temperature, pressure, humidity, light, gyroscope, accelerometer;
+    console.log('trying to mint something');
+    if (rec.decodedRecords) {
+
+    }
+
+    // const dataPoint = [
+    //   snr, vbat, latitude, longitude, gasResistance, temperature,
+    //   pressure, humidity, light, gyroscope, accelerometer
+    // ].map((sensor) => {return sensor.toString()});
+
+    const dataPoint = ["1","2","3","4","5","6","7","8","9","10","11","12"];
+
+    console.log("here is the dp", dataPoint);
+    try {
+      await pNft.contracts[god.currentChain.chainId].claim({
+        params: [god.currentNetwork.account, dataPoint]
+      })
+    } catch (e) {
+      alert(JSON.stringify(e.data.message))
+    }
+  }
+
+  async function approve() {
+    try {
+      const tokee = token.tokens[god.currentChain.chainId]
+        .filter((token) => token.symbol == "PBL")
+      await tokee[0].approve({
+        params: [pNft.contracts[god.currentChain.chainId].address, 1000]
+      });
+    } catch (e) {
+      alert(JSON.stringify(e.data.message))
+    }
+  }
+
   return (
     <>
       <LootDrawerOffChain
@@ -51,20 +89,28 @@ export const ChartsFrameOffChain = observer((props: PropsType) => {
         isOpen={isOpen}
       />
       <Container maxW={"container.xl"}>
-        <Button variant={"outline"} colorScheme={"teal"} onClick={onOpen}>
-          Choose device
-        </Button>
         <Center>
           <Box
             borderWidth="3px" rounded="md"
             position={"relative"}
-            top={-10}
             zIndex={0}
             bg={useColorModeValue("light.100", "dark.100")}
             h={"800px"}
             w={"800px"}
           >
-            <Box position={"absolute"} mt={16}>
+            <Stack>
+              <Button variant={"ghost"} colorScheme={"black"} onClick={onOpen}>
+                Choose device
+              </Button>
+              <Button variant={"ghost"} colorScheme={"black"} onClick={() => {approve()}}>
+                Approve
+              </Button>
+              <Button variant={"ghost"} colorScheme={"black"} onClick={() => {mint()}}>
+                Mint Last Datapoint
+              </Button>
+            </Stack>
+            <Divider/>
+            <Box position={"absolute"} mt={4}>
               <Dashboard/>
             </Box>
           </Box>
