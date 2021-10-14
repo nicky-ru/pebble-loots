@@ -8,16 +8,18 @@ import { ErrorFallback } from '@/components/ErrorFallback';
 import { ErrorBoundary } from 'react-error-boundary';
 
 export const Devices = observer(() => {
-  const { pebble } = useStore();
+  const { pebble, god } = useStore();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    init_pebble();
-  }, [])
+    fetchDevices();
+  }, [god.currentNetwork.account]);
 
-  async function init_pebble() {
+  async function fetchDevices() {
     setLoading(true);
-    const axiosResponse = await axios.get("https://protoreader.herokuapp.com/api/devices");
+    const owner = god.currentNetwork.account;
+    const url = "https://protoreader.herokuapp.com/api/my-devices/" + owner.toLowerCase();
+    const axiosResponse = await axios.get(url);
     pebble.setDevices(axiosResponse.data);
     setLoading(false);
   }
