@@ -23,24 +23,24 @@ export const ToolConfig = [
     component: Devices,
     tags: ['IoT', 'Pebble']
   }),
-  new Tool({
-    name: 'Loot gallery',
-    path: '/myloots',
-    component: MyLoots,
-    tags: ['NFT', 'Pebble']
-  }),
-  new Tool({
-    name: 'Mint Loot',
-    path: '/mintLoot',
-    component: Minting,
-    tags: ['NFT', 'Loot', 'Minting']
-  }),
-  new Tool({
-    name: 'Loot charts 🔥',
-    path: '/lootcharts',
-    component: LootCharts,
-    tags: ['Real data', 'Loot']
-  }),
+  // new Tool({
+  //   name: 'Loot gallery',
+  //   path: '/myloots',
+  //   component: MyLoots,
+  //   tags: ['NFT', 'Pebble']
+  // }),
+  // new Tool({
+  //   name: 'Mint Loot',
+  //   path: '/mintLoot',
+  //   component: Minting,
+  //   tags: ['NFT', 'Loot', 'Minting']
+  // }),
+  // new Tool({
+  //   name: 'Loot charts 🔥',
+  //   path: '/lootcharts',
+  //   component: LootCharts,
+  //   tags: ['Real data', 'Loot']
+  // }),
   new Tool({
     name: 'Pebble charts',
     path: '/pebblecharts',

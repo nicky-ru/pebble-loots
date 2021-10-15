@@ -5,6 +5,7 @@ import { PebbleStore } from './pebble';
 import { RecordStore } from '@/store/rec';
 import { ContractStore } from './ploots';
 import { PebbleNftStore } from '@/store/pebbleNft';
+import { NftStakeStore } from '@/store/stake';
 
 export class RootStore {
   lang = new LangStore();
@@ -14,4 +15,5 @@ export class RootStore {
   rec = new RecordStore();
   ploot = new ContractStore(this);
   pNft = new PebbleNftStore(this);
+  nftStake = new NftStakeStore(this);
 }

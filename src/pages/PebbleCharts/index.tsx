@@ -35,7 +35,8 @@ export const PebbleCharts = observer(() => {
   async function fetchDevices() {
     observable.setLoading(true);
     const owner = god.currentNetwork.account;
-    const url = "https://protoreader.herokuapp.com/api/my-devices/" + owner.toLowerCase();
+    // const url = "https://protoreader.herokuapp.com/api/my-devices/" + owner.toLowerCase();
+    const url = "https://protoreader.herokuapp.com/api/devices";
     const axiosResponse = await axios.get(url);
     pebble.setDevices(axiosResponse.data);
     observable.setLoading(false);

@@ -47,18 +47,32 @@ export const ChartsFrameOffChain = observer((props: PropsType) => {
   }, [pebble.imei]);
 
   async function mint() {
-    let snr, vbat, latitude, longitude, gasResistance, temperature, pressure, humidity, light, gyroscope, accelerometer;
+    let snr, vbat, latitude, longitude, gasResistance, temperature, pressure, humidity, light, gyroscope, accelerometer, random;
+    let dataPoint;
     console.log('trying to mint something');
-    if (rec.decodedRecords) {
+    if (rec.decodedRecords.length) {
+      snr = rec.decodedRecords[rec.decodedRecords.length - 1].snr;
+      vbat = rec.decodedRecords[rec.decodedRecords.length - 1].vbat;
+      latitude = rec.decodedRecords[rec.decodedRecords.length - 1].latitude;
+      longitude = rec.decodedRecords[rec.decodedRecords.length - 1].longitude;
+      gasResistance = rec.decodedRecords[rec.decodedRecords.length - 1].gasResistance;
+      temperature = rec.decodedRecords[rec.decodedRecords.length - 1].temperature;
+      pressure = rec.decodedRecords[rec.decodedRecords.length - 1].pressure;
+      humidity = rec.decodedRecords[rec.decodedRecords.length - 1].humidity;
+      light = rec.decodedRecords[rec.decodedRecords.length - 1].light;
+      gyroscope = rec.decodedRecords[rec.decodedRecords.length - 1].gyroscope;
+      accelerometer = rec.decodedRecords[rec.decodedRecords.length - 1].accelerometer;
+      random = rec.decodedRecords[rec.decodedRecords.length - 1].random;
 
+      dataPoint = [
+        snr, vbat, latitude, longitude, gasResistance, temperature,
+        pressure, humidity, light, gyroscope, accelerometer, random
+      ].map((sensor) => {return sensor.toString()});
+    } else {
+      dataPoint = ["1","2","3","4","5","6","7","8","9","10","11","12"];
     }
 
-    // const dataPoint = [
-    //   snr, vbat, latitude, longitude, gasResistance, temperature,
-    //   pressure, humidity, light, gyroscope, accelerometer
-    // ].map((sensor) => {return sensor.toString()});
-
-    const dataPoint = ["1","2","3","4","5","6","7","8","9","10","11","12"];
+    // dataPoint = ["1","2","3","4","5","6","7","8","9","10","11","12"];
 
     console.log("here is the dp", dataPoint);
     try {
@@ -95,7 +109,7 @@ export const ChartsFrameOffChain = observer((props: PropsType) => {
             position={"relative"}
             zIndex={0}
             bg={useColorModeValue("light.100", "dark.100")}
-            h={"800px"}
+            h={"850px"}
             w={"800px"}
           >
             <Stack>

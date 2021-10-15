@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { observer, useLocalObservable, useLocalStore } from 'mobx-react-lite';
-import { Container, Text, Center, Button, createStandaloneToast, useDisclosure } from '@chakra-ui/react';
+import { Container, Text, Center, Button, Stack, createStandaloneToast, useDisclosure } from '@chakra-ui/react';
 import { useStore } from '@/store/index';
 import { LootCards } from '@/components/Loots';
 import { TransactionResponse } from '@ethersproject/providers';
@@ -15,7 +15,7 @@ const toast = createStandaloneToast();
 const IOTX_TEST_CHAINID = 4690;
 
 export const MyNFTs = observer(() => {
-  const { pNft, god } = useStore();
+  const { pNft, god, nftStake } = useStore();
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const store = useLocalStore(() => ({
@@ -88,32 +88,53 @@ export const MyNFTs = observer(() => {
     }
   }, [observable.chainId])
 
-  // useEffect(() => {
-  //   if (observable.balance) {
-  //     fetchLoots();
-  //   }
-  // }, [observable.balance]);
+  useEffect(() => {
+    if (observable.balance) {
+      fetchNFTs();
+    }
+  }, [observable.balance]);
 
-  // async function fetchLoots() {
-  //   observable.setLoading(true)
-  //   const tokenIds = Array(observable.balance);
-  //
-  //   for (let i = 0; i < observable.balance; i++) {
-  //     tokenIds[i] = await ploot.contracts[observable.chainId].tokenOfOwnerByIndex({params: [ploot.god.currentNetwork.account, i]})
-  //   }
-  //   const tokenUris = await Promise.all(tokenIds.map(async (tid) => {
-  //     const uri = await ploot.contracts[observable.chainId].getTokenUri({params: [tid.toNumber()]});
-  //     return await axios.get(uri.toString());
-  //   }))
-  //
-  //   observable.setTokenUris(tokenUris);
-  //   observable.setLoading(false);
-  //   observable.setLoaded(true);
-  // }
+  async function fetchNFTs() {
+    observable.setLoading(true)
+    const tokenIds = Array(observable.balance);
+
+    for (let i = 0; i < observable.balance; i++) {
+      tokenIds[i] = i;
+    }
+    const tokenUris = tokenIds;
+    // const tokenUris = await Promise.all(tokenIds.map(async (tid) => {
+    //   const uri = await ploot.contracts[observable.chainId].getTokenUri({params: [tid.toNumber()]});
+    //   return await axios.get(uri.toString());
+    // }))
+
+    observable.setTokenUris(tokenUris);
+    observable.setLoading(false);
+    observable.setLoaded(true);
+  }
 
   async function updateBalance() {
     const balance = await pNft.contracts[observable.chainId].balanceOf({params: [pNft.god.currentNetwork.account]});
     observable.setBalance(balance);
+  }
+
+  async function approve() {
+    try {
+      await pNft.contracts[god.currentChain.chainId].setApprovalForAll({
+        params: [nftStake.contracts[god.currentChain.chainId].address]
+      });
+    } catch (e) {
+      alert(JSON.stringify(e.data.message))
+    }
+  }
+
+  async function deposit(tokenId) {
+    try {
+      await nftStake.contracts[god.currentChain.chainId].deposit({
+        params: [tokenId]
+      })
+    } catch (e) {
+      alert(JSON.stringify(e.data.message))
+    }
   }
 
   return(
@@ -121,7 +142,19 @@ export const MyNFTs = observer(() => {
       <Container maxW={'container.xl'} mt={10}>
         {observable.chainId === IOTX_TEST_CHAINID
           ?
-          <Text>Your balance: {observable.balance}</Text>
+          <Stack>
+            <Button onClick={() => {approve()}}>
+              approve
+            </Button>
+            {observable.tokenUris.map((nft) => (
+              <Button
+                key={nft}
+                onClick={() => {deposit(nft)}}
+              >
+                TokenId {nft}
+              </Button>
+            ))}
+          </Stack>
           // <LootCards
           //   balance={observable.balance}
           //   tokenUris={observable.tokenUris}

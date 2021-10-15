@@ -81,4 +81,14 @@ export class PebbleNftState {
       },
       args))
   }
+
+  setApprovalForAll(args: Partial<CallParams>) {
+    console.log("setting approval: ", args)
+    return this.network.execContract(Object.assign({
+        address: this.address,
+        abi: this.abi,
+        method: 'setApprovalForAll'
+      },
+      args))
+  }
 }
