@@ -42,7 +42,7 @@ export const ChartsFrameOffChain = observer((props: PropsType) => {
     observable.deactivateInterval();
     var queryInterval = setInterval(() => {
       props.queryRecords(pebble.imei)
-    }, 5000);
+    }, 300000);
     observable.activateInterval(queryInterval);
   }, [pebble.imei]);
 
@@ -115,12 +115,6 @@ export const ChartsFrameOffChain = observer((props: PropsType) => {
             <Stack>
               <Button variant={"ghost"} colorScheme={"black"} onClick={onOpen}>
                 Choose device
-              </Button>
-              <Button variant={"ghost"} colorScheme={"black"} onClick={() => {approve()}}>
-                Approve
-              </Button>
-              <Button variant={"ghost"} colorScheme={"black"} onClick={() => {mint()}}>
-                Mint Last Datapoint
               </Button>
             </Stack>
             <Divider/>
