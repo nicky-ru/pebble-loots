@@ -20,7 +20,7 @@ describe('LootStake', () => {
     this.pbl = await this.PBL.connect(admin).deploy();
     await this.pbl.deployed();
 
-    this.nft = await this.PebbleNFT.connect(admin).deploy(this.pbl.address, burnMultiplier);
+    this.nft = await this.PebbleNFT.connect(admin).deploy(this.pbl.address, burnMultiplier, feeReceipient.address);
     await this.nft.deployed();
 
     this.nftStake = await this.NFTStake

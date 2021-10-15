@@ -3,7 +3,7 @@ const {expect} = require('chai');
 describe('PebbleNFT', () => {
   const name = "PebbleDataPoint";
   const symbol = "PDP";
-  let admin, minter;
+  let admin, minter, feeReceipient;
   const burnMultiplier = 10;
   const dataPoint = [
     "2",
@@ -22,7 +22,7 @@ describe('PebbleNFT', () => {
   const [token1, token2, token3] = [0, 1, 2];
 
   before('get factories', async () => {
-    [admin, minter] = await ethers.getSigners();
+    [admin, minter, feeReceipient] = await ethers.getSigners();
     this.PebbleNFT = await ethers.getContractFactory('PebbleDataPoint');
     this.PBL = await ethers.getContractFactory('PebbleToken');
   })
@@ -30,7 +30,7 @@ describe('PebbleNFT', () => {
   beforeEach('deploy contract', async () => {
     this.pbl = await this.PBL.connect(admin).deploy();
     await this.pbl.deployed();
-    this.pebbleNft = await this.PebbleNFT.connect(admin).deploy(this.pbl.address, burnMultiplier);
+    this.pebbleNft = await this.PebbleNFT.connect(admin).deploy(this.pbl.address, burnMultiplier, feeReceipient.address);
     await this.pebbleNft.deployed();
   })
 
