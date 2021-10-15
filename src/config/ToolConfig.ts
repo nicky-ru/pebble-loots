@@ -5,6 +5,7 @@ import { Minting } from '../pages/Minting';
 import { LootCharts } from '../pages/LootCharts';
 import { PebbleCharts } from '../pages/PebbleCharts';
 import { MyNFTs } from '../pages/NFTs';
+import { DPBank } from '../pages/DPBank/index.js';
 
 class Tool {
   name: string;
@@ -23,24 +24,24 @@ export const ToolConfig = [
     component: Devices,
     tags: ['IoT', 'Pebble']
   }),
-  // new Tool({
-  //   name: 'Loot gallery',
-  //   path: '/myloots',
-  //   component: MyLoots,
-  //   tags: ['NFT', 'Pebble']
-  // }),
-  // new Tool({
-  //   name: 'Mint Loot',
-  //   path: '/mintLoot',
-  //   component: Minting,
-  //   tags: ['NFT', 'Loot', 'Minting']
-  // }),
-  // new Tool({
-  //   name: 'Loot charts 🔥',
-  //   path: '/lootcharts',
-  //   component: LootCharts,
-  //   tags: ['Real data', 'Loot']
-  // }),
+  new Tool({
+    name: 'Loot gallery',
+    path: '/myloots',
+    component: MyLoots,
+    tags: ['NFT', 'Pebble']
+  }),
+  new Tool({
+    name: 'Mint Loot',
+    path: '/mintLoot',
+    component: Minting,
+    tags: ['NFT', 'Loot', 'Minting']
+  }),
+  new Tool({
+    name: 'Loot charts 🔥',
+    path: '/lootcharts',
+    component: LootCharts,
+    tags: ['Real data', 'Loot']
+  }),
   new Tool({
     name: 'Pebble charts',
     path: '/pebblecharts',
@@ -52,5 +53,11 @@ export const ToolConfig = [
     path: '/pebble-nfts',
     component: MyNFTs,
     tags: ['Art', 'NFT']
+  }),
+  new Tool({
+    name: 'DataPoint Bank 🏛',
+    path: '/datapoint-bank',
+    component: DPBank,
+    tags: ['Trusted Data', 'Pebble']
   })
 ];
