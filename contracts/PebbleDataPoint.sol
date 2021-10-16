@@ -2,6 +2,7 @@
 pragma solidity ^0.8.2;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
@@ -10,7 +11,7 @@ import "./Base64.sol";
 import "./PebbleToken.sol";
 
 /// @notice Contract for minting Pebble Data points NFTs
-contract PebbleDataPoint is ERC721, Ownable {
+contract PebbleDataPoint is ERC721, ERC721Enumerable, Ownable {
   using SafeMath for uint256;
   using SafeMath for uint32;
   using SafeMath for uint8;
@@ -77,48 +78,56 @@ contract PebbleDataPoint is ERC721, Ownable {
 
   /// @notice Generator of token URI
   /// @param tokenId Id of NFT
-  function tokenURI(
-    uint256 tokenId
-  )
+  function tokenURI(uint256 tokenId)
   public
   override
   view
   returns (string memory)
   {
-    DataPoint memory dp = tokenToDataPoint[tokenId];
-
-    string[3] memory parts;
-
-    parts[0] = '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><style>.base { fill: white; font-family: serif; font-size: 14px; }</style><rect width="100%" height="100%" fill="black" /><text x="10" y="20" class="base">';
-
-    parts[1] = string(abi.encodePacked(
-        "DataPoint Loot #", toString(tokenId), '</text><text x="10" y="40" class="base">',
-          "snr: ", dp.snr, '</text><text x="10" y="60" class="base">',
-          "vbat: ", dp.vbat, '</text><text x="10" y="80" class="base">',
-          "latitude: ", dp.latitude, '</text><text x="10" y="100" class="base">',
-          "longitude: ", dp.longitude, '</text><text x="10" y="120" class="base">',
-          "gas resistance: ", dp.gasResistance, '</text><text x="10" y="140" class="base">',
-          "temperature: ", dp.temperature, '</text><text x="10" y="160" class="base">'
+    string memory output = string(abi.encodePacked(
+        '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><style>.base { fill: white; font-family: serif; font-size: 14px; }</style><rect width="100%" height="100%" fill="black" /><text x="10" y="20" class="base">Datapoint Loot #',
+          toString(tokenId), '</text><text x="10" y="40" class="base">snr: ',
+          tokenToDataPoint[tokenId].snr, '</text><text x="10" y="60" class="base">vbat: ',
+          tokenToDataPoint[tokenId].vbat, '</text><text x="10" y="80" class="base">latitude: ',
+          tokenToDataPoint[tokenId].latitude, '</text><text x="10" y="100" class="base">longitude: ',
+          tokenToDataPoint[tokenId].longitude, '</text><text x="10" y="120" class="base">gas resistance: ',
+          tokenToDataPoint[tokenId].gasResistance, '</text><text x="10" y="140" class="base">temperature: ',
+          tokenToDataPoint[tokenId].temperature, '</text><text x="10" y="160" class="base">pressure: ',
+          tokenToDataPoint[tokenId].pressure, '</text><text x="10" y="180" class="base">humidity: '
     ));
 
-    parts[2] = string(abi.encodePacked(
-        "pressure: ", dp.pressure, '</text><text x="10" y="180" class="base">',
-        "humidity: ", dp.humidity, '</text><text x="10" y="200" class="base">',
-        "light: ", dp.light, '</text><text x="10" y="220" class="base">',
-        "gyroscope: ", dp.gyroscope, '</text><text x="10" y="240" class="base">',
-        "accelerometer: ", dp.accelerometer, '</text><text x="10" y="260" class="base">',
-        "timestamp: ", dp.timestamp, '</text><text x="10" y="280" class="base">',
-        "digging power: ", toString(tokenToHashPower[tokenId]), '</text></svg>'
+    output = string(abi.encodePacked(
+        output,
+        tokenToDataPoint[tokenId].humidity, '</text><text x="10" y="200" class="base">light: ',
+        tokenToDataPoint[tokenId].light, '</text><text x="10" y="220" class="base">gyroscope: ',
+        tokenToDataPoint[tokenId].gyroscope, '</text><text x="10" y="240" class="base">accelerometer: ',
+        tokenToDataPoint[tokenId].accelerometer, '</text><text x="10" y="260" class="base">timestamp: ',
+        tokenToDataPoint[tokenId].timestamp, '</text><text x="10" y="280" class="base">digging power: ',
+        toString(tokenToHashPower[tokenId]), '</text></svg>'
       ));
 
-    string memory output = string(abi.encodePacked(parts[0], parts[1], parts[2]));
-    string memory name = string(abi.encodePacked('"name": "Pebble #', toString(tokenId), '"'));
-    string memory description = string(abi.encodePacked('"description": "Pebble Loot is a real world data stored on chain. Stats, images, and other functionality are intentionally omitted for others to interpret. Feel free to use Pebble Loot in any way you want."'));
+    string memory name = string(abi.encodePacked('"name": "Datapoint Loot #', toString(tokenId), '"'));
+    string memory description = string(abi.encodePacked('"description": "Datapoint Loot is a verified and trusted real world datapoint stored on chain. Stats, images, and other functionality are intentionally omitted for others to interpret. Feel free to use Pebble datapoint Loot in any way you want."'));
 
     string memory json = Base64.encode(bytes(string(abi.encodePacked('{', name, ',', description, ',"image": "data:image/svg+xml;base64,', Base64.encode(bytes(output)), '"}'))));
     output = string(abi.encodePacked('data:application/json;base64,', json));
 
     return output;
+  }
+
+  //////////
+  // Admin /
+  //////////
+
+  /// @notice Method for updating burn multiplier
+  /// @dev only admin
+  function updateBurnMultiplier(uint256 _burnMultiplier) external onlyOwner {
+    burnMultiplier = _burnMultiplier;
+  }
+
+  /// @notice Method for updating fee receipient
+  function updateFeeReceipient(address payable _feeReceipient) external onlyOwner {
+    feeReceipient = _feeReceipient;
   }
 
   /////////////////////////
@@ -183,5 +192,21 @@ contract PebbleDataPoint is ERC721, Ownable {
       value /= 10;
     }
     return string(buffer);
+  }
+
+  function _beforeTokenTransfer(address from, address to, uint256 tokenId)
+  internal
+  override(ERC721, ERC721Enumerable)
+  {
+    super._beforeTokenTransfer(from, to, tokenId);
+  }
+
+  function supportsInterface(bytes4 interfaceId)
+  public
+  view
+  override(ERC721, ERC721Enumerable)
+  returns (bool)
+  {
+    return super.supportsInterface(interfaceId);
   }
 }

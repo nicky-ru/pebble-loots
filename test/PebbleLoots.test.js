@@ -9,6 +9,7 @@ describe("Pebble Loots", () => {
   const name = "Pebble Loots";
   const symbol = "PLOOT";
   const mintingFee = 250;
+  const imei1 = 100000000000000;
 
   let registrationAddress;
   let feeReceipient, admin, minter, regOperator, deviceOwner1, deviceOwner2, device1, device2, device3;
@@ -27,11 +28,11 @@ describe("Pebble Loots", () => {
 
     await this.registration
       .connect(regOperator)
-      .ship([100000000000000], [device1.address])
+      .ship([imei1], [device1.address])
 
     await this.registration
       .connect(regOperator)
-      .setOwner(100000000000000, deviceOwner1.address)
+      .setOwner(imei1, deviceOwner1.address)
   })
 
   beforeEach('deploy contract', async () => {
@@ -65,24 +66,23 @@ describe("Pebble Loots", () => {
     const testUri = {
       tokenId: 1,
       expectedUri:
-        "data:application/json;base64,eyJuYW1lIjogIlBlYmJsZ" +
-        "SAjMSIsImRlc2NyaXB0aW9uIjogIlBlYmJsZSBMb290IGlzIGE" +
-        "gcmVhbCB3b3JsZCBkYXRhIHN0b3JlZCBvbiBjaGFpbi4gU3Rhd" +
-        "HMsIGltYWdlcywgYW5kIG90aGVyIGZ1bmN0aW9uYWxpdHkgYXJ" +
-        "lIGludGVudGlvbmFsbHkgb21pdHRlZCBmb3Igb3RoZXJzIHRvI" +
-        "GludGVycHJldC4gRmVlbCBmcmVlIHRvIHVzZSBQZWJibGUgTG9" +
-        "vdCBpbiBhbnkgd2F5IHlvdSB3YW50LiIsImltYWdlIjogImRhd" +
-        "GE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjRiV3h1Y3o" +
-        "waWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzl6ZG1ja" +
-        "UlIQnlaWE5sY25abFFYTndaV04wVW1GMGFXODlJbmhOYVc1WlR" +
-        "XbHVJRzFsWlhRaUlIWnBaWGRDYjNnOUlqQWdNQ0F6TlRBZ016V" +
-        "XdJajQ4YzNSNWJHVStMbUpoYzJVZ2V5Qm1hV3hzT2lCM2FHbDB" +
-        "aVHNnWm05dWRDMW1ZVzFwYkhrNklITmxjbWxtT3lCbWIyNTBMW" +
-        "E5wZW1VNklERTBjSGc3SUgwOEwzTjBlV3hsUGp4eVpXTjBJSGR" +
-        "wWkhSb1BTSXhNREFsSWlCb1pXbG5hSFE5SWpFd01DVWlJR1pwY" +
-        "kd3OUltSnNZV05ySWlBdlBqeDBaWGgwSUhnOUlqRXdJaUI1UFN" +
-        "JeU1DSWdZMnhoYzNNOUltSmhjMlVpUGxCbFltSnNaU0JNYjI5M" +
-        "ElDTXhQQzkwWlhoMFBqd3ZjM1puUGc9PSJ9"
+        "data:application/json;base64,eyJuYW1lIjogIlBlYmJsZSB" +
+        "JTUVJICMxIiwiZGVzY3JpcHRpb24iOiAiUGViYmxlIExvb3QgaXM" +
+        "gYSByZWFsIHdvcmxkIGRhdGEgc3RvcmVkIG9uIGNoYWluLiBTdGF" +
+        "0cywgaW1hZ2VzLCBhbmQgb3RoZXIgZnVuY3Rpb25hbGl0eSBhcmU" +
+        "gaW50ZW50aW9uYWxseSBvbWl0dGVkIGZvciBvdGhlcnMgdG8gaW5" +
+        "0ZXJwcmV0LiBGZWVsIGZyZWUgdG8gdXNlIFBlYmJsZSBMb290IGl" +
+        "uIGFueSB3YXkgeW91IHdhbnQuIiwiaW1hZ2UiOiAiZGF0YTppbWF" +
+        "nZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCNGJXeHVjejBpYUhSMGN" +
+        "Eb3ZMM2QzZHk1M015NXZjbWN2TWpBd01DOXpkbWNpSUhCeVpYTmx" +
+        "jblpsUVhOd1pXTjBVbUYwYVc4OUluaE5hVzVaVFdsdUlHMWxaWFF" +
+        "pSUhacFpYZENiM2c5SWpBZ01DQXpOVEFnTXpVd0lqNDhjM1I1Ykd" +
+        "VK0xtSmhjMlVnZXlCbWFXeHNPaUIzYUdsMFpUc2dabTl1ZEMxbVl" +
+        "XMXBiSGs2SUhObGNtbG1PeUJtYjI1MExYTnBlbVU2SURFMGNIZzd" +
+        "JSDA4TDNOMGVXeGxQanh5WldOMElIZHBaSFJvUFNJeE1EQWxJaUJ" +
+        "vWldsbmFIUTlJakV3TUNVaUlHWnBiR3c5SW1Kc1lXTnJJaUF2UGp" +
+        "4MFpYaDBJSGc5SWpFd0lpQjVQU0l5TUNJZ1kyeGhjM005SW1KaGM" +
+        "yVWlQbEJsWW1Kc1pTQk1iMjkwSUNNeFBDOTBaWGgwUGp3dmMzWm5QZz09In0="
     }
 
     it('returns token Uri', async () => {
@@ -190,15 +190,17 @@ describe("Pebble Loots", () => {
         .to.be.revertedWith("You should own the device to mint this loot")
     })
     it.skip('device owner should be able to mint nft', async () => {
-      const imei = 100000000000000;
-
       await expect(
         this.pebbleLoot
           .connect(deviceOwner1)
-          .claim(imei)
+          .claim(imei1)
       )
         .to.emit(this.pebbleLoot, 'TokenMinted')
-        .withArgs(deviceOwner1.address, imei);
+        .withArgs(deviceOwner1.address, imei1);
     })
+  })
+
+  describe('enumerating', () => {
+
   })
 })

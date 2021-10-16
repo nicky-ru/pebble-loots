@@ -4,10 +4,11 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "./TrueStream/interfaces/IRegistration.sol";
 import "./Base64.sol";
 
-contract PebbleLoot is ERC721, ReentrancyGuard, Ownable {
+contract PebbleLoot is ERC721, ReentrancyGuard, ERC721Enumerable, Ownable {
 
   /// @dev Contract events
   event RegistrationUpdated(
@@ -63,17 +64,14 @@ contract PebbleLoot is ERC721, ReentrancyGuard, Ownable {
   pure
   returns (string memory)
   {
-    string[3] memory parts;
+    string memory output = string(abi.encodePacked(
+      '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><style>.base { fill: white; font-family: serif; font-size: 14px; }</style><rect width="100%" height="100%" fill="black" /><text x="10" y="20" class="base">',
+      "Pebble Loot #",
+      toString(tokenId),
+      '</text></svg>'
+      ));
 
-    parts[0] = '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><style>.base { fill: white; font-family: serif; font-size: 14px; }</style><rect width="100%" height="100%" fill="black" /><text x="10" y="20" class="base">';
-
-    parts[1] = string(abi.encodePacked("Pebble Loot #", toString(tokenId)));
-
-    parts[2] = '</text></svg>';
-
-    string memory output = string(abi.encodePacked(parts[0], parts[1], parts[2]));
-
-    string memory name = string(abi.encodePacked('"name": "Pebble #', toString(tokenId), '"'));
+    string memory name = string(abi.encodePacked('"name": "Pebble IMEI #', toString(tokenId), '"'));
     string memory description = string(abi.encodePacked('"description": "Pebble Loot is a real world data stored on chain. Stats, images, and other functionality are intentionally omitted for others to interpret. Feel free to use Pebble Loot in any way you want."'));
 
     string memory json = Base64.encode(bytes(string(abi.encodePacked('{', name, ',', description, ',"image": "data:image/svg+xml;base64,', Base64.encode(bytes(output)), '"}'))));
@@ -171,5 +169,21 @@ contract PebbleLoot is ERC721, ReentrancyGuard, Ownable {
       value /= 10;
     }
     return string(buffer);
+  }
+
+  function _beforeTokenTransfer(address from, address to, uint256 tokenId)
+  internal
+  override(ERC721, ERC721Enumerable)
+  {
+    super._beforeTokenTransfer(from, to, tokenId);
+  }
+
+  function supportsInterface(bytes4 interfaceId)
+  public
+  view
+  override(ERC721, ERC721Enumerable)
+  returns (bool)
+  {
+    return super.supportsInterface(interfaceId);
   }
 }
