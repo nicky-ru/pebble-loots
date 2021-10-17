@@ -163,7 +163,7 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
     UserInfo storage user = userInfo[_msgSender()];
     uint256[] memory userTokenIds = new uint256[](user.numOfTokens);
 
-    for (uint256 i = 0; i < 2 ** 256 - 1; i.add(1)) {
+    for (uint256 i = 0; i < 2 ** 256 - 1; i++) {
       if (count >= user.numOfTokens) break;
       if (user.tokenIds[i]) {
         userTokenIds[count] = i;

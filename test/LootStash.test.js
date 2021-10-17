@@ -49,6 +49,20 @@ describe('Loot Stash', () => {
         .to.emit(this.stash, "Deposit")
         .withArgs(nftHolder1.address, tokenId1, 1);
     });
+    it('should show staked token ids for each user', async () => {
+      await this.dpl.connect(nftHolder1).setApprovalForAll(this.stash.address, true);
+      await this.dpl.connect(nftHolder2).setApprovalForAll(this.stash.address, true);
+
+      await this.stash.connect(nftHolder1).deposit(tokenId1);
+      await this.stash.connect(nftHolder2).deposit(tokenId2);
+      await this.stash.connect(nftHolder2).deposit(tokenId3);
+
+      const ids = await this.stash.connect(nftHolder1).getTokenIds();
+      const ids2 = await this.stash.connect(nftHolder2).getTokenIds();
+
+      expect(ids.toString()).to.be.equal([tokenId1].toString())
+      expect(ids2.toString()).to.be.equal([tokenId2, tokenId3].toString())
+    })
     it('revert if users deposits not his nft', async () => {
       await this.dpl.connect(nftHolder1).setApprovalForAll(this.stash.address, true);
       await expect(

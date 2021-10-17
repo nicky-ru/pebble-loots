@@ -6,6 +6,7 @@ import axios from 'axios';
 import { BooleanState } from '@/store/standard/base';
 import { RecordList } from '@/components/Records/rec-list';
 import { DPLoots } from '@/components/DPLoots';
+import { Stash } from '@/components/DPLoots/Stash';
 import { Records } from '@/components/Records';
 
 export const DPBank = observer(() => {
@@ -69,7 +70,7 @@ export const DPBank = observer(() => {
             <DPLoots/>
           </TabPanel>
           <TabPanel>
-            <p>three!</p>
+            <Stash/>
           </TabPanel>
         </TabPanels>
       </Tabs>

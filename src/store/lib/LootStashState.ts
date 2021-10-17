@@ -36,4 +36,12 @@ export class LootStashState {
     },
       args))
   }
+
+  getMyStashedTokens() {
+    return this.network.execContract(Object.assign({
+      address: this.address,
+      abi: this.abi,
+      method: 'getTokenIds'
+    }))
+  }
 }
