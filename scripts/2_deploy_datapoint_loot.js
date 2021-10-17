@@ -1,4 +1,4 @@
-const { PEBBLE_TOKEN_ADDRESS } = require("./constants");
+const { PEBBLE_TOKEN_ADDRESS, TREASURY_ADDRESS } = require("./constants");
 const burnMultiplier = 10;
 
 async function main() {
@@ -6,8 +6,8 @@ async function main() {
   const deployerAddress = await deployer.getAddress();
   console.log('Deploying Pebble Loot with address:', deployerAddress);
 
-  const DPL = await ethers.getContractFactory('Datapoint Loot');
-  const dpl = await DPL.deploy(PEBBLE_TOKEN_ADDRESS, burnMultiplier);
+  const DPL = await ethers.getContractFactory('DatapointLoot');
+  const dpl = await DPL.deploy(PEBBLE_TOKEN_ADDRESS, burnMultiplier, TREASURY_ADDRESS);
   await dpl.deployed();
 
   console.log('Datapoint Loot contract deployed to:', dpl.address);

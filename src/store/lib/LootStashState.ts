@@ -1,12 +1,12 @@
-import * as NFTStakeJSON from '../../constants/artifacts/contracts/LootStake.sol/LootStake.json';
+import * as LootStashJSON from '../../constants/artifacts/contracts/LootStash.sol/LootStash.json';
 import { NetworkState } from '@/store/lib/NetworkState';
 import { BigNumberState } from '@/store/standard/BigNumberState';
 import { BooleanState } from '@/store/standard/base';
 import { makeObservable, observable } from 'mobx';
 import { CallParams } from '../../../type';
 
-export class NFTStakeState {
-  abi = NFTStakeJSON.abi;
+export class LootStashState {
+  abi = LootStashJSON.abi;
   name: string = '';
   symbol: string = '';
   address: string = '';
@@ -20,7 +20,7 @@ export class NFTStakeState {
     loading: new BooleanState()
   }
 
-  constructor(args: Partial<NFTStakeState>) {
+  constructor(args: Partial<LootStashState>) {
     Object.assign(this, args);
     this.balance = new BigNumberState({loading: true})
     makeObservable(this, {

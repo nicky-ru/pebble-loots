@@ -7,7 +7,7 @@ import { BooleanState } from '@/store/standard/base';
 import { RecordList } from '@/components/Records/rec-list';
 
 export const DPBank = observer(() => {
-  const { rec, pebble, god, pNft } = useStore();
+  const { rec, pebble, god, dpLoot } = useStore();
 
   const observable = useLocalObservable(() => ({
     loaded: new BooleanState(),
@@ -71,7 +71,7 @@ export const DPBank = observer(() => {
     console.log("Minting dp", dataPoint);
 
     try {
-      await pNft.contracts[god.currentChain.chainId].claim({
+      await dpLoot.contracts[god.currentChain.chainId].claim({
         params: [god.currentNetwork.account, dataPoint]
       })
     } catch (e) {

@@ -15,7 +15,7 @@ const toast = createStandaloneToast();
 const IOTX_TEST_CHAINID = 4690;
 
 export const MyNFTs = observer(() => {
-  const { pNft, god, nftStake } = useStore();
+  const { dpLoot, god, stash } = useStore();
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const store = useLocalStore(() => ({
@@ -71,16 +71,16 @@ export const MyNFTs = observer(() => {
   }))
 
   useEffect(() => {
-    if (pNft.god.currentNetwork.account) {
-      observable.setChainId(pNft.god.currentChain.chainId);
+    if (dpLoot.god.currentNetwork.account) {
+      observable.setChainId(dpLoot.god.currentChain.chainId);
     }
-  }, [pNft.god.currentChain.chainId]);
+  }, [dpLoot.god.currentChain.chainId]);
 
   useEffect(() => {
     if (observable.chainId === IOTX_TEST_CHAINID) {
       updateBalance();
     }
-  }, [pNft.god.currentNetwork.account])
+  }, [dpLoot.god.currentNetwork.account])
 
   useEffect(() => {
     if (observable.chainId === IOTX_TEST_CHAINID) {
@@ -113,14 +113,14 @@ export const MyNFTs = observer(() => {
   }
 
   async function updateBalance() {
-    const balance = await pNft.contracts[observable.chainId].balanceOf({params: [pNft.god.currentNetwork.account]});
+    const balance = await dpLoot.contracts[observable.chainId].balanceOf({params: [dpLoot.god.currentNetwork.account]});
     observable.setBalance(balance);
   }
 
   async function approve() {
     try {
-      await pNft.contracts[god.currentChain.chainId].setApprovalForAll({
-        params: [nftStake.contracts[god.currentChain.chainId].address]
+      await dpLoot.contracts[god.currentChain.chainId].setApprovalForAll({
+        params: [stash.contracts[god.currentChain.chainId].address]
       });
     } catch (e) {
       alert(JSON.stringify(e.data.message))
@@ -129,7 +129,7 @@ export const MyNFTs = observer(() => {
 
   async function deposit(tokenId) {
     try {
-      await nftStake.contracts[god.currentChain.chainId].deposit({
+      await stash.contracts[god.currentChain.chainId].deposit({
         params: [tokenId]
       })
     } catch (e) {

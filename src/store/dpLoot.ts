@@ -1,22 +1,22 @@
 import { makeAutoObservable } from 'mobx';
 import { NetworkState } from '@/store/lib/NetworkState';
-import { NFTStakeState } from '@/store/lib/NFTStakeState';
-import nftStake from '../constants/contracts/nft_stake.json';
+import { DatapointLootState } from '@/store/lib/DatapointLootState';
+import datapointLoot from '../constants/contracts/datapoint_loot.json';
 import { RootStore } from '@/store/root';
 import { EthNetworkConfig } from '../config/NetworkConfig';
 import { IotexTestnetConfig } from '../config/IotexTestnetConfig';
 
-export class NftStakeStore {
+export class DatapointLootStore {
   rootStore: RootStore;
   network: NetworkState;
   balance: number = 5;
-  contracts: { [key: number]: NFTStakeState } = {};
+  contracts: { [key: number]: DatapointLootState } = {};
   tokenUris: any[];
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     this.contracts = {
-      [IotexTestnetConfig.chainId]: new NFTStakeState({ ...nftStake[IotexTestnetConfig.chainId], network: EthNetworkConfig })
+      [IotexTestnetConfig.chainId]: new DatapointLootState({ ...datapointLoot[IotexTestnetConfig.chainId], network: EthNetworkConfig })
     }
 
     makeAutoObservable(this, {

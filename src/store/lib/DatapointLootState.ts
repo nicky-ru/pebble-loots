@@ -1,12 +1,12 @@
-import * as PebbleNftJSON from '../../constants/artifacts/contracts/PebbleDataPoint.sol/PebbleDataPoint.json';
+import * as DatapointLootJSON from '../../constants/artifacts/contracts/DatapointLoot.sol/DatapointLoot.json';
 import { NetworkState } from '@/store/lib/NetworkState';
 import { BigNumberState } from '@/store/standard/BigNumberState';
 import { BooleanState } from '@/store/standard/base';
 import { makeObservable, observable } from 'mobx';
 import { CallParams } from '../../../type';
 
-export class PebbleNftState {
-  abi = PebbleNftJSON.abi;
+export class DatapointLootState {
+  abi = DatapointLootJSON.abi;
   name: string = '';
   symbol: string = '';
   address: string = '';
@@ -20,7 +20,7 @@ export class PebbleNftState {
     loading: new BooleanState()
   }
 
-  constructor(args: Partial<PebbleNftState>) {
+  constructor(args: Partial<DatapointLootState>) {
     Object.assign(this, args);
     this.balance = new BigNumberState({loading: true})
     makeObservable(this, {

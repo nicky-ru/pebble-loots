@@ -24,7 +24,7 @@ interface PropsType {
 }
 
 export const ChartsFrameOffChain = observer((props: PropsType) => {
-  const { pebble, pNft, rec, god, token } = useStore();
+  const { pebble, dpLoot, rec, god, token } = useStore();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
 
@@ -76,7 +76,7 @@ export const ChartsFrameOffChain = observer((props: PropsType) => {
 
     console.log("here is the dp", dataPoint);
     try {
-      await pNft.contracts[god.currentChain.chainId].claim({
+      await dpLoot.contracts[god.currentChain.chainId].claim({
         params: [god.currentNetwork.account, dataPoint]
       })
     } catch (e) {
@@ -89,7 +89,7 @@ export const ChartsFrameOffChain = observer((props: PropsType) => {
       const tokee = token.tokens[god.currentChain.chainId]
         .filter((token) => token.symbol == "PBL")
       await tokee[0].approve({
-        params: [pNft.contracts[god.currentChain.chainId].address, 1000]
+        params: [dpLoot.contracts[god.currentChain.chainId].address, 1000]
       });
     } catch (e) {
       alert(JSON.stringify(e.data.message))

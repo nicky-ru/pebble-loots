@@ -5,7 +5,7 @@ import { Minting } from '../pages/Minting';
 import { LootCharts } from '../pages/LootCharts';
 import { PebbleCharts } from '../pages/PebbleCharts';
 import { MyNFTs } from '../pages/NFTs';
-import { DPBank } from '../pages/DPBank/index.js';
+import { DPBank } from '../pages/DPBank';
 
 class Tool {
   name: string;
