@@ -14,7 +14,7 @@ import '@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol';
 import "./PebbleToken.sol";
 import "./DatapointLoot.sol";
 
-contract LootStake is Ownable, ReentrancyGuard, IERC721Receiver {
+contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
   using SafeMath for uint256;
   using SafeERC20 for IERC20;
 
@@ -120,7 +120,7 @@ contract LootStake is Ownable, ReentrancyGuard, IERC721Receiver {
     emit Deposit(_msgSender(), _tokenId, pNFT.tokenToHashPower(_tokenId));
   }
 
-  /// @notice Withdraw Pebble NFTs from Loot Stake
+  /// @notice Withdraw Pebble NFTs from Loot Stash
   function withdraw(uint256 _tokenId) public {
     UserInfo storage user = userInfo[_msgSender()];
     require(user.tokenIds[_tokenId], "Withdraw: not good");

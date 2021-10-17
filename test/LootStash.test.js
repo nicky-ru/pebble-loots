@@ -1,6 +1,6 @@
 const {expect} = require('chai');
 
-describe('LootStake', () => {
+describe('Loot Stash', () => {
   let admin, nftHolder1, nftHolder2, feeReceipient;
   const burnMultiplier = 10;
   const pebblePerBlock = 10;
@@ -13,7 +13,7 @@ describe('LootStake', () => {
     [admin, nftHolder1, nftHolder2, feeReceipient] = await ethers.getSigners();
     this.PBL = await ethers.getContractFactory('PebbleToken');
     this.DPL = await ethers.getContractFactory('DatapointLoot');
-    this.NFTStake = await ethers.getContractFactory('LootStake');
+    this.LootStash = await ethers.getContractFactory('LootStash');
   })
 
   beforeEach( async () => {
@@ -23,10 +23,10 @@ describe('LootStake', () => {
     this.dpl = await this.DPL.connect(admin).deploy(this.pbl.address, burnMultiplier, feeReceipient.address);
     await this.dpl.deployed();
 
-    this.nftStake = await this.NFTStake
+    this.stash = await this.LootStash
       .connect(admin)
       .deploy(this.pbl.address, this.dpl.address, pebblePerBlock, feeReceipient.address);
-    await this.nftStake.deployed();
+    await this.stash.deployed();
 
     // preminting nfts
     await this.pbl.connect(admin).transfer(nftHolder1.address, 1000);
@@ -42,17 +42,17 @@ describe('LootStake', () => {
 
   describe('deposits', () => {
     it('user should be able to deposit his nft', async () => {
-      await this.dpl.connect(nftHolder1).setApprovalForAll(this.nftStake.address, true);
+      await this.dpl.connect(nftHolder1).setApprovalForAll(this.stash.address, true);
       await expect(
-        this.nftStake.connect(nftHolder1).deposit(tokenId1)
+        this.stash.connect(nftHolder1).deposit(tokenId1)
       )
-        .to.emit(this.nftStake, "Deposit")
+        .to.emit(this.stash, "Deposit")
         .withArgs(nftHolder1.address, tokenId1, 1);
     });
     it('revert if users deposits not his nft', async () => {
-      await this.dpl.connect(nftHolder1).setApprovalForAll(this.nftStake.address, true);
+      await this.dpl.connect(nftHolder1).setApprovalForAll(this.stash.address, true);
       await expect(
-        this.nftStake.connect(nftHolder1).deposit(tokenId2)
+        this.stash.connect(nftHolder1).deposit(tokenId2)
       )
         .to.be.revertedWith("Deposit: not owning item");
     })
@@ -60,19 +60,19 @@ describe('LootStake', () => {
 
   describe('withdrawals', () => {
     beforeEach(async () => {
-      await this.dpl.connect(nftHolder1).setApprovalForAll(this.nftStake.address, true);
-      await this.nftStake.connect(nftHolder1).deposit(tokenId1);
+      await this.dpl.connect(nftHolder1).setApprovalForAll(this.stash.address, true);
+      await this.stash.connect(nftHolder1).deposit(tokenId1);
     })
     it('should allow user to withdraw his nft', async () => {
       await expect(
-        this.nftStake.connect(nftHolder1).withdraw(tokenId1)
+        this.stash.connect(nftHolder1).withdraw(tokenId1)
       )
-        .to.emit(this.nftStake, "Withdraw")
+        .to.emit(this.stash, "Withdraw")
         .withArgs(nftHolder1.address, tokenId1);
     });
     it('reverts if users tries to withdraw not his nft', async () => {
       await expect(
-        this.nftStake.connect(nftHolder1).withdraw(tokenId2)
+        this.stash.connect(nftHolder1).withdraw(tokenId2)
       )
         .to.be.revertedWith("Withdraw: not good");
     })
