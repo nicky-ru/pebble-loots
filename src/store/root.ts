@@ -12,7 +12,7 @@ export class RootStore {
   god = new GodStore(this);
   token = new TokenStore(this);
   pebble = new PebbleStore();
-  rec = new RecordStore();
+  rec = new RecordStore(this);
   ploot = new ContractStore(this);
   dpLoot = new DatapointLootStore(this);
   stash = new LootStashStore(this);
