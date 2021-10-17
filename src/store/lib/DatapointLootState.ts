@@ -55,23 +55,23 @@ export class DatapointLootState {
       args))
   }
 
-  // tokenOfOwnerByIndex(args: Partial<CallParams>) {
-  //   return this.network.execContract(Object.assign({
-  //       address: this.address,
-  //       abi: this.abi,
-  //       method: 'tokenOfOwnerByIndex'
-  //     },
-  //     args))
-  // }
-  //
-  // getTokenUri(args: Partial<CallParams>) {
-  //   return this.network.execContract(Object.assign({
-  //       address: this.address,
-  //       abi: this.abi,
-  //       method: 'tokenURI'
-  //     },
-  //     args))
-  // }
+  tokenOfOwnerByIndex(args: Partial<CallParams>) {
+    return this.network.execContract(Object.assign({
+        address: this.address,
+        abi: this.abi,
+        method: 'tokenOfOwnerByIndex'
+      },
+      args))
+  }
+
+  getTokenUri(args: Partial<CallParams>) {
+    return this.network.execContract(Object.assign({
+        address: this.address,
+        abi: this.abi,
+        method: 'tokenURI'
+      },
+      args))
+  }
 
   transferFrom(args: Partial<CallParams>) {
     return this.network.execContract(Object.assign({
