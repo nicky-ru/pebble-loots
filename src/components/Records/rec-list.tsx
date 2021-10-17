@@ -5,6 +5,7 @@ import { useStore } from '@/store/index';
 
 interface PropsType {
   onOpen: any;
+  setRecordToMint: any;
 }
 
 export const RecordList = observer((props: PropsType) => {
@@ -49,7 +50,10 @@ export const RecordList = observer((props: PropsType) => {
             <Button
               variant={'ghost'}
               borderRadius={0}
-              onClick={() => {props.onOpen()}}
+              onClick={() => {
+                props.setRecordToMint(i)
+                props.onOpen()
+              }}
             >Mint</Button>
           </Tr>
         ))}
