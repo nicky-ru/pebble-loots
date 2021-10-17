@@ -6,12 +6,11 @@ async function main() {
   const deployerAddress = await deployer.getAddress();
   console.log('Deploying Pebble Loot with address:', deployerAddress);
 
+  const DPL = await ethers.getContractFactory('Datapoint Loot');
+  const dpl = await DPL.deploy(PEBBLE_TOKEN_ADDRESS, burnMultiplier);
+  await dpl.deployed();
 
-  const PebbleNft = await ethers.getContractFactory('PebbleDataPoint');
-  const nft = await PebbleNft.deploy(PEBBLE_TOKEN_ADDRESS, burnMultiplier);
-  await nft.deployed();
-
-  console.log('Pebble NFT contract deployed to:', nft.address);
+  console.log('Datapoint Loot contract deployed to:', dpl.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
