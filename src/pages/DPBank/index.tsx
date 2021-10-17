@@ -55,7 +55,7 @@ export const DPBank = observer(() => {
   return(
     <Container maxW={'container.xl'} mt={16}>
       <Heading align={'center'}>Datapoint Bank</Heading>
-      <Tabs>
+      <Tabs variant={'enclosed'} isFitted mt={4}>
         <TabList>
           <Tab>Raw</Tab>
           <Tab>Minted</Tab>
