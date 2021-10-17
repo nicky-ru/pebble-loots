@@ -103,7 +103,7 @@ contract PebbleDataPoint is ERC721, ERC721Enumerable, Ownable {
         tokenToDataPoint[tokenId].gyroscope, '</text><text x="10" y="240" class="base">accelerometer: ',
         tokenToDataPoint[tokenId].accelerometer, '</text><text x="10" y="260" class="base">timestamp: ',
         tokenToDataPoint[tokenId].timestamp, '</text><text x="10" y="280" class="base">digging power: ',
-        toString(tokenToHashPower[tokenId]), '</text></svg>'
+        toString(tokenToHashPower[tokenId]), '</text><text x="10" y="300" class="base">msg origin and integrity are verified</text></svg>'
       ));
 
     string memory name = string(abi.encodePacked('"name": "Datapoint Loot #', toString(tokenId), '"'));
