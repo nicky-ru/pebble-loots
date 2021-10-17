@@ -1,4 +1,4 @@
-const { PEBBLE_TOKEN_ADDRESS, PEBBLE_NFT_ADDRESS, TREASURY_ADDRESS } = require("./constants");
+const { PEBBLE_TOKEN_ADDRESS, DATAPOINT_LOOT_ADDRESS, TREASURY_ADDRESS } = require("./constants");
 const pebblePerBlock = 10;
 
 async function main() {
@@ -10,7 +10,7 @@ async function main() {
   const NftStake = await ethers.getContractFactory('LootStake');
   const stake = await NftStake.deploy(
     PEBBLE_TOKEN_ADDRESS,
-    PEBBLE_NFT_ADDRESS,
+    DATAPOINT_LOOT_ADDRESS,
     pebblePerBlock,
     TREASURY_ADDRESS
   );
