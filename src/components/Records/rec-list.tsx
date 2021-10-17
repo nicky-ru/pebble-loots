@@ -4,7 +4,7 @@ import { Table, TableCaption, Tbody, Td, Button, Th, Thead, Tr } from '@chakra-u
 import { useStore } from '@/store/index';
 
 interface PropsType {
-  mint: any;
+  onOpen: any;
 }
 
 export const RecordList = observer((props: PropsType) => {
@@ -49,7 +49,7 @@ export const RecordList = observer((props: PropsType) => {
             <Button
               variant={'ghost'}
               borderRadius={0}
-              onClick={() => {props.mint(i)}}
+              onClick={() => {props.onOpen()}}
             >Mint</Button>
           </Tr>
         ))}
