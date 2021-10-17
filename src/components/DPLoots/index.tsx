@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { observer, useLocalObservable, useLocalStore } from 'mobx-react-lite';
 import { Container, Text, Center, Button, createStandaloneToast, useDisclosure } from '@chakra-ui/react';
 import { useStore } from '@/store/index';
-import { LootCards } from '@/components/Loots';
+import { DPCards } from '@/components/DPLoots/DPCards';
 import { TransactionResponse } from '@ethersproject/providers';
 import axios from 'axios';
 import { ErrorFallback } from '@/components/ErrorFallback';
@@ -15,7 +15,7 @@ const toast = createStandaloneToast();
 const IOTX_TEST_CHAINID = 4690;
 
 export const DPLoots = observer(() => {
-  const { dpLoot, god } = useStore();
+  const { dpLoot, god, stash } = useStore();
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const store = useLocalStore(() => ({
@@ -116,18 +116,40 @@ export const DPLoots = observer(() => {
     observable.setBalance(balance);
   }
 
+  async function approve() {
+    try {
+      await dpLoot.contracts[god.currentChain.chainId].setApprovalForAll({
+        params: [stash.contracts[god.currentChain.chainId].address, true]
+      });
+    } catch (e) {
+      alert(JSON.stringify(e.data.message))
+    }
+  }
+
+  async function deposit(tokenId) {
+    try {
+      await stash.contracts[god.currentChain.chainId].deposit({
+        params: [tokenId]
+      })
+    } catch (e) {
+      alert(JSON.stringify(e.data.message))
+    }
+  }
+
   return(
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <Container maxW={'container.xl'} mt={10}>
+      <Container maxW={'container.xl'} >
         {observable.chainId === IOTX_TEST_CHAINID
           ?
-          <LootCards
+          <DPCards
             balance={observable.balance}
             tokenUris={observable.tokenUris}
             loading={observable.loading}
             loaded={observable.loaded}
             onOpen={onOpen}
             setTokenToTransfer={observable.setTokenToTransfer}
+            approve={approve}
+            deposit={deposit}
           />
           :
           <Center w={"full"} flexDirection={"column"}>
