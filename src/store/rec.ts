@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import BigNumber from 'bignumber.js';
+import { RootStore } from '@/store/root';
 
 // class DeviceRecord {
 //   imei: "103381234567402"
@@ -24,9 +25,11 @@ class DecodedRecord {
 }
 
 export class RecordStore {
+  rootStore: RootStore;
   decodedRecords = Array<DecodedRecord>();
 
-  constructor() {
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
     makeAutoObservable(this);
   }
 
@@ -36,5 +39,39 @@ export class RecordStore {
       record.longitude = new BigNumber(record.longitude);
       return record;
     });
+  }
+
+  async mint(id: number) {
+    const rec = this.rootStore.rec;
+    const dpLoot = this.rootStore.dpLoot;
+    const god = this.rootStore.god;
+
+    const snr = rec.decodedRecords[id].snr.toString();
+    const vbat = rec.decodedRecords[id].vbat.toString();
+    const latitude = rec.decodedRecords[id].latitude.toString();
+    const longitude = rec.decodedRecords[id].longitude.toString();
+    const gasResistance = rec.decodedRecords[id].gasResistance.toString();
+    const temperature = rec.decodedRecords[id].temperature.toString();
+    const pressure = rec.decodedRecords[id].pressure.toString();
+    const humidity = rec.decodedRecords[id].humidity.toString();
+    const light = rec.decodedRecords[id].light.toString();
+    const gyroscope = rec.decodedRecords[id].gyroscope.toString();
+    const accelerometer = rec.decodedRecords[id].accelerometer.toString();
+    const random = rec.decodedRecords[id].random.toString();
+
+    const dataPoint = [
+      snr, vbat, latitude, longitude, gasResistance, temperature,
+      pressure, humidity, light, gyroscope, accelerometer, random
+    ];
+
+    console.log("Minting dp", dataPoint);
+
+    try {
+      await dpLoot.contracts[god.currentChain.chainId].claim({
+        params: [god.currentNetwork.account, dataPoint]
+      })
+    } catch (e) {
+      alert(JSON.stringify(e.data.message))
+    }
   }
 }
