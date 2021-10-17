@@ -149,6 +149,29 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
     return this.onERC721Received.selector;
   }
 
+  ////////////
+  // Getters /
+  ////////////
+
+  /// @notice get token ids of a user
+  function getTokenIds()
+  external
+  view
+  returns (uint256[] memory)
+  {
+    uint256 count = 0;
+    UserInfo storage user = userInfo[_msgSender()];
+    uint256[] memory userTokenIds = new uint256[](user.numOfTokens);
+
+    for (uint256 i = 0; i < 2 ** 256 - 1; i.add(1)) {
+      if (count >= user.numOfTokens) break;
+      if (user.tokenIds[i]) {
+        userTokenIds[count] = i;
+        count = count.add(1);
+      }
+    }
+    return userTokenIds;
+  }
 
   //////////
   // Admin /
