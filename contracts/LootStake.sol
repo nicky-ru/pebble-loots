@@ -12,7 +12,7 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import '@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol';
 
 import "./PebbleToken.sol";
-import "./PebbleDataPoint.sol";
+import "./DatapointLoot.sol";
 
 contract LootStake is Ownable, ReentrancyGuard, IERC721Receiver {
   using SafeMath for uint256;
@@ -42,7 +42,7 @@ contract LootStake is Ownable, ReentrancyGuard, IERC721Receiver {
   /// @notice the Pebble Token
   PebbleToken public pbl;
   /// @notice Address of Pebble NFT contract
-  PebbleDataPoint public pNFT;
+  DatapointLoot public pNFT;
   /// @notice initial pbl reward per block
   uint256 public pblPerBlock;
   /// @notice User address => UserInfo
@@ -60,7 +60,7 @@ contract LootStake is Ownable, ReentrancyGuard, IERC721Receiver {
   /// @notice Constructor of the contract
   constructor (
     PebbleToken _pbl,
-    PebbleDataPoint _pNFT,
+    DatapointLoot _pNFT,
     uint256 _pblPerBlock,
     address payable _feeAddress
   )
@@ -156,7 +156,7 @@ contract LootStake is Ownable, ReentrancyGuard, IERC721Receiver {
 
   /// @notice Method for updating address of
   /// Pebble NFTs
-  function updateNftAddress(PebbleDataPoint _pNFT)
+  function updateNftAddress(DatapointLoot _pNFT)
   external
   onlyOwner
   {

@@ -1,8 +1,8 @@
 const {expect} = require('chai');
 
-describe('PebbleNFT', () => {
-  const name = "PebbleDataPoint";
-  const symbol = "PDP";
+describe('Datapoint Loot', () => {
+  const name = "Datapoint Loot";
+  const symbol = "DLT";
   let admin, minter, minter2, feeReceipient;
   const burnMultiplier = 10;
   const dataPoint = [
@@ -65,40 +65,40 @@ describe('PebbleNFT', () => {
 
   before('get factories', async () => {
     [admin, minter, minter2, feeReceipient] = await ethers.getSigners();
-    this.PebbleNFT = await ethers.getContractFactory('PebbleDataPoint');
+    this.DLT = await ethers.getContractFactory('DatapointLoot');
     this.PBL = await ethers.getContractFactory('PebbleToken');
   })
 
   beforeEach('deploy contract', async () => {
     this.pbl = await this.PBL.connect(admin).deploy();
     await this.pbl.deployed();
-    this.pebbleNft = await this.PebbleNFT.connect(admin).deploy(this.pbl.address, burnMultiplier, feeReceipient.address);
-    await this.pebbleNft.deployed();
+    this.dlt = await this.DLT.connect(admin).deploy(this.pbl.address, burnMultiplier, feeReceipient.address);
+    await this.dlt.deployed();
   })
 
   describe('metadata',() => {
     it('has a name', async () => {
-      expect(await this.pebbleNft.name()).to.be.equal(name);
+      expect(await this.dlt.name()).to.be.equal(name);
     });
     it('has a symbol', async () => {
-      expect(await this.pebbleNft.symbol()).to.be.equal(symbol);
+      expect(await this.dlt.symbol()).to.be.equal(symbol);
     });
   })
 
   describe('minting', () => {
     it('should revert if minting fee is not enough', async () => {
       await expect(
-        this.pebbleNft.connect(minter).safeMint(minter.address, dataPoint)
+        this.dlt.connect(minter).safeMint(minter.address, dataPoint)
       )
         .to.be.revertedWith('Minting: insufficient balance for minting NFT');
     });
     it('should mint token if enough pbl', async () => {
       await this.pbl.connect(admin).transfer(minter.address, 1000);
-      await this.pbl.connect(minter).approve(this.pebbleNft.address, 1000);
+      await this.pbl.connect(minter).approve(this.dlt.address, 1000);
       await expect(
-        this.pebbleNft.connect(minter).safeMint(minter.address, dataPoint)
+        this.dlt.connect(minter).safeMint(minter.address, dataPoint)
       )
-        .to.emit(this.pebbleNft, "TokenMinted")
+        .to.emit(this.dlt, "TokenMinted")
         .withArgs(minter.address, 0);
     })
   })
@@ -106,12 +106,12 @@ describe('PebbleNFT', () => {
   describe('getters', () => {
     beforeEach(async () => {
       await this.pbl.connect(admin).transfer(minter.address, 1000);
-      await this.pbl.connect(minter).approve(this.pebbleNft.address, 1000);
-      await this.pebbleNft.connect(minter).safeMint(minter.address, dataPoint);
+      await this.pbl.connect(minter).approve(this.dlt.address, 1000);
+      await this.dlt.connect(minter).safeMint(minter.address, dataPoint);
     });
 
     it('should show datapoint data', async () => {
-      const dp = await this.pebbleNft.tokenToDataPoint(token1);
+      const dp = await this.dlt.tokenToDataPoint(token1);
       expect(dp.toString()).to.be.equal(dataPoint.toString());
     });
   })
@@ -120,26 +120,26 @@ describe('PebbleNFT', () => {
     beforeEach(async () => {
       await this.pbl.connect(admin).transfer(minter.address, 1000);
       await this.pbl.connect(admin).transfer(minter2.address, 1000);
-      await this.pbl.connect(minter).approve(this.pebbleNft.address, 1000);
-      await this.pbl.connect(minter2).approve(this.pebbleNft.address, 1000);
-      await this.pebbleNft.connect(minter).safeMint(minter.address, dataPoint);
-      await this.pebbleNft.connect(minter2).safeMint(minter2.address, dataPoint1);
-      await this.pebbleNft.connect(minter).safeMint(minter.address, dataPoint2);
-      await this.pebbleNft.connect(minter2).safeMint(minter2.address, dataPoint3);
+      await this.pbl.connect(minter).approve(this.dlt.address, 1000);
+      await this.pbl.connect(minter2).approve(this.dlt.address, 1000);
+      await this.dlt.connect(minter).safeMint(minter.address, dataPoint);
+      await this.dlt.connect(minter2).safeMint(minter2.address, dataPoint1);
+      await this.dlt.connect(minter).safeMint(minter.address, dataPoint2);
+      await this.dlt.connect(minter2).safeMint(minter2.address, dataPoint3);
     });
 
     it('should list token ids of a user', async () => {
       let tokenIds1 = [];
       let tokenIds2 = [];
-      const bal1 = await this.pebbleNft.balanceOf(minter.address);
-      const bal2 = await this.pebbleNft.balanceOf(minter2.address);
+      const bal1 = await this.dlt.balanceOf(minter.address);
+      const bal2 = await this.dlt.balanceOf(minter2.address);
 
       for (let i = 0; i < bal1; i++) {
-        const tokenId = await this.pebbleNft.tokenOfOwnerByIndex(minter.address, i);
+        const tokenId = await this.dlt.tokenOfOwnerByIndex(minter.address, i);
         tokenIds1.push(tokenId);
       }
       for (let i = 0; i < bal2; i++) {
-        const tokenId = await this.pebbleNft.tokenOfOwnerByIndex(minter2.address, i);
+        const tokenId = await this.dlt.tokenOfOwnerByIndex(minter2.address, i);
         tokenIds2.push(tokenId);
       }
 

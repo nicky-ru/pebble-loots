@@ -11,7 +11,7 @@ import "./Base64.sol";
 import "./PebbleToken.sol";
 
 /// @notice Contract for minting Pebble Data points NFTs
-contract PebbleDataPoint is ERC721, ERC721Enumerable, Ownable {
+contract DatapointLoot is ERC721, ERC721Enumerable, Ownable {
   using SafeMath for uint256;
   using SafeMath for uint32;
   using SafeMath for uint8;
@@ -56,7 +56,7 @@ contract PebbleDataPoint is ERC721, ERC721Enumerable, Ownable {
     PebbleToken _pbl,
     uint256 _burnMultiplier,
     address payable _feeReceipient
-  ) ERC721("PebbleDataPoint", "PDP") {
+  ) ERC721("Datapoint Loot", "DLT") {
     pbl = _pbl;
     burnMultiplier = _burnMultiplier;
     feeReceipient = _feeReceipient;
@@ -86,15 +86,15 @@ contract PebbleDataPoint is ERC721, ERC721Enumerable, Ownable {
   {
     string memory output = string(abi.encodePacked(
         '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><style>.base { fill: white; font-family: serif; font-size: 14px; }</style><rect width="100%" height="100%" fill="black" /><text x="10" y="20" class="base">Datapoint Loot #',
-          toString(tokenId), '</text><text x="10" y="40" class="base">snr: ',
-          tokenToDataPoint[tokenId].snr, '</text><text x="10" y="60" class="base">vbat: ',
-          tokenToDataPoint[tokenId].vbat, '</text><text x="10" y="80" class="base">latitude: ',
-          tokenToDataPoint[tokenId].latitude, '</text><text x="10" y="100" class="base">longitude: ',
-          tokenToDataPoint[tokenId].longitude, '</text><text x="10" y="120" class="base">gas resistance: ',
-          tokenToDataPoint[tokenId].gasResistance, '</text><text x="10" y="140" class="base">temperature: ',
-          tokenToDataPoint[tokenId].temperature, '</text><text x="10" y="160" class="base">pressure: ',
-          tokenToDataPoint[tokenId].pressure, '</text><text x="10" y="180" class="base">humidity: '
-    ));
+        toString(tokenId), '</text><text x="10" y="40" class="base">snr: ',
+        tokenToDataPoint[tokenId].snr, '</text><text x="10" y="60" class="base">vbat: ',
+        tokenToDataPoint[tokenId].vbat, '</text><text x="10" y="80" class="base">latitude: ',
+        tokenToDataPoint[tokenId].latitude, '</text><text x="10" y="100" class="base">longitude: ',
+        tokenToDataPoint[tokenId].longitude, '</text><text x="10" y="120" class="base">gas resistance: ',
+        tokenToDataPoint[tokenId].gasResistance, '</text><text x="10" y="140" class="base">temperature: ',
+        tokenToDataPoint[tokenId].temperature, '</text><text x="10" y="160" class="base">pressure: ',
+        tokenToDataPoint[tokenId].pressure, '</text><text x="10" y="180" class="base">humidity: '
+      ));
 
     output = string(abi.encodePacked(
         output,
