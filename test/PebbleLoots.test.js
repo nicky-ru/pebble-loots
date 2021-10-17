@@ -6,8 +6,8 @@ const { ZERO_ADDRESS } = constants
 const {expect} = require('chai');
 
 describe("Pebble Loots", () => {
-  const name = "Pebble Loots";
-  const symbol = "PLOOT";
+  const name = "Pebble Loot";
+  const symbol = "PLT";
   const mintingFee = 250;
   const imei1 = 100000000000000;
 
@@ -39,8 +39,6 @@ describe("Pebble Loots", () => {
     this.pebbleLoot = await this.PebbleLoot
       .connect(admin)
       .deploy(
-        name,
-        symbol,
         registrationAddress,
         mintingFee,
         feeReceipient.address

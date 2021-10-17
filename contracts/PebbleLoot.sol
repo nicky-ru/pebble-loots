@@ -40,13 +40,11 @@ contract PebbleLoot is ERC721, ReentrancyGuard, ERC721Enumerable, Ownable {
 
   /// @notice Contract constructor
   constructor(
-    string memory _name,
-    string memory _symbol,
     address _registration,
     uint16 _mintingFee,
     address payable _feeReceipient
   )
-  ERC721(_name, _symbol)
+  ERC721("Pebble Loot", "PLT")
   Ownable()
   {
     registration = IRegistration(_registration);
