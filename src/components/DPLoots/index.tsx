@@ -1,17 +1,14 @@
 import React, { useEffect } from 'react';
-import { observer, useLocalObservable, useLocalStore } from 'mobx-react-lite';
-import { Container, Text, Center, Button, createStandaloneToast, useDisclosure } from '@chakra-ui/react';
+import { observer, useLocalObservable } from 'mobx-react-lite';
+import { useDisclosure } from '@chakra-ui/react';
 import { useStore } from '@/store/index';
 import { DPCards } from '@/components/DPLoots/DPCards';
-import { TransactionResponse } from '@ethersproject/providers';
 import axios from 'axios';
 import { ErrorFallback } from '@/components/ErrorFallback';
 import { ErrorBoundary } from 'react-error-boundary';
 import { BooleanState } from '@/store/standard/base';
-import { metamaskUtils } from '@/lib/metaskUtils';
 import { TransferModal } from '@/components/Loots/TransferModal';
 
-const toast = createStandaloneToast();
 const IOTX_TEST_CHAINID = 4690;
 
 export const DPLoots = observer(() => {
@@ -21,17 +18,12 @@ export const DPLoots = observer(() => {
   const observable = useLocalObservable(() => ({
     tokenIds: [],
     chainId: 0,
-    balance: 0,
     tokenUris: [],
     loaded: new BooleanState(),
     loading: new BooleanState(),
     tokenToTransfer: "",
     setChainId(newChainId: number) {
       this.chainId = newChainId;
-    },
-    setBalance(newBalance: Partial<TransactionResponse>) {
-      // @ts-ignore
-      this.balance = newBalance.toNumber();
     },
     setTokenUris(newUris) {
       this.tokenUris = newUris;
@@ -113,7 +105,6 @@ export const DPLoots = observer(() => {
   return(
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <DPCards
-        balance={observable.balance}
         tokenUris={observable.tokenUris}
         loading={observable.loading}
         loaded={observable.loaded}
