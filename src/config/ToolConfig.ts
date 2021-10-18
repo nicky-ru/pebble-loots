@@ -14,7 +14,7 @@ class Tool {
 
 export const ToolConfig = [
   new Tool({
-    name: 'Pebble bag',
+    name: 'Pebble bag 🎒',
     path: '/pebble-bag',
     component: PebbleBag,
     tags: ['Pebble', 'IoT', 'Loot']
@@ -44,7 +44,7 @@ export const ToolConfig = [
   //   tags: ['Real data', 'Loot']
   // }),
   new Tool({
-    name: 'DataPoint Bank 🏛',
+    name: 'DataPoint Stash 💰',
     path: '/datapoint-bank',
     component: DPBank,
     tags: ['Trusted Data', 'Pebble']
