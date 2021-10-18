@@ -84,6 +84,22 @@ describe('Loot Stash', () => {
         .to.emit(this.stash, "Withdraw")
         .withArgs(nftHolder1.address, tokenId1);
     });
+    it('should show staked tokens after withdrawal', async () => {
+      await this.dpl.connect(nftHolder2).setApprovalForAll(this.stash.address, true);
+      await this.stash.connect(nftHolder2).deposit(tokenId2);
+      await this.stash.connect(nftHolder2).deposit(tokenId3);
+      await this.stash.connect(nftHolder1).getTokenIds();
+      await this.stash.connect(nftHolder2).getTokenIds();
+
+      await this.stash.connect(nftHolder1).withdraw(tokenId1);
+      await this.stash.connect(nftHolder2).withdraw(tokenId2);
+
+      let ids = await this.stash.connect(nftHolder1).getTokenIds();
+      let ids2 = await this.stash.connect(nftHolder2).getTokenIds();
+
+      expect(ids.toString()).to.be.equal([].toString())
+      expect(ids2.toString()).to.be.equal([2].toString())
+    })
     it('reverts if users tries to withdraw not his nft', async () => {
       await expect(
         this.stash.connect(nftHolder1).withdraw(tokenId2)

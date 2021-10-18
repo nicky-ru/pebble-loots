@@ -54,7 +54,7 @@ export const Stash = observer(() => {
     if (observable.chainId === IOTX_TEST_CHAINID) {
       updateBalance();
     }
-  }, [dpLoot.god.currentNetwork.account])
+  }, [god.currentNetwork.account])
 
   useEffect(() => {
     if (observable.chainId === IOTX_TEST_CHAINID) {
@@ -83,6 +83,7 @@ export const Stash = observer(() => {
 
   async function updateBalance() {
     let ids = await stash.contracts[observable.chainId].getMyStashedTokens();
+    console.log("stashed tokens: ", ids.toString());
     // @ts-ignore
     observable.setBalance(ids.length);
     observable.setTokenIds(ids);
@@ -90,7 +91,7 @@ export const Stash = observer(() => {
 
   async function withdraw(tokenId) {
     try {
-      await stash.contracts[god.currentChain.chainId].deposit({
+      await stash.contracts[god.currentChain.chainId].withdraw({
         params: [tokenId]
       })
     } catch (e) {
