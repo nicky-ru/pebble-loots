@@ -1,20 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { observer, useLocalObservable } from 'mobx-react-lite';
+import React from 'react';
+import { observer } from 'mobx-react-lite';
 import {
-  useDisclosure,
-  Button,
-  Container,
   Box,
-  Center,
   Image,
-  LinkBox, LinkOverlay, useColorModeValue
 } from '@chakra-ui/react';
 import { BooleanState } from '@/store/standard/base';
-import { Link } from 'react-router-dom';
-import { TransactionResponse } from '@ethersproject/providers';
 import { Dashboard } from '@/components/Dashboard';
 import { useStore } from '@/store/index';
-import Timeout = NodeJS.Timeout;
 
 interface PropsType {
   balance: number;
@@ -25,72 +17,16 @@ interface PropsType {
 
 export const ChartsFrame = observer((props: PropsType) => {
   const { pebble, ploot } = useStore();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-
-  const observable = useLocalObservable(() => ({
-    activeLoot: 0,
-    activeInterval: 0,
-    setActiveLoot(value: number) {
-      this.activeLoot = value;
-      const imei = this.getTokenImei(value);
-      pebble.selectImei(imei);
-    },
-    activateInterval(interval: Timeout) {
-      this.activeInterval = interval;
-    },
-    deactivateInterval() {
-      clearInterval(this.activeInterval);
-    },
-    getTokenImei(value: number) {
-      return ploot.tokenUris[value].data.name.split("#")[1];
-    }
-  }))
-
-  useEffect(() => {
-    observable.deactivateInterval();
-    var queryInterval = setInterval(() => {
-      props.queryRecords(observable.getTokenImei(observable.activeLoot))
-    }, 5000);
-    observable.activateInterval(queryInterval);
-  }, [observable.activeLoot]);
-
-  useEffect(() => {
-    if (ploot.tokenUris?.length){
-      const imei = ploot.tokenUris[0].data.name.split("#")[1];
-      pebble.selectImei(imei);
-    }
-  }, [ploot.tokenUris])
 
   return (
     <Box
-      // borderWidth="3px" rounded="md"
       position={"relative"}
-      // top={-10}
       zIndex={0}
-      // bg={useColorModeValue("light.100", "dark.100")}
     >
-      <Image rounded="md" position={"absolute"} zIndex={-1} src={ploot.tokenUris?.[observable.activeLoot]?.data.image}/>
+      <Image rounded="md" position={"absolute"} zIndex={-1} src={ploot.tokenUris?.[pebble.lootId]?.data.image}/>
       <Box pt={14}>
         <Dashboard/>
       </Box>
     </Box>
-    // <>
-    //   <Center>
-    //
-    //   </Center>
-    //   <LootDrawer
-    //     setActiveLoot={observable.setActiveLoot}
-    //     balance={props.balance}
-    //     onClose={onClose}
-    //     isOpen={isOpen}
-    //   />
-    //   <Container maxW={"container.xl"}>
-    //     <Button variant={"outline"} colorScheme={"teal"} onClick={onOpen}>
-    //       Reveal data
-    //     </Button>
-    //
-    //   </Container>
-    // </>
   );
 });

@@ -12,8 +12,8 @@ export const MapBox = observer(() => {
     latitude: 0,
     longitude: 0,
     zoom: 10,
-    width: '400px',
-    height: '350px'
+    width: '600px',
+    height: '550px'
   })
 
   useEffect(() => {

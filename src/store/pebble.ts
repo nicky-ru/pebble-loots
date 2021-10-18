@@ -16,6 +16,7 @@ class Device {
 export class PebbleStore {
   devices = Array<Device>();
   imei = "";
+  lootId = 0;
 
   constructor() {
     makeAutoObservable(this);
@@ -26,6 +27,9 @@ export class PebbleStore {
   selectImei(imei: string) {
     console.log("selecting imei: ", imei);
     this.imei = imei;
+  }
+  selectPebbleLootId(id: number) {
+    this.lootId = id;
   }
   deviceByImei(imei: string): Device {
     return this.devices

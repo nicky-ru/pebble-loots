@@ -17,6 +17,7 @@ import {
 } from '@chakra-ui/react';
 import { Link } from "react-router-dom";
 import { BooleanState } from '@/store/standard/base';
+import { useStore } from '@/store/index';
 
 interface PropsType {
   balance: number;
@@ -28,48 +29,30 @@ interface PropsType {
 }
 
 export const LootCards = observer((props: PropsType) => {
+  const { pebble } = useStore();
   const [btnText, setBtnText] = useState("Want to mint some?");
 
   return(
     <Skeleton isLoaded={!props.loading.value}>
 
       <Wrap p={2} justify="center">
-        {props.balance
-          ?
-          <>
-            {props.tokenUris?.map(uri => (
-              <WrapItem key={uri.data.name}>
-                <LinkBox as="article"  p={5} pb={10} borderWidth="1px" rounded="md">
-                  <Box align={'right'} w={"200px"} h={"200px"}>
-                    <Image src={uri.data.image}/>
-                    <Button my={2} variant={'link'} onClick={() => {
-                      props.setTokenToTransfer(uri.data.name.toString().split("#")[1])
-                      props.onOpen()
-                    }}>Transfer</Button>
-                  </Box>
-                </LinkBox>
-              </WrapItem>
-            ))}
-          </>
-          :
-          <WrapItem>
-            <Center h={"full"} flexDirection={"column"}>
-              <Text>You have no loots yet 😱</Text>
-              <Link to={"/mintLoot"}>
-                <Button
-                  mt={4}
-                  minWidth={"200px"}
-                  colorScheme="teal"
-                  type="submit"
-                  onMouseEnter={() => {setBtnText("Sure!")}}
-                  onMouseLeave={() => {setBtnText("Want to mint some?")}}
-                >
-                  {btnText}
-                </Button>
-              </Link>
-            </Center>
+        {props.tokenUris?.map((uri, i) => (
+          <WrapItem key={i}>
+            <LinkBox as="article"  p={5} pb={10} borderWidth="1px" rounded="md">
+              <Box align={'right'} w={"200px"} h={"200px"}>
+                <LinkOverlay onClick={() => {
+                  pebble.selectImei(uri.data.name.toString().split("#")[1])
+                  pebble.selectPebbleLootId(i);
+                }}/>
+                <Image src={uri.data.image}/>
+                <Button my={2} variant={'link'} onClick={() => {
+                  props.setTokenToTransfer(uri.data.name.toString().split("#")[1])
+                  props.onOpen()
+                }}>Transfer</Button>
+              </Box>
+            </LinkBox>
           </WrapItem>
-        }
+        ))}
       </Wrap>
 
     </Skeleton>

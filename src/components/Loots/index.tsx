@@ -8,6 +8,7 @@ import axios from 'axios';
 import { ErrorFallback } from '@/components/ErrorFallback';
 import { ErrorBoundary } from 'react-error-boundary';
 import { BooleanState } from '@/store/standard/base';
+import { TransferModal } from '@/components/Loots/TransferModal';
 
 const IOTX_TEST_CHAINID = 4690;
 
@@ -100,6 +101,7 @@ export const MyLoots = observer(() => {
         onOpen={onOpen}
         setTokenToTransfer={observable.setTokenToTransfer}
       />
+      <TransferModal isOpen={isOpen} onClose={onClose} tokenToTransfer={observable.tokenToTransfer}/>
     </ErrorBoundary>
   );
 });
