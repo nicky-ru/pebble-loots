@@ -71,7 +71,6 @@ export const PebbleBag = observer(() => {
           <Button colorScheme={"teal"} mt={5} onClick={() => {store.setChain(IOTX_TEST_CHAINID)}}>Switch to IoTeX Testnet</Button>
         </Center>
       }
-
     </Container>
   );
 });

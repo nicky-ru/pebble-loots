@@ -1,16 +1,47 @@
 import React, { useEffect } from 'react';
-import { observer, useLocalObservable } from 'mobx-react-lite';
-import { Container, Flex, Box, Button, Stack, Heading, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
+import { observer, useLocalObservable, useLocalStore } from 'mobx-react-lite';
+import {
+  Container,
+  Button,
+  Grid, GridItem, Center, Text, createStandaloneToast
+} from '@chakra-ui/react';
 import { useStore } from '@/store/index';
 import axios from 'axios';
 import { BooleanState } from '@/store/standard/base';
-import { RecordList } from '@/components/Records/rec-list';
 import { DPLoots } from '@/components/DPLoots';
 import { Stash } from '@/components/DPLoots/Stash';
 import { Records } from '@/components/Records';
+import { MyLoots } from '@/components/Loots';
+import { metamaskUtils } from '@/lib/metaskUtils';
+
+const toast = createStandaloneToast();
+const IOTX_TEST_CHAINID = 4690;
 
 export const DPBank = observer(() => {
-  const { rec, pebble, god, dpLoot } = useStore();
+  const { rec, pebble, god } = useStore();
+
+  const store = useLocalStore(() => ({
+    async setChain(val) {
+      const chain = god.currentNetwork.chain.map[val];
+      console.log(chain);
+      if (chain.networkKey !== 'eth') {
+        await metamaskUtils.setupNetwork({
+          chainId: chain.chainId,
+          blockExplorerUrls: [chain.explorerURL],
+          chainName: chain.name,
+          nativeCurrency: {
+            decimals: chain.Coin.decimals || 18,
+            name: chain.Coin.symbol,
+            symbol: chain.Coin.symbol
+          },
+          rpcUrls: [chain.rpcUrl]
+        });
+        god.setChain(val);
+      } else {
+        toast({ title: 'Please connect to the  Ethereum network on metamask.', position: 'top', status: 'warning' });
+      }
+    }
+  }));
 
   const observable = useLocalObservable(() => ({
     loaded: new BooleanState(),
@@ -53,28 +84,33 @@ export const DPBank = observer(() => {
   }
 
   return(
-    <Container maxW={'container.xl'} mt={16}>
-      <Heading align={'center'}>Datapoint Bank</Heading>
-      <Tabs variant={'enclosed'} isFitted mt={4}>
-        <TabList>
-          <Tab>Raw</Tab>
-          <Tab>Minted</Tab>
-          <Tab>Stashed</Tab>
-        </TabList>
-
-        <TabPanels>
-          <TabPanel>
+    <Container maxW={'full'}>
+      {god.currentChain.chainId === IOTX_TEST_CHAINID
+        ?
+        <Grid
+          templateColumns="repeat(6, 1fr)"
+          gap={4}
+          mt={10}
+        >
+          <GridItem colSpan={1}>
+            <MyLoots/>
+          </GridItem>
+          <GridItem  colSpan={5}>
             <Records/>
-          </TabPanel>
-          <TabPanel>
+          </GridItem>
+          <GridItem borderWidth="3px" rounded="md" colSpan={6}>
             <DPLoots/>
-          </TabPanel>
-          <TabPanel>
+          </GridItem>
+          <GridItem borderWidth="3px" rounded="md" colSpan={6}>
             <Stash/>
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
-
+          </GridItem>
+        </Grid>
+        :
+        <Center w={"full"} flexDirection={"column"}>
+          <Text>This dapp currently works only on IoTeX Testnet</Text>
+          <Button colorScheme={"teal"} mt={5} onClick={() => {store.setChain(IOTX_TEST_CHAINID)}}>Switch to IoTeX Testnet</Button>
+        </Center>
+      }
     </Container>
   );
 });

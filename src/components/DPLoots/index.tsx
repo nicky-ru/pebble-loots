@@ -138,26 +138,16 @@ export const DPLoots = observer(() => {
 
   return(
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <Container maxW={'container.xl'} >
-        {observable.chainId === IOTX_TEST_CHAINID
-          ?
-          <DPCards
-            balance={observable.balance}
-            tokenUris={observable.tokenUris}
-            loading={observable.loading}
-            loaded={observable.loaded}
-            onOpen={onOpen}
-            setTokenToTransfer={observable.setTokenToTransfer}
-            approve={approve}
-            deposit={deposit}
-          />
-          :
-          <Center w={"full"} flexDirection={"column"}>
-            <Text>This dapp currently works only on IoTeX Testnet</Text>
-            <Button colorScheme={"teal"} mt={5} onClick={() => {store.setChain(IOTX_TEST_CHAINID)}}>Switch to IoTeX Testnet</Button>
-          </Center>
-        }
-      </Container>
+      <DPCards
+        balance={observable.balance}
+        tokenUris={observable.tokenUris}
+        loading={observable.loading}
+        loaded={observable.loaded}
+        onOpen={onOpen}
+        setTokenToTransfer={observable.setTokenToTransfer}
+        approve={approve}
+        deposit={deposit}
+      />
       <TransferModal isOpen={isOpen} onClose={onClose} tokenToTransfer={observable.tokenToTransfer}/>
     </ErrorBoundary>
   );

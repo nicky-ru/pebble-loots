@@ -1,43 +1,17 @@
 import React, { useEffect } from 'react';
-import { observer, useLocalObservable, useLocalStore } from 'mobx-react-lite';
-import { Container, Text, Center, Button, createStandaloneToast } from '@chakra-ui/react';
+import { observer, useLocalObservable } from 'mobx-react-lite';
 import { useStore } from '@/store/index';
 import { TransactionResponse } from '@ethersproject/providers';
 import axios from 'axios';
 import { ErrorFallback } from '@/components/ErrorFallback';
 import { ErrorBoundary } from 'react-error-boundary';
 import { BooleanState } from '@/store/standard/base';
-import { metamaskUtils } from '@/lib/metaskUtils';
 import { StashCards } from '@/components/DPLoots/StashCards';
 
-const toast = createStandaloneToast();
 const IOTX_TEST_CHAINID = 4690;
 
 export const Stash = observer(() => {
   const { dpLoot, god, stash } = useStore();
-
-  const store = useLocalStore(() => ({
-    async setChain(val) {
-      const chain = god.currentNetwork.chain.map[val];
-      console.log(chain);
-      if (chain.networkKey !== 'eth') {
-        await metamaskUtils.setupNetwork({
-          chainId: chain.chainId,
-          blockExplorerUrls: [chain.explorerURL],
-          chainName: chain.name,
-          nativeCurrency: {
-            decimals: chain.Coin.decimals || 18,
-            name: chain.Coin.symbol,
-            symbol: chain.Coin.symbol
-          },
-          rpcUrls: [chain.rpcUrl]
-        });
-        god.setChain(val);
-      } else {
-        toast({ title: 'Please connect to the  Ethereum network on metamask.', position: 'top', status: 'warning' });
-      }
-    }
-  }));
 
   const observable = useLocalObservable(() => ({
     tokenIds: [],
@@ -126,23 +100,13 @@ export const Stash = observer(() => {
 
   return(
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <Container maxW={'container.xl'} >
-        {observable.chainId === IOTX_TEST_CHAINID
-          ?
-          <StashCards
-            balance={observable.balance}
-            tokenUris={observable.tokenUris}
-            loading={observable.loading}
-            loaded={observable.loaded}
-            withdraw={withdraw}
-          />
-          :
-          <Center w={"full"} flexDirection={"column"}>
-            <Text>This dapp currently works only on IoTeX Testnet</Text>
-            <Button colorScheme={"teal"} mt={5} onClick={() => {store.setChain(IOTX_TEST_CHAINID)}}>Switch to IoTeX Testnet</Button>
-          </Center>
-        }
-      </Container>
+      <StashCards
+        balance={observable.balance}
+        tokenUris={observable.tokenUris}
+        loading={observable.loading}
+        loaded={observable.loaded}
+        withdraw={withdraw}
+      />
     </ErrorBoundary>
   );
 });

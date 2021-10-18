@@ -1,22 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Container,
+  Grid, GridItem,
   Box,
   Heading,
   Stack,
   Wrap,
   WrapItem,
   LinkBox,
-  Text,
-  LinkOverlay,
   Image,
-  Divider,
   Skeleton,
-  Spinner, Button,
-  Center
+  Button,
+  Center, Text
 } from '@chakra-ui/react';
-import { Link } from "react-router-dom";
 import { BooleanState } from '@/store/standard/base';
 
 interface PropsType {
@@ -31,66 +27,61 @@ interface PropsType {
 }
 
 export const DPCards = observer((props: PropsType) => {
-  const [btnText, setBtnText] = useState("Want to mint some?");
 
   return(
-    <Container textAlign={"center"} maxW={'full'}>
-      <Text>
-        Your have {props.loading.value? <Spinner size="xs" /> : props.balance}{" "}
-        Datapoint Loot{props.balance === 1 ? "" : "s"}
-      </Text>
+    <>
+      <Grid gap={4} templateColumns="repeat(12, 1fr)">
 
-      <Button mt={2} onClick={() => {props.approve()}}>
-        Approve all
-      </Button>
+        <GridItem colSpan={2}>
+          <Center h={'full'}>
+            <Stack>
+              <Heading size={'md'}>
+                Minted tokens
+              </Heading>
+              <Button m={2} onClick={() => {props.approve()}}>
+                Approve all
+              </Button>
+            </Stack>
+          </Center>
+        </GridItem>
 
-      <Skeleton isLoaded={!props.loading.value}>
-
-        <Wrap mt={2} justify="center" minH={"400px"}>
-          {props.balance
-            ?
-            <>
-              {props.tokenUris?.map(uri => (
-                <WrapItem key={uri.data.name}>
-                  <LinkBox as="article"  p={5} pb={10} borderWidth="1px" rounded="md">
-                    <Box w={"300px"} h={"300px"}>
-                      <Image src={uri.data.image}/>
-                      <Stack isInline justify={'space-between'} mt={2}>
-                        <Button variant={'link'} onClick={() => {
-                          props.setTokenToTransfer(uri.data.name.toString().split("#")[1])
-                          props.onOpen()
-                        }}>Transfer</Button>
-                        <Button variant={'link'} onClick={() => {
-                          props.deposit(uri.data.name.toString().split("#")[1])
-                        }}>Stash</Button>
-                      </Stack>
-                    </Box>
-                  </LinkBox>
+        <GridItem colSpan={10}>
+          <Skeleton isLoaded={!props.loading.value}>
+            <Wrap my={2} justify="start">
+              {props.balance
+                ?
+                <>
+                  {props.tokenUris?.map(uri => (
+                    <WrapItem key={uri.data.name}>
+                      <LinkBox as="article"  p={5} pb={10} borderWidth="1px" rounded="md">
+                        <Box w={"200px"} h={"200px"}>
+                          <Image src={uri.data.image}/>
+                          <Stack isInline justify={'space-between'} mt={2}>
+                            <Button variant={'link'} onClick={() => {
+                              props.setTokenToTransfer(uri.data.name.toString().split("#")[1])
+                              props.onOpen()
+                            }}>Transfer</Button>
+                            <Button variant={'link'} onClick={() => {
+                              props.deposit(uri.data.name.toString().split("#")[1])
+                            }}>Stash</Button>
+                          </Stack>
+                        </Box>
+                      </LinkBox>
+                    </WrapItem>
+                  ))}
+                </>
+                :
+                <WrapItem>
+                  <Center h={"200px"} flexDirection={"column"}>
+                    <Text>Empty list</Text>
+                  </Center>
                 </WrapItem>
-              ))}
-            </>
-            :
-            <WrapItem>
-              <Center h={"full"} flexDirection={"column"}>
-                <Text>You have no loots yet 😱</Text>
-                <Link to={"/mintLoot"}>
-                  <Button
-                    mt={4}
-                    minWidth={"200px"}
-                    colorScheme="teal"
-                    type="submit"
-                    onMouseEnter={() => {setBtnText("Sure!")}}
-                    onMouseLeave={() => {setBtnText("Want to mint some?")}}
-                  >
-                    {btnText}
-                  </Button>
-                </Link>
-              </Center>
-            </WrapItem>
-          }
-        </Wrap>
+              }
+            </Wrap>
+          </Skeleton>
+        </GridItem>
 
-      </Skeleton>
-    </Container>
+      </Grid>
+    </>
   );
 });
