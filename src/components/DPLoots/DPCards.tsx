@@ -17,7 +17,6 @@ import { BooleanState } from '@/store/standard/base';
 import { useStore } from '@/store/index';
 
 interface PropsType {
-  balance: number;
   tokenUris: any[];
   loading: BooleanState;
   loaded: BooleanState;
