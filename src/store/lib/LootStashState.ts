@@ -37,6 +37,15 @@ export class LootStashState {
       args))
   }
 
+  withdraw(args: Partial<CallParams>) {
+    return this.network.execContract(Object.assign({
+        address: this.address,
+        abi: this.abi,
+        method: 'withdraw'
+      },
+      args))
+  }
+
   getMyStashedTokens() {
     return this.network.execContract(Object.assign({
       address: this.address,
