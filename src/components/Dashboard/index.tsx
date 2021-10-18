@@ -15,8 +15,8 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { ErrorFallback } from '@/components/ErrorFallback';
 
 export const Dashboard = observer(() => {
-  const chartW = 750;
-  const chartH = 150;
+  const chartW = 650;
+  const chartH = 124;
   const borderW = "1px";
   const rounded = "md";
   const wrapW = "full";

@@ -1,9 +1,6 @@
 import { ERC20 } from '../pages/ERC20';
-import { Devices } from '../pages/Devices';
-import { MyLoots } from '../pages/Loots';
-import { Minting } from '../pages/Minting';
-import { LootCharts } from '../pages/LootCharts';
 import { DPBank } from '../pages/DPBank';
+import { PebbleBag } from '../pages/PebbleBag';
 
 class Tool {
   name: string;
@@ -17,29 +14,35 @@ class Tool {
 
 export const ToolConfig = [
   new Tool({
-    name: 'Devices',
-    path: '/devices',
-    component: Devices,
-    tags: ['IoT', 'Pebble']
+    name: 'Pebble bag',
+    path: '/pebble-bag',
+    component: PebbleBag,
+    tags: ['Pebble', 'IoT', 'Loot']
   }),
-  new Tool({
-    name: 'Loot gallery',
-    path: '/myloots',
-    component: MyLoots,
-    tags: ['NFT', 'Pebble']
-  }),
-  new Tool({
-    name: 'Mint Loot',
-    path: '/mintLoot',
-    component: Minting,
-    tags: ['NFT', 'Loot', 'Minting']
-  }),
-  new Tool({
-    name: 'Loot charts 🔥',
-    path: '/lootcharts',
-    component: LootCharts,
-    tags: ['Real data', 'Loot']
-  }),
+  // new Tool({
+  //   name: 'Devices',
+  //   path: '/devices',
+  //   component: Devices,
+  //   tags: ['IoT', 'Pebble']
+  // }),
+  // new Tool({
+  //   name: 'Loot gallery',
+  //   path: '/myloots',
+  //   component: MyLoots,
+  //   tags: ['NFT', 'Pebble']
+  // }),
+  // new Tool({
+  //   name: 'Mint Loot',
+  //   path: '/mintLoot',
+  //   component: Minting,
+  //   tags: ['NFT', 'Loot', 'Minting']
+  // }),
+  // new Tool({
+  //   name: 'Loot charts 🔥',
+  //   path: '/lootcharts',
+  //   component: LootCharts,
+  //   tags: ['Real data', 'Loot']
+  // }),
   new Tool({
     name: 'DataPoint Bank 🏛',
     path: '/datapoint-bank',

@@ -12,8 +12,8 @@ export const MapBox = observer(() => {
     latitude: 0,
     longitude: 0,
     zoom: 10,
-    width: '500px',
-    height: '500px'
+    width: '400px',
+    height: '350px'
   })
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export const MapBox = observer(() => {
   }, [rec.decodedRecords]);
 
   return(
-    <Center width={"765px"} height={"650px"}>
+    <Center width={"full"} height={'full'}>
       <ReactMapGl
         mapStyle={"mapbox://styles/nickyru/cku03xgm61x4x17oype7yzsl5"}
         // mapbox://styles/nickyru/cku03y3cp2bjx18mxgfwdemx0

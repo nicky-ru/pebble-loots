@@ -12,7 +12,6 @@ import {
 import { BooleanState } from '@/store/standard/base';
 import { Link } from 'react-router-dom';
 import { TransactionResponse } from '@ethersproject/providers';
-import { LootDrawer } from '@/components/ChartsFrame/LootDrawer';
 import { Dashboard } from '@/components/Dashboard';
 import { useStore } from '@/store/index';
 import Timeout = NodeJS.Timeout;
@@ -64,34 +63,34 @@ export const ChartsFrame = observer((props: PropsType) => {
   }, [ploot.tokenUris])
 
   return (
-    <>
-      <LootDrawer
-        setActiveLoot={observable.setActiveLoot}
-        balance={props.balance}
-        onClose={onClose}
-        isOpen={isOpen}
-      />
-      <Container maxW={"container.xl"}>
-        <Button variant={"outline"} colorScheme={"teal"} onClick={onOpen}>
-          Reveal data
-        </Button>
-        <Center>
-          <Box
-            borderWidth="3px" rounded="md"
-            position={"relative"}
-            top={-10}
-            zIndex={0}
-            bg={useColorModeValue("light.100", "dark.100")}
-            h={"800px"}
-            w={"800px"}
-          >
-            <Image position={"absolute"} src={ploot.tokenUris?.[observable.activeLoot]?.data.image}/>
-            <Box position={"absolute"} mt={16}>
-              <Dashboard/>
-            </Box>
-          </Box>
-        </Center>
-      </Container>
-    </>
+    <Box
+      // borderWidth="3px" rounded="md"
+      position={"relative"}
+      // top={-10}
+      zIndex={0}
+      // bg={useColorModeValue("light.100", "dark.100")}
+    >
+      <Image rounded="md" position={"absolute"} zIndex={-1} src={ploot.tokenUris?.[observable.activeLoot]?.data.image}/>
+      <Box pt={14}>
+        <Dashboard/>
+      </Box>
+    </Box>
+    // <>
+    //   <Center>
+    //
+    //   </Center>
+    //   <LootDrawer
+    //     setActiveLoot={observable.setActiveLoot}
+    //     balance={props.balance}
+    //     onClose={onClose}
+    //     isOpen={isOpen}
+    //   />
+    //   <Container maxW={"container.xl"}>
+    //     <Button variant={"outline"} colorScheme={"teal"} onClick={onOpen}>
+    //       Reveal data
+    //     </Button>
+    //
+    //   </Container>
+    // </>
   );
 });

@@ -1,93 +1,105 @@
-import React, { useState } from 'react';
-import { observer } from 'mobx-react-lite';
-import {
-  Container,
-  Box,
-  Heading,
-  Wrap,
-  WrapItem,
-  LinkBox,
-  Text,
-  LinkOverlay,
-  Image,
-  Divider,
-  Skeleton,
-  Spinner, Button,
-  Center
-} from '@chakra-ui/react';
-import { Link } from "react-router-dom";
+import React, { useEffect } from 'react';
+import { observer, useLocalObservable } from 'mobx-react-lite';
+import { useDisclosure } from '@chakra-ui/react';
+import { useStore } from '@/store/index';
+import { LootCards } from './LootCards';
+import { TransactionResponse } from '@ethersproject/providers';
+import axios from 'axios';
+import { ErrorFallback } from '@/components/ErrorFallback';
+import { ErrorBoundary } from 'react-error-boundary';
 import { BooleanState } from '@/store/standard/base';
 
-interface PropsType {
-  balance: number;
-  tokenUris: any[];
-  loading: BooleanState;
-  loaded: BooleanState;
-  onOpen: any;
-  setTokenToTransfer: any;
-}
+const IOTX_TEST_CHAINID = 4690;
 
-export const LootCards = observer((props: PropsType) => {
-  const [btnText, setBtnText] = useState("Want to mint some?");
+export const MyLoots = observer(() => {
+  const { ploot } = useStore();
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const observable = useLocalObservable(() => ({
+    tokenIds: [],
+    chainId: 0,
+    balance: 0,
+    tokenUris: [],
+    loaded: new BooleanState(),
+    loading: new BooleanState(),
+    tokenToTransfer: "",
+    setChainId(newChainId: number) {
+      this.chainId = newChainId;
+    },
+    setBalance(newBalance: Partial<TransactionResponse>) {
+      // @ts-ignore
+      this.balance = newBalance.toNumber();
+    },
+    setTokenUris(newUris) {
+      this.tokenUris = newUris;
+    },
+    setLoading(newLoading: boolean) {
+      this.loading.setValue(newLoading);
+    },
+    setLoaded(newLoaded: boolean) {
+      this.loaded.setValue(newLoaded);
+    },
+    setTokenToTransfer(value: string) {
+      this.tokenToTransfer = value;
+    }
+  }))
+
+  useEffect(() => {
+    if (ploot.god.currentNetwork.account) {
+      observable.setChainId(ploot.god.currentChain.chainId);
+    }
+  }, [ploot.god.currentChain.chainId]);
+
+  useEffect(() => {
+    if (observable.chainId === IOTX_TEST_CHAINID) {
+      updateBalance();
+    }
+  }, [ploot.god.currentNetwork.account])
+
+  useEffect(() => {
+    if (observable.chainId === IOTX_TEST_CHAINID) {
+      updateBalance();
+    }
+  }, [observable.chainId])
+
+  useEffect(() => {
+    if (observable.balance) {
+      fetchLoots();
+    }
+  }, [observable.balance]);
+
+  async function fetchLoots() {
+    observable.setLoading(true)
+    const tokenIds = Array(observable.balance);
+
+    for (let i = 0; i < observable.balance; i++) {
+      tokenIds[i] = await ploot.contracts[observable.chainId].tokenOfOwnerByIndex({params: [ploot.god.currentNetwork.account, i]})
+    }
+    const tokenUris = await Promise.all(tokenIds.map(async (tid) => {
+      const uri = await ploot.contracts[observable.chainId].getTokenUri({params: [tid.toNumber()]});
+      return await axios.get(uri.toString());
+    }))
+
+    observable.setTokenUris(tokenUris);
+    observable.setLoading(false);
+    observable.setLoaded(true);
+  }
+
+  async function updateBalance() {
+    const balance = await ploot.contracts[observable.chainId].balanceOf({params: [ploot.god.currentNetwork.account]});
+    observable.setBalance(balance);
+  }
 
   return(
-    <Container textAlign={"center"} maxW={'full'}>
-      <Heading mb={4}>
-        Here is your collection of minted Pebble Loots
-      </Heading>
-      <Divider/>
-      <Text>
-        Your have {props.loading.value? <Spinner size="xs" /> : props.balance}{" "}
-        Pebble Loot{props.balance === 1 ? "" : "s"}
-      </Text>
-
-      <Skeleton isLoaded={!props.loading.value}>
-
-          <Wrap mt={10} justify="center" minH={"400px"}>
-            {props.balance
-            ?
-              <>
-                {props.tokenUris?.map(uri => (
-                    <WrapItem key={uri.data.name}>
-                      <LinkBox as="article"  p={5} pb={10} borderWidth="1px" rounded="md">
-                        <Box w={"350px"} h={"400px"}>
-                          <Image src={uri.data.image}/>
-                          <Text my={2}>
-                            <LinkOverlay as={Link} to={"/lootcharts"}>
-                              {uri.data.name}
-                            </LinkOverlay>
-                          </Text>
-                          <Button onClick={() => {
-                            props.setTokenToTransfer(uri.data.name.toString().split("#")[1])
-                            props.onOpen()
-                          }}>Transfer</Button>
-                        </Box>
-                      </LinkBox>
-                    </WrapItem>
-                  ))}
-                </>
-            :
-              <WrapItem>
-                <Center h={"full"} flexDirection={"column"}>
-                  <Text>You have no loots yet 😱</Text>
-                  <Link to={"/mintLoot"}>
-                    <Button
-                      mt={4}
-                      minWidth={"200px"}
-                      colorScheme="teal"
-                      type="submit"
-                      onMouseEnter={() => {setBtnText("Sure!")}}
-                      onMouseLeave={() => {setBtnText("Want to mint some?")}}
-                    >
-                      {btnText}
-                    </Button>
-                  </Link>
-                </Center>
-              </WrapItem>
-            }
-          </Wrap>
-
-      </Skeleton>
-    </Container>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <LootCards
+        balance={observable.balance}
+        tokenUris={observable.tokenUris}
+        loading={observable.loading}
+        loaded={observable.loaded}
+        onOpen={onOpen}
+        setTokenToTransfer={observable.setTokenToTransfer}
+      />
+    </ErrorBoundary>
   );
 });

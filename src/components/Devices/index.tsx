@@ -26,10 +26,9 @@ export const Devices = observer(() => {
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <Container maxW="container.lg" textAlign={'center'}>
-        <Heading as={'h1'} mt={10}>All devices</Heading>
-        <Skeleton isLoaded={!loading}><DevicesList/></Skeleton>
-      </Container>
+      <Skeleton isLoaded={!loading}>
+        <DevicesList/>
+      </Skeleton>
     </ErrorBoundary>
   );
 });

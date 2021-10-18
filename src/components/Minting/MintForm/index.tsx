@@ -1,6 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Button, FormControl, FormLabel, Input, FormErrorMessage, Heading } from '@chakra-ui/react';
+import { Button, FormControl, FormLabel, Input, FormErrorMessage, Box, Stack } from '@chakra-ui/react';
 import { Formik, Form, Field } from 'formik';
 import BigNumber from 'bignumber.js';
 
@@ -23,8 +23,7 @@ export const MintForm = observer((props: PropsType) => {
   }
 
   return (
-    <>
-      <Heading>Here you can mint a Loot of your device</Heading>
+    <Box p={2}>
       <Formik
         initialValues={{ imei: "" }}
         onSubmit={async (values, actions) => {
@@ -38,22 +37,25 @@ export const MintForm = observer((props: PropsType) => {
               {({ field, form }) => (
                 <FormControl isInvalid={form.errors.imei && form.touched.imei}>
                   <FormLabel htmlFor="imei">Device IMEI to mint</FormLabel>
-                  <Input {...field} id="imei" placeholder="e.g 100000000000001" />
+                  <Stack isInline>
+                    <Input {...field} id="imei" placeholder="e.g 100000000000001" />
+                    <Button
+                      mt={4}
+                      colorScheme="teal"
+                      isLoading={props.isSubmitting}
+                      type="submit"
+                    >
+                      Mint
+                    </Button>
+                  </Stack>
+
                   <FormErrorMessage>{form.errors.imei}</FormErrorMessage>
                 </FormControl>
               )}
             </Field>
-            <Button
-              mt={4}
-              colorScheme="teal"
-              isLoading={props.isSubmitting}
-              type="submit"
-            >
-              Submit
-            </Button>
           </Form>
         )}
       </Formik>
-    </>
+    </Box>
   )
 });
