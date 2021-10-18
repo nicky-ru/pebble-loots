@@ -9,7 +9,8 @@ import { IotexTestnetConfig } from '../config/IotexTestnetConfig';
 export class LootStashStore {
   rootStore: RootStore;
   network: NetworkState;
-  balance: number = 5;
+  balance: number = 0;
+  tokenIds: [];
   contracts: { [key: number]: LootStashState } = {};
   tokenUris: any[];
 
@@ -27,4 +28,12 @@ export class LootStashStore {
   get god() {
     return this.rootStore.god;
   }
+
+  // async updateBalance() {
+  //   const ids = await this.contracts[this.god.currentChain.chainId].getMyStashedTokens();
+  //   // @ts-ignore
+  //   this.balance = ids.length();
+  //   // @ts-ignore
+  //   this.tokenIds = ids;
+  // }
 }

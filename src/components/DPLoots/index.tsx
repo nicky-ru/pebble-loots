@@ -18,29 +18,6 @@ export const DPLoots = observer(() => {
   const { dpLoot, god, stash } = useStore();
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const store = useLocalStore(() => ({
-    async setChain(val) {
-      const chain = god.currentNetwork.chain.map[val];
-      console.log(chain);
-      if (chain.networkKey !== 'eth') {
-        await metamaskUtils.setupNetwork({
-          chainId: chain.chainId,
-          blockExplorerUrls: [chain.explorerURL],
-          chainName: chain.name,
-          nativeCurrency: {
-            decimals: chain.Coin.decimals || 18,
-            name: chain.Coin.symbol,
-            symbol: chain.Coin.symbol
-          },
-          rpcUrls: [chain.rpcUrl]
-        });
-        god.setChain(val);
-      } else {
-        toast({ title: 'Please connect to the  Ethereum network on metamask.', position: 'top', status: 'warning' });
-      }
-    }
-  }));
-
   const observable = useLocalObservable(() => ({
     tokenIds: [],
     chainId: 0,
@@ -78,27 +55,27 @@ export const DPLoots = observer(() => {
 
   useEffect(() => {
     if (observable.chainId === IOTX_TEST_CHAINID) {
-      updateBalance();
+      dpLoot.updateBalance();
     }
   }, [dpLoot.god.currentNetwork.account])
 
   useEffect(() => {
     if (observable.chainId === IOTX_TEST_CHAINID) {
-      updateBalance();
+      dpLoot.updateBalance();
     }
   }, [observable.chainId])
 
   useEffect(() => {
-    if (observable.balance) {
+    if (dpLoot.balance) {
       fetchLoots();
     }
-  }, [observable.balance]);
+  }, [dpLoot.balance]);
 
   async function fetchLoots() {
     observable.setLoading(true)
-    const tokenIds = Array(observable.balance);
+    const tokenIds = Array(dpLoot.balance);
 
-    for (let i = 0; i < observable.balance; i++) {
+    for (let i = 0; i < dpLoot.balance; i++) {
       tokenIds[i] = await dpLoot.contracts[observable.chainId].tokenOfOwnerByIndex({params: [dpLoot.god.currentNetwork.account, i]})
     }
     const tokenUris = await Promise.all(tokenIds.map(async (tid) => {
@@ -109,11 +86,6 @@ export const DPLoots = observer(() => {
     observable.setTokenUris(tokenUris);
     observable.setLoading(false);
     observable.setLoaded(true);
-  }
-
-  async function updateBalance() {
-    const balance = await dpLoot.contracts[observable.chainId].balanceOf({params: [dpLoot.god.currentNetwork.account]});
-    observable.setBalance(balance);
   }
 
   async function approve() {
@@ -128,9 +100,11 @@ export const DPLoots = observer(() => {
 
   async function deposit(tokenId) {
     try {
-      await stash.contracts[god.currentChain.chainId].deposit({
+      const tx = await stash.contracts[god.currentChain.chainId].deposit({
         params: [tokenId]
       })
+      await tx.wait(1);
+      dpLoot.updateBalance();
     } catch (e) {
       alert(JSON.stringify(e.data.message))
     }

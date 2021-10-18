@@ -14,6 +14,7 @@ import {
   Center, Text
 } from '@chakra-ui/react';
 import { BooleanState } from '@/store/standard/base';
+import { useStore } from '@/store/index';
 
 interface PropsType {
   balance: number;
@@ -27,6 +28,7 @@ interface PropsType {
 }
 
 export const DPCards = observer((props: PropsType) => {
+  const { dpLoot } = useStore()
 
   return(
     <>
@@ -48,7 +50,7 @@ export const DPCards = observer((props: PropsType) => {
         <GridItem colSpan={10}>
           <Skeleton isLoaded={!props.loading.value}>
             <Wrap my={2} justify="start">
-              {props.balance
+              {dpLoot.balance
                 ?
                 <>
                   {props.tokenUris?.map(uri => (

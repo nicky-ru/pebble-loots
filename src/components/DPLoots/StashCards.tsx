@@ -15,6 +15,7 @@ import {
   Center
 } from '@chakra-ui/react';
 import { BooleanState } from '@/store/standard/base';
+import { useStore } from '@/store/index';
 
 interface PropsType {
   balance: number;
@@ -25,6 +26,7 @@ interface PropsType {
 }
 
 export const StashCards = observer((props: PropsType) => {
+  const {stash} = useStore()
 
   return(
     <>

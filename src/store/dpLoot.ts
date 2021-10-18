@@ -9,7 +9,7 @@ import { IotexTestnetConfig } from '../config/IotexTestnetConfig';
 export class DatapointLootStore {
   rootStore: RootStore;
   network: NetworkState;
-  balance: number = 5;
+  balance: number = 0;
   contracts: { [key: number]: DatapointLootState } = {};
   tokenUris: any[];
 
@@ -26,5 +26,11 @@ export class DatapointLootStore {
 
   get god() {
     return this.rootStore.god;
+  }
+
+  async updateBalance() {
+    const bal = await this.contracts[this.god.currentChain.chainId].balanceOf({params: [this.god.currentNetwork.account]});
+    // @ts-ignore
+    this.balance = bal.toNumber();
   }
 }

@@ -70,6 +70,7 @@ export const Stash = observer(() => {
 
   async function fetchLoots() {
     observable.setLoading(true)
+    console.log("bal: ",observable.balance)
 
     const tokenUris = await Promise.all(observable.tokenIds.map(async (tid) => {
       const uri = await dpLoot.contracts[observable.chainId].getTokenUri({params: [tid.toNumber()]});
@@ -83,7 +84,6 @@ export const Stash = observer(() => {
 
   async function updateBalance() {
     let ids = await stash.contracts[observable.chainId].getMyStashedTokens();
-    console.log("stashed tokens: ", ids.toString());
     // @ts-ignore
     observable.setBalance(ids.length);
     observable.setTokenIds(ids);
@@ -91,9 +91,12 @@ export const Stash = observer(() => {
 
   async function withdraw(tokenId) {
     try {
-      await stash.contracts[god.currentChain.chainId].withdraw({
+      const tx = await stash.contracts[god.currentChain.chainId].withdraw({
         params: [tokenId]
       })
+      await tx.wait(1);
+      updateBalance();
+      dpLoot.updateBalance();
     } catch (e) {
       alert(JSON.stringify(e.data.message))
     }
@@ -110,4 +113,4 @@ export const Stash = observer(() => {
       />
     </ErrorBoundary>
   );
-});
+})
