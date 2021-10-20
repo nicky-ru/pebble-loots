@@ -28,6 +28,8 @@ describe('Loot Stash', () => {
       .deploy(this.pbl.address, this.dpl.address, pebblePerBlock, feeReceipient.address);
     await this.stash.deployed();
 
+    await this.pbl.connect(admin).transfer(this.stash.address, 1000000000000000);
+
     // preminting nfts
     await this.pbl.connect(admin).transfer(nftHolder1.address, 1000);
     await this.pbl.connect(admin).transfer(nftHolder2.address, 1000);
@@ -105,6 +107,49 @@ describe('Loot Stash', () => {
         this.stash.connect(nftHolder1).withdraw(tokenId2)
       )
         .to.be.revertedWith("Withdraw: not good");
+    })
+  })
+
+  describe('rewards', () => {
+    beforeEach(async () => {
+      await this.dpl.connect(nftHolder1).setApprovalForAll(this.stash.address, true);
+      await this.stash.connect(nftHolder1).deposit(tokenId1);
+      await this.dpl.connect(nftHolder2).setApprovalForAll(this.stash.address, true);
+      await this.stash.connect(nftHolder2).deposit(tokenId2);
+    })
+    it('should reward staker', async () => {
+      let expectedReward1 = pebblePerBlock * 2; // two blocks for deposits
+      let expectedReward2;
+
+      const initBal1 = await this.pbl.balanceOf(nftHolder1.address);
+      const initBal2 = await this.pbl.balanceOf(nftHolder2.address);
+
+      // mine four blocks
+      await network.provider.send("evm_mine");
+      await network.provider.send("evm_mine");
+      await network.provider.send("evm_mine");
+      await network.provider.send("evm_mine");
+
+      await this.stash.connect(nftHolder1).withdraw(tokenId1);
+
+      expectedReward1 += pebblePerBlock * 5 / 2;
+      expectedReward2 = pebblePerBlock * 5 / 2;
+
+      // mine another four blocks
+      await network.provider.send("evm_mine");
+      await network.provider.send("evm_mine");
+      await network.provider.send("evm_mine");
+      await network.provider.send("evm_mine");
+
+      await this.stash.connect(nftHolder2).withdraw(tokenId2);
+
+      expectedReward2 += pebblePerBlock * 5;
+
+      const initBal3 = await this.pbl.balanceOf(nftHolder1.address);
+      const initBal4 = await this.pbl.balanceOf(nftHolder2.address);
+
+      await expect(initBal3 - initBal1).to.be.equal(expectedReward1);
+      await expect(initBal4 - initBal2).to.be.equal(expectedReward2);
     })
   })
 })

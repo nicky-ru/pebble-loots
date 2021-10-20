@@ -14,10 +14,10 @@ class Tool {
 
 export const ToolConfig = [
   new Tool({
-    name: 'Pebble bag 🎒',
+    name: 'Machinaverse Passports 🪐',
     path: '/pebble-bag',
     component: PebbleBag,
-    tags: ['Pebble', 'IoT', 'Loot']
+    tags: ['DID', 'IoT', 'Metaverse']
   }),
   // new Tool({
   //   name: 'Devices',
@@ -44,9 +44,9 @@ export const ToolConfig = [
   //   tags: ['Real data', 'Loot']
   // }),
   new Tool({
-    name: 'DataPoint Stash 💰',
+    name: 'Intergalactic mine 💎',
     path: '/datapoint-bank',
     component: DPBank,
-    tags: ['Trusted Data', 'Pebble']
+    tags: ['Ore', 'PoW']
   })
 ];

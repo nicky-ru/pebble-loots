@@ -113,6 +113,7 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
       _tokenId
     );
 
+    totalHashPower = totalHashPower.add(pNFT.tokenToHashPower(_tokenId));
     user.numOfTokens = user.numOfTokens.add(1);
     user.tokenIds[_tokenId] = true;
     user.hashPower = user.hashPower.add(pNFT.tokenToHashPower(_tokenId));
@@ -131,6 +132,7 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
     delete user.tokenIds[_tokenId];
     user.hashPower = user.hashPower.sub(pNFT.tokenToHashPower(_tokenId));
     user.rewardDebt = user.hashPower.mul(accPblPerHashPowerUnit).div(1e12);
+    totalHashPower = totalHashPower.sub(pNFT.tokenToHashPower(_tokenId));
     pNFT.safeTransferFrom(
       address(this),
       _msgSender(),
