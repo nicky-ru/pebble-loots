@@ -54,7 +54,7 @@ export const RecordList = observer((props: PropsType) => {
                 props.setRecordToMint(i)
                 props.onOpen()
               }}
-            >Mint</Button>
+            >Solidify</Button>
           </Tr>
         ))}
       </Tbody>
