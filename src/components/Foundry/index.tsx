@@ -1,10 +1,11 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { Container, Heading, Text, Button, Box } from '@chakra-ui/react';
-import { DPLoots } from '@/components/DPLoots';
 import { Stash } from '@/components/DPLoots/Stash';
+import { useStore } from '@/store/index';
 
 export const Foundry = observer(() => {
+  const { tabs } = useStore();
   return (
     <Container minW={'full'} align={'center'}>
       <Heading>
@@ -15,7 +16,7 @@ export const Foundry = observer(() => {
       </Text>
       <Box borderWidth={'thin'} borderColor={'teal'} borderRadius={'3xl'} p={8} m={8}>
         <Stash/>
-        <Button>
+        <Button onClick={() => {tabs.setTabIndex(1)}}>
           Visit your Machinaverse
         </Button>
       </Box>

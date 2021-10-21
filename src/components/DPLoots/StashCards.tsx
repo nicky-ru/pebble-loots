@@ -26,57 +26,38 @@ interface PropsType {
 }
 
 export const StashCards = observer((props: PropsType) => {
-  const {stash} = useStore()
 
   return(
-    <>
-      <Grid gap={4} templateColumns="repeat(12, 1fr)">
-        <GridItem colSpan={2}>
-          <Center h={'full'}>
-            <Stack>
-              <Heading size={'md'}>
-                Stashed tokens
-              </Heading>
-              <Text>
-                Pending bal:
-              </Text>
-            </Stack>
-          </Center>
-        </GridItem>
-        <GridItem colSpan={10}>
-          <Skeleton isLoaded={!props.loading.value}>
+    <Skeleton isLoaded={!props.loading.value}>
 
-            <Wrap m={2} justify="start">
-              {props.balance
-                ?
-                <>
-                  {props.tokenUris?.map(uri => (
-                    <WrapItem key={uri.data.name}>
-                      <LinkBox as="article"  p={5} pb={10} borderWidth="1px" rounded="md">
-                        <Box w={"200px"} h={"200px"}>
-                          <Image src={uri.data.image}/>
-                          <Stack isInline justify={'end'} mt={2}>
-                            <Button variant={'link'} onClick={() => {
-                              props.withdraw(uri.data.name.toString().split("#")[1])
-                            }}>Unstash</Button>
-                          </Stack>
-                        </Box>
-                      </LinkBox>
-                    </WrapItem>
-                  ))}
-                </>
-                :
-                <WrapItem>
-                  <Center h={"200px"} flexDirection={"column"}>
-                    <Text>You have no stashed loots yet 😱</Text>
-                  </Center>
-                </WrapItem>
-              }
-            </Wrap>
+      <Wrap m={2} justify="start">
+        {props.balance
+          ?
+          <>
+            {props.tokenUris?.map(uri => (
+              <WrapItem key={uri.data.name}>
+                <LinkBox as="article"  p={5} pb={10} borderWidth="1px" rounded="md">
+                  <Box w={"200px"} h={"200px"}>
+                    <Image src={uri.data.image}/>
+                    <Stack isInline justify={'end'} mt={2}>
+                      <Button variant={'link'} onClick={() => {
+                        props.withdraw(uri.data.name.toString().split("#")[1])
+                      }}>Unstash</Button>
+                    </Stack>
+                  </Box>
+                </LinkBox>
+              </WrapItem>
+            ))}
+          </>
+          :
+          <WrapItem>
+            <Center h={"200px"} flexDirection={"column"}>
+              <Text>You have no stashed loots yet 😱</Text>
+            </Center>
+          </WrapItem>
+        }
+      </Wrap>
 
-          </Skeleton>
-        </GridItem>
-      </Grid>
-    </>
+    </Skeleton>
   );
 });

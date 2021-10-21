@@ -31,7 +31,7 @@ export const Machinaverse = observer(() => {
         <MyLoots/>
       </Box>
 
-      <Modal isOpen={isOpen} onClose={onClose} size={'xl'} isCentered>
+      <Modal isOpen={isOpen} onClose={onClose} size={'3xl'} isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Awake your Pebble Soul in the Machinaverse</ModalHeader>
