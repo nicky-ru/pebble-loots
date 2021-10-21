@@ -6,6 +6,7 @@ import { RecordStore } from '@/store/rec';
 import { ContractStore } from './ploots';
 import { DatapointLootStore } from '@/store/dpLoot';
 import { LootStashStore } from '@/store/stash';
+import { TabsStore } from '@/store/tabs';
 
 export class RootStore {
   lang = new LangStore();
@@ -16,4 +17,5 @@ export class RootStore {
   ploot = new ContractStore(this);
   dpLoot = new DatapointLootStore(this);
   stash = new LootStashStore(this);
+  tabs = new TabsStore();
 }
