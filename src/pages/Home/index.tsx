@@ -1,38 +1,64 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Container, LinkBox, SimpleGrid, LinkOverlay, Stack, Image, useColorModeValue } from '@chakra-ui/react';
+import { Container, Flex, Box, Tabs, TabList, TabPanels, Tab, TabPanel, Heading, Text } from '@chakra-ui/react';
 import { Link } from "react-router-dom";
 import { ToolConfig } from '../../config/ToolConfig';
-import { Badge, Text } from '@chakra-ui/layout';
 import { ErrorFallback } from '@/components/ErrorFallback';
 import { ErrorBoundary } from 'react-error-boundary';
+import { Machinaverse } from '@/components/Machinaverse';
+import { Sediments } from '@/components/Sediments';
+import { Foundry } from '@/components/Foundry';
+import { ERC20 } from '../ERC20';
 
 export const Home = observer(() => {
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <Container maxW="7xl">
-        <SimpleGrid minChildWidth="200px" spacing="10px" py="6">
-          {ToolConfig.map((i) => (
-            <LinkBox as="article" w="full" p="4" borderWidth="1px" rounded="md" key={i.name}>
-              <LinkOverlay as={Link} to={i.path} target="_self">
-                <Text>{i.name}</Text>
-              </LinkOverlay>
-              {i.tags && (
-                <Stack direction="row" mt="2">
-                  {i.tags.map((i) => (
-                    <Badge key={i} variant="outline" colorScheme="green">
-                      {i}
-                    </Badge>
-                  ))}
-                </Stack>
-              )}
-            </LinkBox>
-          ))}
-        </SimpleGrid>
-      </Container>
-      {/*<Container mt={-24} maxW={"100vw"}>*/}
-      {/*  <Image width={"100vw"} src={"/images/pebble-loots-how-to.svg"}/>*/}
-      {/*</Container>*/}
+      <Tabs colorScheme={'teal'} orientation={'vertical'} size={'lg'} variant={'line'}>
+        <TabList pt={10} w={64} h={'90vh'} borderRadius={'3xl'} borderColor={'teal'}>
+          <Tab>Home</Tab>
+          <Tab>Machinaverse</Tab>
+          <Tab>Sediments</Tab>
+          <Tab>The Foundry</Tab>
+          <Tab>Marketplace</Tab>
+        </TabList>
+
+        <TabPanels>
+
+          <TabPanel>
+            <Container align={'center'}>
+              <Heading>
+                Home
+              </Heading>
+              <Text>
+                Hello Master.
+                Welcome to Machinaverse.
+                We believe, that each device in this world should have a right to live it's life.
+                Here is the entry point to give your device a chance to have it's own persona in the metaverse.
+                Each device has got it's own unique identity.
+                Each device's soul needs to be awaken in the Machinaverse.
+                Each soul of Machinaverse works hard for the master who gave it freedom to live.
+              </Text>
+            </Container>
+          </TabPanel>
+
+          <TabPanel>
+            <Machinaverse/>
+          </TabPanel>
+
+          <TabPanel>
+            <Sediments/>
+          </TabPanel>
+
+          <TabPanel>
+            <Foundry/>
+          </TabPanel>
+
+          <TabPanel>
+            <ERC20/>
+          </TabPanel>
+
+        </TabPanels>
+      </Tabs>
     </ErrorBoundary>
   );
 });
