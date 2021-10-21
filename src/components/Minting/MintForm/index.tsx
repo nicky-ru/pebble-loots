@@ -36,7 +36,7 @@ export const MintForm = observer((props: PropsType) => {
             <Field name="imei" validate={validateImei}>
               {({ field, form }) => (
                 <FormControl isInvalid={form.errors.imei && form.touched.imei}>
-                  <FormLabel htmlFor="imei">Device IMEI to mint</FormLabel>
+                  <FormLabel htmlFor="imei">Device IMEI to awake</FormLabel>
                   <Stack isInline>
                     <Input {...field} id="imei" placeholder="e.g 100000000000001" />
                     <Button
@@ -45,7 +45,7 @@ export const MintForm = observer((props: PropsType) => {
                       isLoading={props.isSubmitting}
                       type="submit"
                     >
-                      Mint
+                      Awake
                     </Button>
                   </Stack>
 
