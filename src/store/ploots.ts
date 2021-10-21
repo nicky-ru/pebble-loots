@@ -10,7 +10,7 @@ import { IotexTestnetConfig } from '../config/IotexTestnetConfig';
 export class ContractStore {
   rootStore: RootStore;
   network: NetworkState;
-  balance: number = 5;
+  balance: number;
   contracts: { [key: number]: PebbleLootState } = {};
   tokenUris: any[];
 
@@ -29,7 +29,12 @@ export class ContractStore {
   get god() {
     return this.rootStore.god;
   }
+
   setTokenUris(uris: any[]) {
     this.tokenUris = uris;
+  }
+
+  updateBalance(bal: number) {
+    this.balance = bal;
   }
 }
