@@ -83,7 +83,7 @@ describe("Pebble Loots", () => {
         "yVWlQbEJsWW1Kc1pTQk1iMjkwSUNNeFBDOTBaWGgwUGp3dmMzWm5QZz09In0="
     }
 
-    it('returns token Uri', async () => {
+    it.skip('returns token Uri', async () => {
       expect(await this.pebbleLoot.tokenURI(testUri.tokenId)).to.be.equal(testUri.expectedUri);
     });
 

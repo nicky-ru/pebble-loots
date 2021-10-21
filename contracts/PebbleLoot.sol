@@ -37,7 +37,6 @@ contract PebbleLoot is ERC721, ReentrancyGuard, ERC721Enumerable, Ownable {
   /// @notice Fee receipient
   address payable public feeReceipient;
 
-
   /// @notice Contract constructor
   constructor(
     address _registration,
@@ -52,6 +51,53 @@ contract PebbleLoot is ERC721, ReentrancyGuard, ERC721Enumerable, Ownable {
     feeReceipient = _feeReceipient;
   }
 
+  string[] private skins = [
+  "Cat",
+  "Dog",
+  "Bull",
+  "Bear",
+  "Wolf",
+  "Fox",
+  "Unicorn",
+  "Ape",
+  "Shark",
+  "Frog",
+  "Whale"
+  ];
+
+  string[] private colors = [
+    "Black",
+    "White",
+    "Blue",
+    "Red",
+    "Yellow",
+    "Pink"
+  ];
+
+  function random(string memory input) internal pure returns (uint256) {
+    return uint256(keccak256(abi.encodePacked(input)));
+  }
+
+  function getSkin(uint256 tokenId) public view returns(string memory) {
+    return pluck(tokenId, "SKIN", skins);
+  }
+
+  function pluck(
+    uint256 tokenId,
+    string memory keyPrefix,
+    string[] memory sourceArray
+  )
+  internal
+  view
+  returns (string memory)
+  {
+    uint256 rand = random(string(abi.encodePacked(keyPrefix, toString(tokenId))));
+    string memory output = sourceArray[rand % sourceArray.length];
+    string memory color = colors[rand % colors.length];
+    output = string(abi.encodePacked(color, " Robo", output));
+    return output;
+  }
+
   /// @notice Generator of token URI
   /// @param tokenId Id of NFT
   function tokenURI(
@@ -59,14 +105,14 @@ contract PebbleLoot is ERC721, ReentrancyGuard, ERC721Enumerable, Ownable {
   )
   public
   override
-  pure
+  view
   returns (string memory)
   {
     string memory output = string(abi.encodePacked(
       '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><style>.base { fill: white; font-family: serif; font-size: 14px; }</style><rect width="100%" height="100%" fill="black" /><text x="10" y="20" class="base">',
-      "Pebble Loot #",
-      toString(tokenId),
-      '</text></svg>'
+      "Pebble Soul #",
+      toString(tokenId), '</text><text x="10" y="40" class="base">',
+      getSkin(tokenId), '</text></svg>'
       ));
 
     string memory name = string(abi.encodePacked('"name": "Pebble IMEI #', toString(tokenId), '"'));
