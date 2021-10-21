@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Container, Tabs, TabList, TabPanels, Tab, TabPanel, Heading, Text } from '@chakra-ui/react';
 import { ErrorFallback } from '@/components/ErrorFallback';
@@ -8,11 +8,21 @@ import { Sediments } from '@/components/Sediments';
 import { Foundry } from '@/components/Foundry';
 import { ERC20 } from '../ERC20';
 import { Vapor } from '@/components/Vapor';
+import { useStore } from '@/store/index';
 
 export const Home = observer(() => {
+  const { tabs } = useStore();
+
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <Tabs colorScheme={'teal'} orientation={'vertical'} size={'lg'} variant={'line'}>
+      <Tabs
+        index={tabs.tabIndex}
+        onChange={(i) => {tabs.setTabIndex(i)}}
+        colorScheme={'teal'}
+        orientation={'vertical'}
+        size={'lg'}
+        variant={'line'}
+      >
         <TabList pt={10} w={64} h={'90vh'} borderRadius={'3xl'} borderColor={'teal'}>
           <Tab>Home</Tab>
           <Tab>Machinaverse</Tab>
