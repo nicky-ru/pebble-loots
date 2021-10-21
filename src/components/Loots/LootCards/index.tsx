@@ -17,7 +17,7 @@ interface PropsType {
 }
 
 export const LootCards = observer((props: PropsType) => {
-  const { pebble, ploot } = useStore();
+  const { pebble, ploot, tabs } = useStore();
 
   return(
     <Skeleton isLoaded={!props.loading.value}>
@@ -30,6 +30,7 @@ export const LootCards = observer((props: PropsType) => {
                 <LinkOverlay onClick={() => {
                   pebble.selectImei(uri.data.name.toString().split("#")[1])
                   pebble.selectPebbleLootId(i);
+                  tabs.setTabIndex(2);
                 }}/>
                 <Image src={uri.data.image}/>
               </Box>
