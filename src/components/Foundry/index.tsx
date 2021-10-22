@@ -1,7 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { Container, Heading, Text, Button, Box, Stack } from '@chakra-ui/react';
-import { Stash } from '@/components/DPLoots/Stash';
 import { useStore } from '@/store/index';
 
 export const Foundry = observer(() => {
@@ -15,7 +14,6 @@ export const Foundry = observer(() => {
         The Foundry is where precious Plasma is produced and collected.
       </Text>
       <Box borderWidth={'thin'} borderColor={'teal'} borderRadius={'3xl'} p={8} m={8}>
-        {/*<Stash/>*/}
         <Stack isInline w={'full'} justifyContent={'space-between'}>
           <Box borderWidth={'thin'} w={'45%'} p={4} borderRadius={'md'}>
             <Stack>
