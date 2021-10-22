@@ -53,4 +53,13 @@ export class LootStashState {
       method: 'getTokenIds'
     }))
   }
+
+  getPending(args: Partial<CallParams>) {
+    return this.network.execContract(Object.assign({
+      address: this.address,
+      abi: this.abi,
+      method: 'pendingPbl'
+    },
+      args))
+  }
 }
