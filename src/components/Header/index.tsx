@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, Box, Flex, Container, Stack, useDisclosure, IconButton, useColorModeValue, Icon, useColorMode, Heading, Alert, AlertIcon, Text } from '@chakra-ui/react';
+import { Image, Box, Flex, Container, Stack, useDisclosure,Button, IconButton, useColorModeValue, Icon, useColorMode, Heading, Alert, AlertIcon, Text } from '@chakra-ui/react';
 import { CloseIcon, HamburgerIcon } from '@chakra-ui/icons';
 import { IoMoon, IoSunny } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
@@ -36,7 +36,8 @@ export const Header = observer(() => {
           <Flex flex={{ base: 1, md: 'auto' }} justify={{ base: 'center', md: 'start' }}>
             <Link to={'/'}>
               <Stack as={'a'} direction={'row'} alignItems={'center'} spacing={{ base: 2, sm: 4 }}>
-                <Image src={useColorModeValue("/images/pebbleglitch.svg", "/images/pebblelogo.svg")} h={12} py={2}/>
+                {/*<Image src={useColorModeValue("/images/pebbleglitch.svg", "/images/pebblelogo.svg")} h={12} py={2}/>*/}
+                <Button>Buy a Pebble</Button>
               </Stack>
             </Link>
           </Flex>
