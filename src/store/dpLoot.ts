@@ -33,4 +33,8 @@ export class DatapointLootStore {
     // @ts-ignore
     this.balance = bal.toNumber();
   }
+
+  setTokenUris(uris: any[]) {
+    this.tokenUris = uris;
+  }
 }
