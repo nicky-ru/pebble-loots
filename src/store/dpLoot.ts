@@ -5,13 +5,15 @@ import datapointLoot from '../constants/contracts/datapoint_loot.json';
 import { RootStore } from '@/store/root';
 import { EthNetworkConfig } from '../config/NetworkConfig';
 import { IotexTestnetConfig } from '../config/IotexTestnetConfig';
+import { BigNumber } from 'ethers';
 
 export class DatapointLootStore {
   rootStore: RootStore;
   network: NetworkState;
-  balance: number = 0;
+  balance: number;
   contracts: { [key: number]: DatapointLootState } = {};
   tokenUris: any[];
+  tokenIds: number[];
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
@@ -30,11 +32,37 @@ export class DatapointLootStore {
 
   async updateBalance() {
     const bal = await this.contracts[this.god.currentChain.chainId].balanceOf({params: [this.god.currentNetwork.account]});
-    // @ts-ignore
-    this.balance = bal.toNumber();
+    this.balance = BigNumber.from(JSON.parse(JSON.stringify(bal))).toNumber();
   }
 
   setTokenUris(uris: any[]) {
-    this.tokenUris = uris;
+    this.tokenUris = [...uris];
+  }
+
+  setTokenIds(ids: number[]) {
+    this.tokenIds = [...ids];
+  }
+
+  async approve() {
+    try {
+      await this.contracts[this.god.currentChain.chainId]
+        .setApprovalForAll({
+          params: [this.rootStore.stash.contracts[this.god.currentChain.chainId].address, true]
+        });
+    } catch (e) {
+      alert(JSON.stringify(e.data.message))
+    }
+  }
+
+  async deposit(tokenId) {
+    try {
+      const tx = await this.rootStore.stash.contracts[this.god.currentChain.chainId].deposit({
+        params: [tokenId]
+      })
+      await tx.wait(1);
+      this.updateBalance();
+    } catch (e) {
+      alert(JSON.stringify(e.data.message))
+    }
   }
 }
