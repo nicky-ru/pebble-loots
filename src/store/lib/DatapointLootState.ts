@@ -91,4 +91,14 @@ export class DatapointLootState {
       },
       args))
   }
+
+  getTokenHashPower(args: Partial<CallParams>) {
+    console.log("querying hash power");
+    return this.network.execContract(Object.assign({
+      address: this.address,
+      abi: this.abi,
+      method: 'tokenToHashPower'
+    },
+      args))
+  }
 }

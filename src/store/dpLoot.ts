@@ -14,6 +14,7 @@ export class DatapointLootStore {
   contracts: { [key: number]: DatapointLootState } = {};
   tokenUris: any[];
   tokenIds: number[];
+  hashPow: any[];
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
@@ -33,6 +34,12 @@ export class DatapointLootStore {
   async updateBalance() {
     const bal = await this.contracts[this.god.currentChain.chainId].balanceOf({params: [this.god.currentNetwork.account]});
     this.balance = BigNumber.from(JSON.parse(JSON.stringify(bal))).toNumber();
+  }
+
+  async updateHashPow() {
+    this.hashPow = await this.tokenIds.map(async (tid) => {
+      await this.contracts[this.god.currentChain.chainId].getTokenHashPower({params: [tid]});
+    })
   }
 
   setTokenUris(uris: any[]) {
