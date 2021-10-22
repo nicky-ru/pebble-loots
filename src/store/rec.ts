@@ -1,6 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import BigNumber from 'bignumber.js';
 import { RootStore } from '@/store/root';
+import {utils} from "ethers";
 
 // class DeviceRecord {
 //   imei: "103381234567402"
@@ -27,6 +28,7 @@ class DecodedRecord {
 export class RecordStore {
   rootStore: RootStore;
   decodedRecords = Array<DecodedRecord>();
+  recordPowers = Array<number>();
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
@@ -39,6 +41,45 @@ export class RecordStore {
       record.longitude = new BigNumber(record.longitude);
       return record;
     });
+  }
+
+  setPowers(powers: Array<number>) {
+    this.recordPowers = [...powers];
+  }
+
+  async calculateHashPower(id: number) {
+    const rec = this.rootStore.rec;
+    const dpLoot = this.rootStore.dpLoot;
+    const god = this.rootStore.god;
+
+    let hashPower;
+    const snr = rec.decodedRecords[id].snr.toString();
+    const vbat = rec.decodedRecords[id].vbat.toString();
+    const latitude = rec.decodedRecords[id].latitude.toString();
+    const longitude = rec.decodedRecords[id].longitude.toString();
+    const gasResistance = rec.decodedRecords[id].gasResistance.toString();
+    const temperature = rec.decodedRecords[id].temperature.toString();
+    const pressure = rec.decodedRecords[id].pressure.toString();
+    const humidity = rec.decodedRecords[id].humidity.toString();
+    const light = rec.decodedRecords[id].light.toString();
+    const gyroscope = rec.decodedRecords[id].gyroscope.toString();
+    const accelerometer = rec.decodedRecords[id].accelerometer.toString();
+    const random = rec.decodedRecords[id].random.toString();
+
+    const dataPoint = [
+      snr, vbat, latitude, longitude, gasResistance, temperature,
+      pressure, humidity, light, gyroscope, accelerometer, random
+    ];
+
+    try {
+      hashPower = await dpLoot.contracts[god.currentChain.chainId].calculateHashPower({
+        params: [dataPoint]
+      })
+    } catch (e) {
+      alert(JSON.stringify(e.data.message))
+    }
+
+    return hashPower;
   }
 
   async mint(id: number) {
@@ -63,6 +104,8 @@ export class RecordStore {
       snr, vbat, latitude, longitude, gasResistance, temperature,
       pressure, humidity, light, gyroscope, accelerometer, random
     ];
+
+
 
     console.log("Minting dp", dataPoint);
 

@@ -5,6 +5,7 @@ import { useStore } from '@/store/index';
 import { BooleanState } from '@/store/standard/base';
 import axios from 'axios';
 import { VaporCards } from '@/components/Vapor/VaporCards';
+import { DPLoots } from '@/components/DPLoots';
 
 export const Vapor = observer(() => {
   const { tabs, pebble, rec, god } = useStore();
@@ -29,6 +30,23 @@ export const Vapor = observer(() => {
   useEffect(() => {
     fetchDevices();
   }, [god.currentNetwork.account]);
+
+  useEffect(() => {
+    if (rec.decodedRecords) {
+      updatePowers();
+    }
+  }, [rec.decodedRecords])
+
+  async function updatePowers() {
+    observable.setLoading(true);
+    const powers = await Promise.all(rec.decodedRecords.map(async (record, i) => {
+      const pow = await rec.calculateHashPower(i);
+      return pow;
+    }))
+
+    rec.setPowers(powers);
+    observable.setLoading(false);
+  }
 
   async function fetchDevices() {
     observable.setLoading(true);

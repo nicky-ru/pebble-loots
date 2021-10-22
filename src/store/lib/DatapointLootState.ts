@@ -101,4 +101,13 @@ export class DatapointLootState {
     },
       args))
   }
+
+  calculateHashPower(args: Partial<CallParams>) {
+    return this.network.execContract(Object.assign({
+      address: this.address,
+      abi: this.abi,
+      method: 'calculateHashPower'
+    },
+      args))
+  }
 }

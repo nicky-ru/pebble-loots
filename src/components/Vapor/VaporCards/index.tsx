@@ -15,6 +15,18 @@ export const VaporCards = observer(() => {
       this.recordToMint = value;
     }
   }))
+
+  const vaporColor = (pow: number) => {
+    let color;
+    if (pow === 1) {
+      color = './images/vapor/green.svg'
+    }
+    else if (pow === 2) {
+      color = './images/vapor/blue.svg'
+    }
+    return color;
+  }
+
   return (
     <Box maxH={'500px'} overflowY={'scroll'}>
       <Wrap mx={4} spacing="45px">
@@ -23,10 +35,14 @@ export const VaporCards = observer(() => {
             <WrapItem key={i}>
               <Center w={'full'}>
                 <Stack>
-                  <Image h={32} w={32} src={'./images/vapor/green.svg'}/>
+                  <Image h={32} w={32} src={rec.recordPowers ? vaporColor(rec.recordPowers[i]) : './images/vapor/green.svg'}/>
                   <Text>{record.temperature}°C - {record.humidity}% - {record.pressure}hPa</Text>
-                  <Text>Power: {record.vbat}</Text>
-                  <Button onClick={() => {onOpen()}}>Solidify</Button>
+                  <Text>Power: {rec.recordPowers?.[i]}</Text>
+                  <Button onClick={() => {
+                    observable.setRecordToMint(i);
+                    onOpen()}}
+                  >
+                    Solidify</Button>
                 </Stack>
               </Center>
             </WrapItem>
