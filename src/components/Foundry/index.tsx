@@ -1,10 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Container, Heading, Text, Button, Box, Stack } from '@chakra-ui/react';
 import { useStore } from '@/store/index';
 
 export const Foundry = observer(() => {
-  const { tabs } = useStore();
+  const { tabs, dpLoot, stash } = useStore();
+  const [availablePow, setAvailablePow] = useState<number>(0);
+
+  useEffect(() => {
+    if (dpLoot.hashPow) {
+      const powers = [...dpLoot.hashPow];
+      const sum = powers.reduce(add,0);
+      setAvailablePow(sum);
+      stash.updateUserInfo();
+    }
+  }, [dpLoot.hashPow]);
+
+  const add = (accumulator: number, a: number) => {
+    return accumulator + a;
+  }
+
   return (
     <Container minW={'full'} align={'center'}>
       <Heading>
@@ -28,7 +43,7 @@ export const Foundry = observer(() => {
           <Box borderWidth={'thin'} w={'45%'} p={4} borderRadius={'md'}>
             <Stack>
               <Text align={'left'}>Your production power</Text>
-              <Text align={'left'}>Used 132 - Available 59</Text>
+              <Text align={'left'}>Used {stash.userInfo?.hashPower} - Available {availablePow}</Text>
               <Stack isInline justifyContent={'space-between'} align={'center'}>
                 <Button>Manage</Button>
                 <Text>APY: 520%</Text>

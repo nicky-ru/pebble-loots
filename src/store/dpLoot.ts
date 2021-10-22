@@ -33,13 +33,22 @@ export class DatapointLootStore {
 
   async updateBalance() {
     const bal = await this.contracts[this.god.currentChain.chainId].balanceOf({params: [this.god.currentNetwork.account]});
-    this.balance = BigNumber.from(JSON.parse(JSON.stringify(bal))).toNumber();
+    this.setBalance(BigNumber.from(JSON.parse(JSON.stringify(bal))).toNumber());
   }
 
   async updateHashPow() {
-    this.hashPow = await Promise.all(this.tokenIds.map(async (tid) => {
+    const newHashPowers = await Promise.all(this.tokenIds.map(async (tid) => {
       return await this.contracts[this.god.currentChain.chainId].getTokenHashPower({params: [tid]});
     }))
+    this.setHashPower(newHashPowers);
+  }
+
+  setBalance(newBal: number) {
+    this.balance = newBal;
+  }
+
+  setHashPower(hashpowers: any[]) {
+    this.hashPow = [...hashpowers];
   }
 
   setTokenUris(uris: any[]) {

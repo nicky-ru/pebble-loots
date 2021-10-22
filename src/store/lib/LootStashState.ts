@@ -62,4 +62,13 @@ export class LootStashState {
     },
       args))
   }
+
+  getUserInfo(args: Partial<CallParams>) {
+    return this.network.execContract(Object.assign({
+      address: this.address,
+      abi: this.abi,
+      method: 'userInfo'
+    },
+      args))
+  }
 }

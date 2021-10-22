@@ -24,7 +24,7 @@ interface PropsType {
 export const SedimentCards = observer((props: PropsType) => {
   const { dpLoot } = useStore()
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [tid, setTid] = useState<number>(0);
+  const [sedimentTid, setTid] = useState<number>(0);
 
   return(
     <>
@@ -33,11 +33,11 @@ export const SedimentCards = observer((props: PropsType) => {
           {dpLoot.balance
             ?
             <>
-              {dpLoot.tokenIds?.map((tid) => (
+              {dpLoot.tokenIds?.map((tid, i) => (
                 <WrapItem key={tid}>
                   <Box w={"200px"} h={"200px"} m={4}>
                     <Image src={'./images/sediment/3d.svg'}/>
-                    <Text mt={-8}>Power: {dpLoot.hashPow?.[tid]}</Text>
+                    <Text mt={-8}>Power: {dpLoot.hashPow[i]}</Text>
                     <Button
                       variant={'outline'}
                       mt={1}
@@ -77,7 +77,7 @@ export const SedimentCards = observer((props: PropsType) => {
             </Button>
             <Button
               variant="ghost"
-              onClick={() => {dpLoot.deposit(tid)}}
+              onClick={() => {dpLoot.deposit(sedimentTid)}}
             >
               Put
             </Button>
