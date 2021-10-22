@@ -35,6 +35,10 @@ export const Sediments = observer(() => {
     }
   }, [dpLoot.balance]);
 
+  useEffect(() => {
+    dpLoot.updateHashPow();
+  }, [dpLoot.tokenIds])
+
   async function fetchLoots() {
     observable.setLoading(true)
     const tokenIds = Array(dpLoot.balance);

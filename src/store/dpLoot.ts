@@ -37,9 +37,9 @@ export class DatapointLootStore {
   }
 
   async updateHashPow() {
-    this.hashPow = await this.tokenIds.map(async (tid) => {
-      await this.contracts[this.god.currentChain.chainId].getTokenHashPower({params: [tid]});
-    })
+    this.hashPow = await Promise.all(this.tokenIds.map(async (tid) => {
+      return await this.contracts[this.god.currentChain.chainId].getTokenHashPower({params: [tid]});
+    }))
   }
 
   setTokenUris(uris: any[]) {
