@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { Box, Button, Container, Heading, Text } from '@chakra-ui/react';
-import { Records } from '@/components/Records';
 import { useStore } from '@/store/index';
 import { BooleanState } from '@/store/standard/base';
 import axios from 'axios';
+import { VaporCards } from '@/components/Vapor/VaporCards';
 
 export const Vapor = observer(() => {
   const { tabs, pebble, rec, god } = useStore();
@@ -43,7 +43,6 @@ export const Vapor = observer(() => {
     observable.setLoading(true);
     console.log("querying data for: ", imei);
     const data = await axios.get(`https://protoreader.herokuapp.com/api/devices/${imei}`);
-    // const data = await axios.get(`http://localhost:3001/api/devices/${imei}`);
     rec.setDecodedRecords(data.data.decoded);
     observable.setLoading(false);
   }
@@ -59,8 +58,8 @@ export const Vapor = observer(() => {
       <Button onClick={() => {tabs.setTabIndex(1)}}>
         Back to souls
       </Button>
-      <Box w={'full'} borderWidth={'thin'} borderColor={'teal'} borderRadius={'3xl'} p={8} m={8}>
-        <Records/>
+      <Box w={'90%'} borderWidth={'thin'} borderColor={'teal'} borderRadius={'3xl'} p={8} m={8}>
+        <VaporCards/>
       </Box>
     </Container>
   );
