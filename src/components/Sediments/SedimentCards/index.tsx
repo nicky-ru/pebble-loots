@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Grid, GridItem,
@@ -11,7 +11,7 @@ import {
   Image,
   Skeleton,
   Button,
-  Center, Text
+  Center, Text, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Modal, useDisclosure
 } from '@chakra-ui/react';
 import { BooleanState } from '@/store/standard/base';
 import { useStore } from '@/store/index';
@@ -19,38 +19,70 @@ import { useStore } from '@/store/index';
 interface PropsType {
   loading: BooleanState;
   loaded: BooleanState;
-  approve: any;
-  deposit: any;
 }
 
 export const SedimentCards = observer((props: PropsType) => {
   const { dpLoot } = useStore()
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [tid, setTid] = useState<number>(0);
 
   return(
-    <Skeleton isLoaded={!props.loading.value}>
-      <Wrap m={4} justify="start">
-        {dpLoot.balance
-          ?
-          <>
-            {dpLoot.tokenUris?.map(uri => (
-              <WrapItem key={uri.data.name}>
-                <Box w={"200px"} h={"200px"} m={4}>
-                  <Image src={'./images/sediment/sediment.svg'}/>
-                  <Button variant={'outline'} mt={1} onClick={() => {
-                    props.deposit(uri.data.name.toString().split("#")[1])
-                  }}>Put in the Foundry</Button>
-                </Box>
-              </WrapItem>
-            ))}
-          </>
-          :
-          <WrapItem>
-            <Center h={"200px"} flexDirection={"column"}>
-              <Text>Empty list</Text>
-            </Center>
-          </WrapItem>
-        }
-      </Wrap>
-    </Skeleton>
+    <>
+      <Skeleton isLoaded={!props.loading.value}>
+        <Wrap m={4} justify="start">
+          {dpLoot.balance
+            ?
+            <>
+              {dpLoot.tokenIds?.map((tid) => (
+                <WrapItem key={tid}>
+                  <Box w={"200px"} h={"200px"} m={4}>
+                    <Image src={'./images/sediment/3d.svg'}/>
+                    <Button
+                      variant={'outline'}
+                      mt={1}
+                      onClick={() => {
+                        setTid(tid);
+                        onOpen();
+                      }
+                      }
+                    >
+                      Put in the Foundry
+                    </Button>
+                  </Box>
+                </WrapItem>
+              ))}
+            </>
+            :
+            <WrapItem>
+              <Center h={"200px"} flexDirection={"column"}>
+                <Text>Empty list</Text>
+              </Center>
+            </WrapItem>
+          }
+        </Wrap>
+      </Skeleton>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Put Sediment in the Foundry</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={() => {dpLoot.approve()}}>
+              Approve
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => {dpLoot.deposit(tid)}}
+            >
+              Put
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 });
