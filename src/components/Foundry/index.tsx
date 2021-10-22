@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Container, Heading, Text, Button, Box, Stack } from '@chakra-ui/react';
 import { useStore } from '@/store/index';
+import { BigNumber } from 'ethers';
 
 export const Foundry = observer(() => {
-  const { tabs, dpLoot, stash } = useStore();
+  const { tabs, dpLoot, stash, god } = useStore();
   const [availablePow, setAvailablePow] = useState<number>(0);
+  const [pending, setPending] = useState<number>(0);
 
   useEffect(() => {
     if (dpLoot.hashPow) {
@@ -16,8 +18,20 @@ export const Foundry = observer(() => {
     }
   }, [dpLoot.hashPow]);
 
+  useEffect(() => {
+    if (stash.userInfo?.numOfTokens) {
+      updatePending();
+    }
+  }, [stash.userInfo])
+
   const add = (accumulator: number, a: number) => {
     return accumulator + a;
+  }
+
+  const updatePending = async () => {
+    const pen = await stash.contracts[god.currentChain.chainId]
+      .getPending({params: [god.currentNetwork.account]})
+    setPending(BigNumber.from(JSON.parse(JSON.stringify(pen))).toNumber());
   }
 
   return (
@@ -33,7 +47,7 @@ export const Foundry = observer(() => {
           <Box borderWidth={'thin'} w={'45%'} p={4} borderRadius={'md'}>
             <Stack>
               <Text align={'left'}>Your pending Plasma</Text>
-              <Text align={'left'}>100 PMT</Text>
+              <Text align={'left'}>{pending} PMT</Text>
               <Stack isInline justifyContent={'space-between'} align={'center'}>
                 <Button>Collect</Button>
                 <Text>10$</Text>

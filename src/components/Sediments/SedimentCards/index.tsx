@@ -37,7 +37,7 @@ export const SedimentCards = observer((props: PropsType) => {
                 <WrapItem key={tid}>
                   <Box w={"200px"} h={"200px"} m={4}>
                     <Image src={'./images/sediment/3d.svg'}/>
-                    <Text mt={-8}>Power: {dpLoot.hashPow[i]}</Text>
+                    <Text mt={-8}>Power: {dpLoot.hashPow?.[i]}</Text>
                     <Button
                       variant={'outline'}
                       mt={1}
