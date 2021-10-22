@@ -136,7 +136,7 @@ contract DatapointLoot is ERC721, ERC721Enumerable, Ownable {
 
   /// @notice Method for calculating hash power of NFT
   function calculateHashPower(DataPoint memory dataPoint)
-  internal
+  public
   pure
   returns (uint8 hashPower)
   {
