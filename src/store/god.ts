@@ -34,8 +34,8 @@ export class GodStore {
     });
     EthNetworkConfig.god = this;
   }
-  get isIotxNetork() {
-    return this.network.currentId.value == 'iotex';
+  get isIotxTestnet() {
+    return this.currentNetwork.currentChain.chainId == 4690;
   }
   get isETHNetwork() {
     //@ts-ignore

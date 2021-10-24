@@ -8,13 +8,11 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { BooleanState } from '@/store/standard/base';
 import { BigNumber } from 'ethers';
 
-const IOTX_TEST_CHAINID = 4690;
-
 export const MyLoots = observer(() => {
   const { ploot, god, load } = useStore();
 
   useEffect(() => {
-    if (god.currentChain.chainId === IOTX_TEST_CHAINID) {
+    if (god.isIotxTestnet) {
       updateBalance();
     }
   }, [ploot.god.currentNetwork.account, god.currentChain.chainId]);
