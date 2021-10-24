@@ -1,7 +1,7 @@
 import React from 'react';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { Box, useDisclosure, Wrap, WrapItem, Image, Button, Text, Stack, Center } from '@chakra-ui/react';
-import { MintModal } from '@/components/DPLoots/MintModal';
+import { MintModal } from '@/components/Minting/MintModal';
 import { useStore } from '@/store/index';
 
 export const VaporCards = observer(() => {

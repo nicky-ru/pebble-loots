@@ -5,7 +5,6 @@ import { useStore } from '@/store/index';
 import { BooleanState } from '@/store/standard/base';
 import axios from 'axios';
 import { VaporCards } from '@/components/Vapor/VaporCards';
-import { DPLoots } from '@/components/DPLoots';
 
 export const Vapor = observer(() => {
   const { tabs, pebble, rec, god } = useStore();
