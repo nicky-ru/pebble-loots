@@ -6,7 +6,7 @@ import { useStore } from '@/store/index';
 export const DevicesList = observer(() => {
   const { pebble } = useStore();
 
-  return(
+  return (
     <Box>
       <Table size="sm" variant="striped">
         <Thead>
@@ -16,25 +16,21 @@ export const DevicesList = observer(() => {
           </Tr>
         </Thead>
         <Tbody>
-          {pebble.devices.length
-            ? pebble.devices.map(device => (
+          {pebble.devices.length ? (
+            pebble.devices.map((device) => (
               <Tr key={device.id}>
                 <Td>{device.id}</Td>
                 <Td>{device.name}</Td>
               </Tr>
             ))
-            :
+          ) : (
             <Tr>
-              <Td>
-                You have no devices
-              </Td>
-              <Td>
-                yet
-              </Td>
+              <Td>You have no devices</Td>
+              <Td>yet</Td>
             </Tr>
-          }
+          )}
         </Tbody>
       </Table>
     </Box>
-    );
+  );
 });

@@ -18,7 +18,7 @@ export const Devices = observer(() => {
   async function fetchDevices() {
     setLoading(true);
     const owner = god.currentNetwork.account;
-    const url = "https://protoreader.herokuapp.com/api/my-devices/" + owner.toLowerCase();
+    const url = 'https://protoreader.herokuapp.com/api/my-devices/' + owner.toLowerCase();
     const axiosResponse = await axios.get(url);
     pebble.setDevices(axiosResponse.data);
     setLoading(false);
@@ -27,7 +27,7 @@ export const Devices = observer(() => {
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <Skeleton isLoaded={!loading}>
-        <DevicesList/>
+        <DevicesList />
       </Skeleton>
     </ErrorBoundary>
   );

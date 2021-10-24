@@ -18,7 +18,7 @@ export const DPLoots = observer(() => {
     tokenUris: [],
     loaded: new BooleanState(),
     loading: new BooleanState(),
-    tokenToTransfer: "",
+    tokenToTransfer: '',
     setTokenUris(newUris) {
       this.tokenUris = newUris;
     },
@@ -31,13 +31,13 @@ export const DPLoots = observer(() => {
     setTokenToTransfer(value: string) {
       this.tokenToTransfer = value;
     }
-  }))
+  }));
 
   useEffect(() => {
     if (god.currentChain.chainId === IOTX_TEST_CHAINID) {
       dpLoot.updateBalance();
     }
-  }, [dpLoot.god.currentNetwork.account, god.currentChain.chainId])
+  }, [dpLoot.god.currentNetwork.account, god.currentChain.chainId]);
 
   useEffect(() => {
     if (dpLoot.balance) {
@@ -46,16 +46,18 @@ export const DPLoots = observer(() => {
   }, [dpLoot.balance]);
 
   async function fetchLoots() {
-    observable.setLoading(true)
+    observable.setLoading(true);
     const tokenIds = Array(dpLoot.balance);
 
     for (let i = 0; i < dpLoot.balance; i++) {
-      tokenIds[i] = await dpLoot.contracts[god.currentChain.chainId].tokenOfOwnerByIndex({params: [dpLoot.god.currentNetwork.account, i]})
+      tokenIds[i] = await dpLoot.contracts[god.currentChain.chainId].tokenOfOwnerByIndex({ params: [dpLoot.god.currentNetwork.account, i] });
     }
-    const tokenUris = await Promise.all(tokenIds.map(async (tid) => {
-      const uri = await dpLoot.contracts[god.currentChain.chainId].getTokenUri({params: [tid.toNumber()]});
-      return await axios.get(uri.toString());
-    }))
+    const tokenUris = await Promise.all(
+      tokenIds.map(async (tid) => {
+        const uri = await dpLoot.contracts[god.currentChain.chainId].getTokenUri({ params: [tid.toNumber()] });
+        return await axios.get(uri.toString());
+      })
+    );
 
     observable.setTokenUris(tokenUris);
     observable.setLoading(false);
@@ -68,7 +70,7 @@ export const DPLoots = observer(() => {
         params: [stash.contracts[god.currentChain.chainId].address, true]
       });
     } catch (e) {
-      alert(JSON.stringify(e.data.message))
+      alert(JSON.stringify(e.data.message));
     }
   }
 
@@ -76,24 +78,17 @@ export const DPLoots = observer(() => {
     try {
       const tx = await stash.contracts[god.currentChain.chainId].deposit({
         params: [tokenId]
-      })
+      });
       await tx.wait(1);
       dpLoot.updateBalance();
     } catch (e) {
-      alert(JSON.stringify(e.data.message))
+      alert(JSON.stringify(e.data.message));
     }
   }
 
-  return(
+  return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <DPCards
-        tokenUris={observable.tokenUris}
-        loading={observable.loading}
-        loaded={observable.loaded}
-        setTokenToTransfer={observable.setTokenToTransfer}
-        approve={approve}
-        deposit={deposit}
-      />
+      <DPCards tokenUris={observable.tokenUris} loading={observable.loading} loaded={observable.loaded} setTokenToTransfer={observable.setTokenToTransfer} approve={approve} deposit={deposit} />
     </ErrorBoundary>
   );
 });

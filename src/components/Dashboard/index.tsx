@@ -10,22 +10,22 @@ import { HumidityChart } from '@/components/Dashboard/humidity';
 import { LightChart } from '@/components/Dashboard/light';
 import { GyroChart } from '@/components/Dashboard/gyro';
 import { AccelChart } from '@/components/Dashboard/accel';
-import { MapBox } from "../Map";
+import { MapBox } from '../Map';
 import { ErrorBoundary } from 'react-error-boundary';
 import { ErrorFallback } from '@/components/ErrorFallback';
 
 export const Dashboard = observer(() => {
   const chartW = 650;
   const chartH = 124;
-  const borderW = "1px";
-  const rounded = "md";
-  const wrapW = "full";
-  const bc = useColorModeValue("dark.400", "dark.200");
+  const borderW = '1px';
+  const rounded = 'md';
+  const wrapW = 'full';
+  const bc = useColorModeValue('dark.400', 'dark.200');
 
-  return(
+  return (
     <>
-      <Tabs isFitted variant={"unstyled"}>
-        <TabList color={useColorModeValue("white", "dark.500")}>
+      <Tabs isFitted variant={'unstyled'}>
+        <TabList color={useColorModeValue('white', 'dark.500')}>
           <Tab>Climate</Tab>
           <Tab>Motion</Tab>
           <Tab>GPS</Tab>
@@ -33,21 +33,20 @@ export const Dashboard = observer(() => {
         </TabList>
 
         <TabPanels>
-
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallback}>
               <Wrap>
                 <WrapItem borderWidth={borderW} rounded={rounded} width={wrapW} borderColor={bc}>
-                  <HumidityChart height={chartH} width={chartW}/>
+                  <HumidityChart height={chartH} width={chartW} />
                 </WrapItem>
                 <WrapItem borderWidth={borderW} rounded={rounded} width={wrapW} borderColor={bc}>
-                  <PressureChart width={chartW} height={chartH}/>
+                  <PressureChart width={chartW} height={chartH} />
                 </WrapItem>
                 <WrapItem borderWidth={borderW} rounded={rounded} width={wrapW} borderColor={bc}>
-                  <TemperatureChart width={chartW} height={chartH}/>
+                  <TemperatureChart width={chartW} height={chartH} />
                 </WrapItem>
                 <WrapItem borderWidth={borderW} rounded={rounded} width={wrapW} borderColor={bc}>
-                  <GasChart width={chartW} height={chartH}/>
+                  <GasChart width={chartW} height={chartH} />
                 </WrapItem>
               </Wrap>
             </ErrorBoundary>
@@ -57,10 +56,10 @@ export const Dashboard = observer(() => {
             <ErrorBoundary FallbackComponent={ErrorFallback}>
               <Wrap>
                 <WrapItem borderWidth={borderW} rounded={rounded} width={wrapW} borderColor={bc}>
-                  <GyroChart width={chartW} height={chartH * 2}/>
+                  <GyroChart width={chartW} height={chartH * 2} />
                 </WrapItem>
                 <WrapItem borderWidth={borderW} rounded={rounded} width={wrapW} borderColor={bc}>
-                  <AccelChart width={chartW} height={chartH * 2}/>
+                  <AccelChart width={chartW} height={chartH * 2} />
                 </WrapItem>
               </Wrap>
             </ErrorBoundary>
@@ -69,8 +68,8 @@ export const Dashboard = observer(() => {
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallback}>
               <Wrap>
-                <WrapItem width={"full"}>
-                  <MapBox/>
+                <WrapItem width={'full'}>
+                  <MapBox />
                 </WrapItem>
               </Wrap>
             </ErrorBoundary>
@@ -80,21 +79,19 @@ export const Dashboard = observer(() => {
             <ErrorBoundary FallbackComponent={ErrorFallback}>
               <Wrap>
                 <WrapItem borderWidth={borderW} rounded={rounded} width={wrapW} borderColor={bc}>
-                  <LightChart width={chartW} height={chartH * 1.3}/>
+                  <LightChart width={chartW} height={chartH * 1.3} />
                 </WrapItem>
                 <WrapItem borderWidth={borderW} rounded={rounded} width={wrapW} borderColor={bc}>
-                  <VbatChart width={chartW} height={chartH * 1.3}/>
+                  <VbatChart width={chartW} height={chartH * 1.3} />
                 </WrapItem>
                 <WrapItem borderWidth={borderW} rounded={rounded} width={wrapW} borderColor={bc}>
-                  <SnrChart width={chartW} height={chartH * 1.3}/>
+                  <SnrChart width={chartW} height={chartH * 1.3} />
                 </WrapItem>
               </Wrap>
             </ErrorBoundary>
           </TabPanel>
-
         </TabPanels>
       </Tabs>
-
     </>
   );
 });

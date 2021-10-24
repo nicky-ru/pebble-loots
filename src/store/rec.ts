@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import BigNumber from 'bignumber.js';
 import { RootStore } from '@/store/root';
-import {utils} from "ethers";
+import { utils } from 'ethers';
 
 // class DeviceRecord {
 //   imei: "103381234567402"
@@ -20,9 +20,9 @@ class DecodedRecord {
   humidity: 7213;
   light: 166950;
   temperature2: 3818;
-  gyroscope: [6,-5,-4021];
-  accelerometer: [2115,4304,4021];
-  random: "323799a2aa47a007";
+  gyroscope: [6, -5, -4021];
+  accelerometer: [2115, 4304, 4021];
+  random: '323799a2aa47a007';
 }
 
 export class RecordStore {
@@ -66,17 +66,14 @@ export class RecordStore {
     const accelerometer = rec.decodedRecords[id].accelerometer.toString();
     const random = rec.decodedRecords[id].random.toString();
 
-    const dataPoint = [
-      snr, vbat, latitude, longitude, gasResistance, temperature,
-      pressure, humidity, light, gyroscope, accelerometer, random
-    ];
+    const dataPoint = [snr, vbat, latitude, longitude, gasResistance, temperature, pressure, humidity, light, gyroscope, accelerometer, random];
 
     try {
       hashPower = await dpLoot.contracts[god.currentChain.chainId].calculateHashPower({
         params: [dataPoint]
-      })
+      });
     } catch (e) {
-      alert(JSON.stringify(e.data.message))
+      alert(JSON.stringify(e.data.message));
     }
 
     return hashPower;
@@ -100,21 +97,16 @@ export class RecordStore {
     const accelerometer = rec.decodedRecords[id].accelerometer.toString();
     const random = rec.decodedRecords[id].random.toString();
 
-    const dataPoint = [
-      snr, vbat, latitude, longitude, gasResistance, temperature,
-      pressure, humidity, light, gyroscope, accelerometer, random
-    ];
+    const dataPoint = [snr, vbat, latitude, longitude, gasResistance, temperature, pressure, humidity, light, gyroscope, accelerometer, random];
 
-
-
-    console.log("Minting dp", dataPoint);
+    console.log('Minting dp', dataPoint);
 
     try {
       await dpLoot.contracts[god.currentChain.chainId].claim({
         params: [god.currentNetwork.account, dataPoint]
-      })
+      });
     } catch (e) {
-      alert(JSON.stringify(e.data.message))
+      alert(JSON.stringify(e.data.message));
     }
   }
 }

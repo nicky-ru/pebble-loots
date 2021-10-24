@@ -20,7 +20,7 @@ export class DatapointLootStore {
     this.rootStore = rootStore;
     this.contracts = {
       [IotexTestnetConfig.chainId]: new DatapointLootState({ ...datapointLoot[IotexTestnetConfig.chainId], network: EthNetworkConfig })
-    }
+    };
 
     makeAutoObservable(this, {
       rootStore: false
@@ -32,14 +32,16 @@ export class DatapointLootStore {
   }
 
   async updateBalance() {
-    const bal = await this.contracts[this.god.currentChain.chainId].balanceOf({params: [this.god.currentNetwork.account]});
+    const bal = await this.contracts[this.god.currentChain.chainId].balanceOf({ params: [this.god.currentNetwork.account] });
     this.setBalance(BigNumber.from(JSON.parse(JSON.stringify(bal))).toNumber());
   }
 
   async updateHashPow() {
-    const newHashPowers = await Promise.all(this.tokenIds.map(async (tid) => {
-      return await this.contracts[this.god.currentChain.chainId].getTokenHashPower({params: [tid]});
-    }))
+    const newHashPowers = await Promise.all(
+      this.tokenIds.map(async (tid) => {
+        return await this.contracts[this.god.currentChain.chainId].getTokenHashPower({ params: [tid] });
+      })
+    );
     this.setHashPower(newHashPowers);
   }
 
@@ -61,12 +63,11 @@ export class DatapointLootStore {
 
   async approve() {
     try {
-      await this.contracts[this.god.currentChain.chainId]
-        .setApprovalForAll({
-          params: [this.rootStore.stash.contracts[this.god.currentChain.chainId].address, true]
-        });
+      await this.contracts[this.god.currentChain.chainId].setApprovalForAll({
+        params: [this.rootStore.stash.contracts[this.god.currentChain.chainId].address, true]
+      });
     } catch (e) {
-      alert(JSON.stringify(e.data.message))
+      alert(JSON.stringify(e.data.message));
     }
   }
 
@@ -74,11 +75,11 @@ export class DatapointLootStore {
     try {
       const tx = await this.rootStore.stash.contracts[this.god.currentChain.chainId].deposit({
         params: [tokenId]
-      })
+      });
       await tx.wait(1);
       this.updateBalance();
     } catch (e) {
-      alert(JSON.stringify(e.data.message))
+      alert(JSON.stringify(e.data.message));
     }
   }
 }

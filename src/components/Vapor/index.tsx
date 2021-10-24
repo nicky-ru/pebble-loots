@@ -19,11 +19,11 @@ export const Vapor = observer(() => {
     setLoaded(newLoaded: boolean) {
       this.loaded.setValue(newLoaded);
     }
-  }))
+  }));
 
   useEffect(() => {
     if (pebble.imei) {
-      queryRecords(pebble.imei)
+      queryRecords(pebble.imei);
     }
   }, [pebble.imei]);
 
@@ -35,14 +35,16 @@ export const Vapor = observer(() => {
     if (rec.decodedRecords) {
       updatePowers();
     }
-  }, [rec.decodedRecords])
+  }, [rec.decodedRecords]);
 
   async function updatePowers() {
     observable.setLoading(true);
-    const powers = await Promise.all(rec.decodedRecords.map(async (record, i) => {
-      const pow = await rec.calculateHashPower(i);
-      return pow;
-    }))
+    const powers = await Promise.all(
+      rec.decodedRecords.map(async (record, i) => {
+        const pow = await rec.calculateHashPower(i);
+        return pow;
+      })
+    );
 
     rec.setPowers(powers);
     observable.setLoading(false);
@@ -51,7 +53,7 @@ export const Vapor = observer(() => {
   async function fetchDevices() {
     observable.setLoading(true);
     const owner = god.currentNetwork.account;
-    const url = "https://protoreader.herokuapp.com/api/my-devices/" + owner.toLowerCase();
+    const url = 'https://protoreader.herokuapp.com/api/my-devices/' + owner.toLowerCase();
     const axiosResponse = await axios.get(url);
     pebble.setDevices(axiosResponse.data);
     observable.setLoading(false);
@@ -59,25 +61,25 @@ export const Vapor = observer(() => {
 
   const queryRecords = async (imei: string) => {
     observable.setLoading(true);
-    console.log("querying data for: ", imei);
+    console.log('querying data for: ', imei);
     const data = await axios.get(`https://protoreader.herokuapp.com/api/devices/${imei}`);
     rec.setDecodedRecords(data.data.decoded);
     observable.setLoading(false);
-  }
+  };
 
-  return(
+  return (
     <Container maxW={'Full'} align={'center'}>
-      <Heading>
-        Vapor clouds produced
-      </Heading>
-      <Text my={4}>
-        Your Pebble produce Vapor clouds in the Machinaverse
-      </Text>
-      <Button onClick={() => {tabs.setTabIndex(1)}}>
+      <Heading>Vapor clouds produced</Heading>
+      <Text my={4}>Your Pebble produce Vapor clouds in the Machinaverse</Text>
+      <Button
+        onClick={() => {
+          tabs.setTabIndex(1);
+        }}
+      >
         Back to souls
       </Button>
       <Box w={'90%'} borderWidth={'thin'} borderColor={'teal'} borderRadius={'3xl'} p={8} m={8}>
-        <VaporCards/>
+        <VaporCards />
       </Box>
     </Container>
   );

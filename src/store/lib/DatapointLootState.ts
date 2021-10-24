@@ -14,100 +14,132 @@ export class DatapointLootState {
   network: NetworkState;
   balance: BigNumberState;
   info: {
-    loading: BooleanState,
+    loading: BooleanState;
     [key: string]: any;
   } = {
     loading: new BooleanState()
-  }
+  };
 
   constructor(args: Partial<DatapointLootState>) {
     Object.assign(this, args);
-    this.balance = new BigNumberState({loading: true})
+    this.balance = new BigNumberState({ loading: true });
     makeObservable(this, {
       info: observable
     });
   }
 
   get nftName() {
-    return this.network.execContract(Object.assign({address: this.address, abi: this.abi, method: 'name'}))
+    return this.network.execContract(Object.assign({ address: this.address, abi: this.abi, method: 'name' }));
   }
 
   get nftSymbol() {
-    return this.network.execContract(Object.assign({address: this.address, abi: this.abi, method: 'symbol'}))
+    return this.network.execContract(Object.assign({ address: this.address, abi: this.abi, method: 'symbol' }));
   }
 
   claim(args: Partial<CallParams>) {
-    console.log("Trying to claim token: ", args.params);
-    return this.network.execContract(Object.assign({
-        address: this.address,
-        abi: this.abi,
-        method: 'safeMint'
-      },
-      args))
+    console.log('Trying to claim token: ', args.params);
+    return this.network.execContract(
+      Object.assign(
+        {
+          address: this.address,
+          abi: this.abi,
+          method: 'safeMint'
+        },
+        args
+      )
+    );
   }
 
   balanceOf(args: Partial<CallParams>) {
-    return this.network.execContract(Object.assign({
-        address: this.address,
-        abi: this.abi,
-        method: 'balanceOf'
-      },
-      args))
+    return this.network.execContract(
+      Object.assign(
+        {
+          address: this.address,
+          abi: this.abi,
+          method: 'balanceOf'
+        },
+        args
+      )
+    );
   }
 
   tokenOfOwnerByIndex(args: Partial<CallParams>) {
-    return this.network.execContract(Object.assign({
-        address: this.address,
-        abi: this.abi,
-        method: 'tokenOfOwnerByIndex'
-      },
-      args))
+    return this.network.execContract(
+      Object.assign(
+        {
+          address: this.address,
+          abi: this.abi,
+          method: 'tokenOfOwnerByIndex'
+        },
+        args
+      )
+    );
   }
 
   getTokenUri(args: Partial<CallParams>) {
-    return this.network.execContract(Object.assign({
-        address: this.address,
-        abi: this.abi,
-        method: 'tokenURI'
-      },
-      args))
+    return this.network.execContract(
+      Object.assign(
+        {
+          address: this.address,
+          abi: this.abi,
+          method: 'tokenURI'
+        },
+        args
+      )
+    );
   }
 
   transferFrom(args: Partial<CallParams>) {
-    return this.network.execContract(Object.assign({
-        address: this.address,
-        abi: this.abi,
-        method: 'transferFrom'
-      },
-      args))
+    return this.network.execContract(
+      Object.assign(
+        {
+          address: this.address,
+          abi: this.abi,
+          method: 'transferFrom'
+        },
+        args
+      )
+    );
   }
 
   setApprovalForAll(args: Partial<CallParams>) {
-    console.log("setting approval: ", args)
-    return this.network.execContract(Object.assign({
-        address: this.address,
-        abi: this.abi,
-        method: 'setApprovalForAll'
-      },
-      args))
+    console.log('setting approval: ', args);
+    return this.network.execContract(
+      Object.assign(
+        {
+          address: this.address,
+          abi: this.abi,
+          method: 'setApprovalForAll'
+        },
+        args
+      )
+    );
   }
 
   getTokenHashPower(args: Partial<CallParams>) {
-    console.log("querying hash power");
-    return this.network.execContract(Object.assign({
-      address: this.address,
-      abi: this.abi,
-      method: 'tokenToHashPower'
-    },
-      args))
+    console.log('querying hash power');
+    return this.network.execContract(
+      Object.assign(
+        {
+          address: this.address,
+          abi: this.abi,
+          method: 'tokenToHashPower'
+        },
+        args
+      )
+    );
   }
 
   calculateHashPower(args: Partial<CallParams>) {
-    return this.network.execContract(Object.assign({
-      address: this.address,
-      abi: this.abi,
-      method: 'calculateHashPower'
-    },
-      args))
+    return this.network.execContract(
+      Object.assign(
+        {
+          address: this.address,
+          abi: this.abi,
+          method: 'calculateHashPower'
+        },
+        args
+      )
+    );
   }
 }

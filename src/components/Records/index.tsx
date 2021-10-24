@@ -13,11 +13,11 @@ export const Records = observer(() => {
     setRecordToMint(value: number) {
       this.recordToMint = value;
     }
-  }))
+  }));
   return (
     <Box maxH={'500px'} overflowY={'scroll'} overflowX={'visible'}>
-      <RecordList onOpen={onOpen} setRecordToMint={observable.setRecordToMint}/>
-      <MintModal isOpen={isOpen} onClose={onClose} recordToMint={observable.recordToMint}/>
+      <RecordList onOpen={onOpen} setRecordToMint={observable.setRecordToMint} />
+      <MintModal isOpen={isOpen} onClose={onClose} recordToMint={observable.recordToMint} />
     </Box>
   );
 });

@@ -9,15 +9,14 @@ interface PropsType {
 }
 
 export const MintForm = observer((props: PropsType) => {
-
   function validateImei(value) {
-    let error
+    let error;
     if (!value) {
-      error = "IMEI is required"
+      error = 'IMEI is required';
     } else if (value.length !== 15) {
-      error = "IMEI should be 15 digits long"
-    } else if (!(new BigNumber(value).toNumber())) {
-      error = "IMEI should contain digits only"
+      error = 'IMEI should be 15 digits long';
+    } else if (!new BigNumber(value).toNumber()) {
+      error = 'IMEI should contain digits only';
     }
     return error;
   }
@@ -25,9 +24,9 @@ export const MintForm = observer((props: PropsType) => {
   return (
     <Box p={2}>
       <Formik
-        initialValues={{ imei: "" }}
+        initialValues={{ imei: '' }}
         onSubmit={async (values, actions) => {
-          await props.handleClaim(values.imei)
+          await props.handleClaim(values.imei);
           actions.setSubmitting(false);
         }}
       >
@@ -39,12 +38,7 @@ export const MintForm = observer((props: PropsType) => {
                   <FormLabel htmlFor="imei">Device IMEI to awake</FormLabel>
                   <Stack isInline>
                     <Input {...field} id="imei" placeholder="e.g 100000000000001" />
-                    <Button
-                      mt={4}
-                      colorScheme="teal"
-                      isLoading={props.isSubmitting}
-                      type="submit"
-                    >
+                    <Button mt={4} colorScheme="teal" isLoading={props.isSubmitting} type="submit">
                       Awake
                     </Button>
                   </Stack>
@@ -57,5 +51,5 @@ export const MintForm = observer((props: PropsType) => {
         )}
       </Formik>
     </Box>
-  )
+  );
 });

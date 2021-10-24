@@ -1,4 +1,4 @@
-const { PEBBLE_TOKEN_ADDRESS, DATAPOINT_LOOT_ADDRESS, TREASURY_ADDRESS } = require("./constants");
+const { PEBBLE_TOKEN_ADDRESS, DATAPOINT_LOOT_ADDRESS, TREASURY_ADDRESS } = require('./constants');
 const pebblePerBlock = 10;
 
 async function main() {
@@ -6,14 +6,8 @@ async function main() {
   const deployerAddress = await deployer.getAddress();
   console.log('Deploying Pebble Loot with address:', deployerAddress);
 
-
   const LootStash = await ethers.getContractFactory('LootStash');
-  const stash = await LootStash.deploy(
-    PEBBLE_TOKEN_ADDRESS,
-    DATAPOINT_LOOT_ADDRESS,
-    pebblePerBlock,
-    TREASURY_ADDRESS
-  );
+  const stash = await LootStash.deploy(PEBBLE_TOKEN_ADDRESS, DATAPOINT_LOOT_ADDRESS, pebblePerBlock, TREASURY_ADDRESS);
   await stash.deployed();
 
   console.log('NFT Stake contract deployed to:', stash.address);

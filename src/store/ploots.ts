@@ -17,9 +17,9 @@ export class ContractStore {
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     this.contracts = {
-      [Local7545.chainId]: new PebbleLootState({...pebbleLoots[Local7545.chainId], network: EthNetworkConfig} ),
+      [Local7545.chainId]: new PebbleLootState({ ...pebbleLoots[Local7545.chainId], network: EthNetworkConfig }),
       [IotexTestnetConfig.chainId]: new PebbleLootState({ ...pebbleLoots[IotexTestnetConfig.chainId], network: EthNetworkConfig })
-    }
+    };
 
     makeAutoObservable(this, {
       rootStore: false

@@ -15,7 +15,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noImplicitAny": false,
-//    "strictNullChecks": true,
+    //    "strictNullChecks": true,
     "noEmit": true,
     "jsx": "react",
     "baseUrl": "src",
@@ -27,7 +27,6 @@
       "@/utils/*": ["utils/*"],
       "@/lib/*": ["lib/*"],
       "@/constants/*": ["constants/*"]
-
     }
   },
   "include": ["src", "cypress", "type.ts"]

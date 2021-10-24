@@ -25,7 +25,7 @@ export class LootStashStore {
     this.rootStore = rootStore;
     this.contracts = {
       [IotexTestnetConfig.chainId]: new LootStashState({ ...lootStash[IotexTestnetConfig.chainId], network: EthNetworkConfig })
-    }
+    };
 
     makeAutoObservable(this, {
       rootStore: false
@@ -37,18 +37,17 @@ export class LootStashStore {
   }
 
   async updateUserInfo() {
-    const userInfo = await this.contracts[this.god.currentChain.chainId]
-      .getUserInfo({params: [this.god.currentNetwork.account]});
+    const userInfo = await this.contracts[this.god.currentChain.chainId].getUserInfo({ params: [this.god.currentNetwork.account] });
     const userInfoParsed = JSON.parse(JSON.stringify(userInfo));
-    this.setUser(BigNumber.from(userInfoParsed[0]).toNumber(), BigNumber.from(userInfoParsed[1]).toNumber())
+    this.setUser(BigNumber.from(userInfoParsed[0]).toNumber(), BigNumber.from(userInfoParsed[1]).toNumber());
   }
 
   setUser(hashPower: number, numOfTokens: number) {
     this.userInfo = new UserInfo();
-    Object.assign(this.userInfo,{
+    Object.assign(this.userInfo, {
       hashPower: hashPower,
       numOfTokens: numOfTokens
-    })
+    });
   }
 
   // async updateBalance() {

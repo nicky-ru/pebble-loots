@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.2;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
-import "./Base64.sol";
+import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
+import '@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol';
+import '@openzeppelin/contracts/access/Ownable.sol';
+import '@openzeppelin/contracts/utils/math/SafeMath.sol';
+import '@openzeppelin/contracts/utils/Counters.sol';
+import './Base64.sol';
 
-import "./PebbleToken.sol";
+import './PebbleToken.sol';
 
 /// @notice Contract for minting Pebble Data points NFTs
 contract DatapointLoot is ERC721, ERC721Enumerable, Ownable {
@@ -18,10 +18,7 @@ contract DatapointLoot is ERC721, ERC721Enumerable, Ownable {
   using Counters for Counters.Counter;
 
   /// @notice events for the contract
-  event TokenMinted (
-    address indexed to,
-    uint256 indexed tokenId
-  );
+  event TokenMinted(address indexed to, uint256 indexed tokenId);
 
   struct DataPoint {
     string snr;
@@ -45,10 +42,10 @@ contract DatapointLoot is ERC721, ERC721Enumerable, Ownable {
   /// @notice Fee receipient
   address payable feeReceipient;
   /// @notice Token Id => Data point structure
-  mapping (uint256 => DataPoint) public tokenToDataPoint;
+  mapping(uint256 => DataPoint) public tokenToDataPoint;
   /// @notice Token Id => Token hash power
   /// Hash power will be used in calculating rewards in NFT Staking
-  mapping (uint256 => uint8) public tokenToHashPower;
+  mapping(uint256 => uint8) public tokenToHashPower;
   /// @notice counter for auto incrementing id's
   Counters.Counter private _tokenIdCounter;
 
@@ -56,7 +53,7 @@ contract DatapointLoot is ERC721, ERC721Enumerable, Ownable {
     PebbleToken _pbl,
     uint256 _burnMultiplier,
     address payable _feeReceipient
-  ) ERC721("Datapoint Loot", "DLT") {
+  ) ERC721('Datapoint Loot', 'DLT') {
     pbl = _pbl;
     burnMultiplier = _burnMultiplier;
     feeReceipient = _feeReceipient;
@@ -65,7 +62,7 @@ contract DatapointLoot is ERC721, ERC721Enumerable, Ownable {
   function safeMint(address to, DataPoint memory dataPoint) public {
     uint8 hashPower = calculateHashPower(dataPoint);
     uint256 pblToBurn = hashPower.mul(burnMultiplier);
-    require(pbl.balanceOf(_msgSender()) >= pblToBurn + hashPower, "Minting: insufficient balance for minting NFT");
+    require(pbl.balanceOf(_msgSender()) >= pblToBurn + hashPower, 'Minting: insufficient balance for minting NFT');
     pbl.burnFrom(_msgSender(), pblToBurn);
     pbl.transferFrom(_msgSender(), feeReceipient, hashPower);
 
@@ -78,36 +75,53 @@ contract DatapointLoot is ERC721, ERC721Enumerable, Ownable {
 
   /// @notice Generator of token URI
   /// @param tokenId Id of NFT
-  function tokenURI(uint256 tokenId)
-  public
-  override
-  view
-  returns (string memory)
-  {
-    string memory output = string(abi.encodePacked(
+  function tokenURI(uint256 tokenId) public view override returns (string memory) {
+    string memory output = string(
+      abi.encodePacked(
         '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><style>.base { fill: white; font-family: serif; font-size: 14px; }</style><rect width="100%" height="100%" fill="black" /><text x="10" y="20" class="base">Datapoint Loot #',
-        toString(tokenId), '</text><text x="10" y="40" class="base">snr: ',
-        tokenToDataPoint[tokenId].snr, '</text><text x="10" y="60" class="base">vbat: ',
-        tokenToDataPoint[tokenId].vbat, '</text><text x="10" y="80" class="base">latitude: ',
-        tokenToDataPoint[tokenId].latitude, '</text><text x="10" y="100" class="base">longitude: ',
-        tokenToDataPoint[tokenId].longitude, '</text><text x="10" y="120" class="base">gas resistance: ',
-        tokenToDataPoint[tokenId].gasResistance, '</text><text x="10" y="140" class="base">temperature: ',
-        tokenToDataPoint[tokenId].temperature, '</text><text x="10" y="160" class="base">pressure: ',
-        tokenToDataPoint[tokenId].pressure, '</text><text x="10" y="180" class="base">humidity: '
-      ));
+        toString(tokenId),
+        '</text><text x="10" y="40" class="base">snr: ',
+        tokenToDataPoint[tokenId].snr,
+        '</text><text x="10" y="60" class="base">vbat: ',
+        tokenToDataPoint[tokenId].vbat,
+        '</text><text x="10" y="80" class="base">latitude: ',
+        tokenToDataPoint[tokenId].latitude,
+        '</text><text x="10" y="100" class="base">longitude: ',
+        tokenToDataPoint[tokenId].longitude,
+        '</text><text x="10" y="120" class="base">gas resistance: ',
+        tokenToDataPoint[tokenId].gasResistance,
+        '</text><text x="10" y="140" class="base">temperature: ',
+        tokenToDataPoint[tokenId].temperature,
+        '</text><text x="10" y="160" class="base">pressure: ',
+        tokenToDataPoint[tokenId].pressure,
+        '</text><text x="10" y="180" class="base">humidity: '
+      )
+    );
 
-    output = string(abi.encodePacked(
+    output = string(
+      abi.encodePacked(
         output,
-        tokenToDataPoint[tokenId].humidity, '</text><text x="10" y="200" class="base">light: ',
-        tokenToDataPoint[tokenId].light, '</text><text x="10" y="220" class="base">gyroscope: ',
-        tokenToDataPoint[tokenId].gyroscope, '</text><text x="10" y="240" class="base">accelerometer: ',
-        tokenToDataPoint[tokenId].accelerometer, '</text><text x="10" y="260" class="base">timestamp: ',
-        tokenToDataPoint[tokenId].timestamp, '</text><text x="10" y="280" class="base">digging power: ',
-        toString(tokenToHashPower[tokenId]), '</text><text x="10" y="300" class="base">msg origin and integrity are verified</text></svg>'
-      ));
+        tokenToDataPoint[tokenId].humidity,
+        '</text><text x="10" y="200" class="base">light: ',
+        tokenToDataPoint[tokenId].light,
+        '</text><text x="10" y="220" class="base">gyroscope: ',
+        tokenToDataPoint[tokenId].gyroscope,
+        '</text><text x="10" y="240" class="base">accelerometer: ',
+        tokenToDataPoint[tokenId].accelerometer,
+        '</text><text x="10" y="260" class="base">timestamp: ',
+        tokenToDataPoint[tokenId].timestamp,
+        '</text><text x="10" y="280" class="base">digging power: ',
+        toString(tokenToHashPower[tokenId]),
+        '</text><text x="10" y="300" class="base">msg origin and integrity are verified</text></svg>'
+      )
+    );
 
     string memory name = string(abi.encodePacked('"name": "Datapoint Loot #', toString(tokenId), '"'));
-    string memory description = string(abi.encodePacked('"description": "Datapoint Loot is a verified and trusted real world datapoint stored on chain. Stats, images, and other functionality are intentionally omitted for others to interpret. Feel free to use Pebble datapoint Loot in any way you want."'));
+    string memory description = string(
+      abi.encodePacked(
+        '"description": "Datapoint Loot is a verified and trusted real world datapoint stored on chain. Stats, images, and other functionality are intentionally omitted for others to interpret. Feel free to use Pebble datapoint Loot in any way you want."'
+      )
+    );
 
     string memory json = Base64.encode(bytes(string(abi.encodePacked('{', name, ',', description, ',"image": "data:image/svg+xml;base64,', Base64.encode(bytes(output)), '"}'))));
     output = string(abi.encodePacked('data:application/json;base64,', json));
@@ -135,29 +149,33 @@ contract DatapointLoot is ERC721, ERC721Enumerable, Ownable {
   /////////////////////////
 
   /// @notice Method for calculating hash power of NFT
-  function calculateHashPower(DataPoint memory dataPoint)
-  public
-  pure
-  returns (uint8 hashPower)
-  {
+  function calculateHashPower(DataPoint memory dataPoint) public pure returns (uint8 hashPower) {
     bytes4 hash = bytes4(
-      keccak256(abi.encodePacked(
-        dataPoint.snr, dataPoint.vbat, dataPoint.latitude, dataPoint.longitude,
-        dataPoint.gasResistance, dataPoint.temperature, dataPoint.pressure, dataPoint.humidity,
-        dataPoint.light, dataPoint.gyroscope, dataPoint.accelerometer, dataPoint.timestamp
-      ))
+      keccak256(
+        abi.encodePacked(
+          dataPoint.snr,
+          dataPoint.vbat,
+          dataPoint.latitude,
+          dataPoint.longitude,
+          dataPoint.gasResistance,
+          dataPoint.temperature,
+          dataPoint.pressure,
+          dataPoint.humidity,
+          dataPoint.light,
+          dataPoint.gyroscope,
+          dataPoint.accelerometer,
+          dataPoint.timestamp
+        )
+      )
     );
 
     if (uint32(hash).mod(1e9) == 0) {
       hashPower = 16;
-    }
-    else if (uint32(hash).mod(1e6) == 0) {
+    } else if (uint32(hash).mod(1e6) == 0) {
       hashPower = 8;
-    }
-    else if (uint32(hash).mod(1e3) == 0) {
+    } else if (uint32(hash).mod(1e3) == 0) {
       hashPower = 4;
-    }
-    else if (uint32(hash).mod(10) == 0) {
+    } else if (uint32(hash).mod(10) == 0) {
       hashPower = 2;
     } else {
       hashPower = 1;
@@ -166,18 +184,12 @@ contract DatapointLoot is ERC721, ERC721Enumerable, Ownable {
 
   /// @notice Method for converting uint256 to string
   /// @param value Number to convert
-  function toString(
-    uint256 value
-  )
-  internal
-  pure
-  returns (string memory)
-  {
+  function toString(uint256 value) internal pure returns (string memory) {
     // Inspired by OraclizeAPI's implementation - MIT license
     // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
 
     if (value == 0) {
-      return "0";
+      return '0';
     }
     uint256 temp = value;
     uint256 digits;
@@ -194,19 +206,15 @@ contract DatapointLoot is ERC721, ERC721Enumerable, Ownable {
     return string(buffer);
   }
 
-  function _beforeTokenTransfer(address from, address to, uint256 tokenId)
-  internal
-  override(ERC721, ERC721Enumerable)
-  {
+  function _beforeTokenTransfer(
+    address from,
+    address to,
+    uint256 tokenId
+  ) internal override(ERC721, ERC721Enumerable) {
     super._beforeTokenTransfer(from, to, tokenId);
   }
 
-  function supportsInterface(bytes4 interfaceId)
-  public
-  view
-  override(ERC721, ERC721Enumerable)
-  returns (bool)
-  {
+  function supportsInterface(bytes4 interfaceId) public view override(ERC721, ERC721Enumerable) returns (bool) {
     return super.supportsInterface(interfaceId);
   }
 }

@@ -17,7 +17,9 @@ export const Home = observer(() => {
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <Tabs
         index={tabs.tabIndex}
-        onChange={(i) => {tabs.setTabIndex(i)}}
+        onChange={(i) => {
+          tabs.setTabIndex(i);
+        }}
         colorScheme={'teal'}
         orientation={'vertical'}
         size={'lg'}
@@ -33,44 +35,36 @@ export const Home = observer(() => {
         </TabList>
 
         <TabPanels>
-
           <TabPanel>
             <Container align={'center'}>
-              <Heading>
-                Home
-              </Heading>
+              <Heading>Home</Heading>
               <Text>
-                Hello Master.
-                Welcome to Machinaverse.
-                We believe, that each device in this world should have a right to live it's life.
-                Here is the entry point to give your device a chance to have it's own persona in the metaverse.
-                Each device has got it's own unique identity.
-                Each device's soul needs to be awaken in the Machinaverse.
-                Each soul of Machinaverse works hard for the master who gave it freedom to live.
+                Hello Master. Welcome to Machinaverse. We believe, that each device in this world should have a right to live it's life. Here is the entry point to give your device a chance to have
+                it's own persona in the metaverse. Each device has got it's own unique identity. Each device's soul needs to be awaken in the Machinaverse. Each soul of Machinaverse works hard for the
+                master who gave it freedom to live.
               </Text>
             </Container>
           </TabPanel>
 
           <TabPanel>
-            <Machinaverse/>
+            <Machinaverse />
           </TabPanel>
 
           <TabPanel>
-            <Vapor/>
+            <Vapor />
           </TabPanel>
 
           <TabPanel>
-            <Sediments/>
+            <Sediments />
           </TabPanel>
 
           <TabPanel>
-            <Foundry/>
+            <Foundry />
           </TabPanel>
 
           <TabPanel>
-            <ERC20/>
+            <ERC20 />
           </TabPanel>
-
         </TabPanels>
       </Tabs>
     </ErrorBoundary>

@@ -20,7 +20,7 @@ export const Stash = observer(() => {
     tokenUris: [],
     loaded: new BooleanState(),
     loading: new BooleanState(),
-    tokenToTransfer: "",
+    tokenToTransfer: '',
     setChainId(newChainId: number) {
       this.chainId = newChainId;
     },
@@ -42,7 +42,7 @@ export const Stash = observer(() => {
     setTokenIds(newIds: Partial<TransactionResponse>) {
       this.tokenIds = newIds;
     }
-  }))
+  }));
 
   useEffect(() => {
     if (dpLoot.god.currentNetwork.account) {
@@ -54,13 +54,13 @@ export const Stash = observer(() => {
     if (observable.chainId === IOTX_TEST_CHAINID) {
       updateBalance();
     }
-  }, [god.currentNetwork.account])
+  }, [god.currentNetwork.account]);
 
   useEffect(() => {
     if (observable.chainId === IOTX_TEST_CHAINID) {
       updateBalance();
     }
-  }, [observable.chainId])
+  }, [observable.chainId]);
 
   useEffect(() => {
     if (observable.balance) {
@@ -69,13 +69,15 @@ export const Stash = observer(() => {
   }, [observable.balance]);
 
   async function fetchLoots() {
-    observable.setLoading(true)
-    console.log("bal: ",observable.balance)
+    observable.setLoading(true);
+    console.log('bal: ', observable.balance);
 
-    const tokenUris = await Promise.all(observable.tokenIds.map(async (tid) => {
-      const uri = await dpLoot.contracts[observable.chainId].getTokenUri({params: [tid.toNumber()]});
-      return await axios.get(uri.toString());
-    }))
+    const tokenUris = await Promise.all(
+      observable.tokenIds.map(async (tid) => {
+        const uri = await dpLoot.contracts[observable.chainId].getTokenUri({ params: [tid.toNumber()] });
+        return await axios.get(uri.toString());
+      })
+    );
 
     observable.setTokenUris(tokenUris);
     observable.setLoading(false);
@@ -93,24 +95,18 @@ export const Stash = observer(() => {
     try {
       const tx = await stash.contracts[god.currentChain.chainId].withdraw({
         params: [tokenId]
-      })
+      });
       await tx.wait(1);
       updateBalance();
       dpLoot.updateBalance();
     } catch (e) {
-      alert(JSON.stringify(e.data.message))
+      alert(JSON.stringify(e.data.message));
     }
   }
 
-  return(
+  return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <StashCards
-        balance={observable.balance}
-        tokenUris={observable.tokenUris}
-        loading={observable.loading}
-        loaded={observable.loaded}
-        withdraw={withdraw}
-      />
+      <StashCards balance={observable.balance} tokenUris={observable.tokenUris} loading={observable.loading} loaded={observable.loaded} withdraw={withdraw} />
     </ErrorBoundary>
   );
-})
+});

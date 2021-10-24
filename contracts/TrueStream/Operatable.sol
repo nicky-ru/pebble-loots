@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import '@openzeppelin/contracts/access/Ownable.sol';
 
 abstract contract Operatable is Ownable {
   event OperatorGranted(address account);
@@ -10,7 +10,7 @@ abstract contract Operatable is Ownable {
   mapping(address => bool) public operators;
 
   modifier onlyOperator() {
-    require(operators[msg.sender], "caller is not the operator");
+    require(operators[msg.sender], 'caller is not the operator');
     _;
   }
 

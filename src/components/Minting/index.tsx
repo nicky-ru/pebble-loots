@@ -14,7 +14,7 @@ export const Minting = observer(() => {
     setChainId(newChainId: number) {
       this.chainId = newChainId;
     }
-  }))
+  }));
 
   useEffect(() => {
     if (ploot.god.currentNetwork.account) {
@@ -27,18 +27,15 @@ export const Minting = observer(() => {
     try {
       await ploot.contracts[observable.chainId].claim({
         params: [tokenIdNum.toNumber()]
-      })
+      });
     } catch (e) {
-      alert(JSON.stringify(e.data.message))
+      alert(JSON.stringify(e.data.message));
     }
   }
 
-
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <MintForm
-        handleClaim={handleClaim}
-      />
+      <MintForm handleClaim={handleClaim} />
     </ErrorBoundary>
   );
 });

@@ -1,4 +1,4 @@
-const { PEBBLE_TOKEN_ADDRESS, TREASURY_ADDRESS } = require("./constants");
+const { PEBBLE_TOKEN_ADDRESS, TREASURY_ADDRESS } = require('./constants');
 const burnMultiplier = 10;
 
 async function main() {

@@ -12,7 +12,7 @@ export const Foundry = observer(() => {
   useEffect(() => {
     if (dpLoot.hashPow) {
       const powers = [...dpLoot.hashPow];
-      const sum = powers.reduce(add,0);
+      const sum = powers.reduce(add, 0);
       setAvailablePow(sum);
       stash.updateUserInfo();
     }
@@ -22,26 +22,21 @@ export const Foundry = observer(() => {
     if (stash.userInfo?.numOfTokens) {
       updatePending();
     }
-  }, [stash.userInfo])
+  }, [stash.userInfo]);
 
   const add = (accumulator: number, a: number) => {
     return accumulator + a;
-  }
+  };
 
   const updatePending = async () => {
-    const pen = await stash.contracts[god.currentChain.chainId]
-      .getPending({params: [god.currentNetwork.account]})
+    const pen = await stash.contracts[god.currentChain.chainId].getPending({ params: [god.currentNetwork.account] });
     setPending(BigNumber.from(JSON.parse(JSON.stringify(pen))).toNumber());
-  }
+  };
 
   return (
     <Container minW={'full'} align={'center'}>
-      <Heading>
-        The Foundry
-      </Heading>
-      <Text my={4}>
-        The Foundry is where precious Plasma is produced and collected.
-      </Text>
+      <Heading>The Foundry</Heading>
+      <Text my={4}>The Foundry is where precious Plasma is produced and collected.</Text>
       <Box borderWidth={'thin'} borderColor={'teal'} borderRadius={'3xl'} p={8} m={8}>
         <Stack isInline w={'full'} justifyContent={'space-between'}>
           <Box borderWidth={'thin'} w={'45%'} p={4} borderRadius={'md'}>
@@ -57,21 +52,26 @@ export const Foundry = observer(() => {
           <Box borderWidth={'thin'} w={'45%'} p={4} borderRadius={'md'}>
             <Stack>
               <Text align={'left'}>Your production power</Text>
-              <Text align={'left'}>Used {stash.userInfo?.hashPower} - Available {availablePow}</Text>
+              <Text align={'left'}>
+                Used {stash.userInfo?.hashPower} - Available {availablePow}
+              </Text>
               <Stack isInline justifyContent={'space-between'} align={'center'}>
                 <Button>Manage</Button>
-                <Button>
-                  Unstake
-                </Button>
+                <Button>Unstake</Button>
                 <Text>APY: 520%</Text>
               </Stack>
             </Stack>
           </Box>
         </Stack>
-        <Button mt={8} onClick={() => {tabs.setTabIndex(1)}}>
+        <Button
+          mt={8}
+          onClick={() => {
+            tabs.setTabIndex(1);
+          }}
+        >
           Visit your Machinaverse
         </Button>
       </Box>
     </Container>
-  )
+  );
 });

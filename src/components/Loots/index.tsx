@@ -18,13 +18,13 @@ export const MyLoots = observer(() => {
     setLoading(newLoading: boolean) {
       this.loading.setValue(newLoading);
     }
-  }))
+  }));
 
   useEffect(() => {
     if (god.currentChain.chainId === IOTX_TEST_CHAINID) {
       updateBalance();
     }
-  }, [ploot.god.currentNetwork.account, god.currentChain.chainId])
+  }, [ploot.god.currentNetwork.account, god.currentChain.chainId]);
 
   useEffect(() => {
     if (ploot.balance) {
@@ -33,32 +33,32 @@ export const MyLoots = observer(() => {
   }, [ploot.balance]);
 
   async function fetchLoots() {
-    observable.setLoading(true)
+    observable.setLoading(true);
     const tokenIds = Array(ploot.balance);
 
     for (let i = 0; i < ploot.balance; i++) {
-      tokenIds[i] = await ploot.contracts[god.currentChain.chainId].tokenOfOwnerByIndex({params: [ploot.god.currentNetwork.account, i]})
+      tokenIds[i] = await ploot.contracts[god.currentChain.chainId].tokenOfOwnerByIndex({ params: [ploot.god.currentNetwork.account, i] });
     }
-    const tokenUris = await Promise.all(tokenIds.map(async (tid) => {
-      const uri = await ploot.contracts[god.currentChain.chainId].getTokenUri({params: [tid.toNumber()]});
-      return await axios.get(uri.toString());
-    }))
+    const tokenUris = await Promise.all(
+      tokenIds.map(async (tid) => {
+        const uri = await ploot.contracts[god.currentChain.chainId].getTokenUri({ params: [tid.toNumber()] });
+        return await axios.get(uri.toString());
+      })
+    );
 
     ploot.setTokenUris(tokenUris);
     observable.setLoading(false);
   }
 
   async function updateBalance() {
-    const balance = await ploot.contracts[god.currentChain.chainId].balanceOf({params: [ploot.god.currentNetwork.account]});
+    const balance = await ploot.contracts[god.currentChain.chainId].balanceOf({ params: [ploot.god.currentNetwork.account] });
     const bal = BigNumber.from(JSON.parse(JSON.stringify(balance)).hex);
     ploot.updateBalance(bal.toNumber());
   }
 
-  return(
+  return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <LootCards
-        loading={observable.loading}
-      />
+      <LootCards loading={observable.loading} />
     </ErrorBoundary>
   );
 });

@@ -11,11 +11,9 @@ interface PropsType {
 export const RecordList = observer((props: PropsType) => {
   const { rec } = useStore();
 
-  return(
+  return (
     <Table size="sm" variant="striped">
-      <TableCaption placement={"bottom"}>
-        Data points coming from your device will be updated each 5 min
-      </TableCaption>
+      <TableCaption placement={'bottom'}>Data points coming from your device will be updated each 5 min</TableCaption>
       <Thead>
         <Tr>
           <Th>SNR</Th>
@@ -51,10 +49,12 @@ export const RecordList = observer((props: PropsType) => {
               variant={'ghost'}
               borderRadius={0}
               onClick={() => {
-                props.setRecordToMint(i)
-                props.onOpen()
+                props.setRecordToMint(i);
+                props.onOpen();
               }}
-            >Solidify</Button>
+            >
+              Solidify
+            </Button>
           </Tr>
         ))}
       </Tbody>

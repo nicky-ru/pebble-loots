@@ -1,39 +1,32 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.2;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import '@openzeppelin/contracts/access/Ownable.sol';
+import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
+import '@openzeppelin/contracts/utils/math/SafeMath.sol';
+import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/interfaces/IERC165.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+import '@openzeppelin/contracts/interfaces/IERC165.sol';
+import '@openzeppelin/contracts/token/ERC721/IERC721.sol';
 import '@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol';
 
-import "./PebbleToken.sol";
-import "./DatapointLoot.sol";
+import './PebbleToken.sol';
+import './DatapointLoot.sol';
 
 contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
   using SafeMath for uint256;
   using SafeERC20 for IERC20;
 
   /// @notice Events of the contract
-  event Deposit(
-    address indexed user,
-    uint256 indexed tokenId,
-    uint256 digPower
-  );
-  event Withdraw(
-    address indexed user,
-    uint256 indexed tokenId
-  );
+  event Deposit(address indexed user, uint256 indexed tokenId, uint256 digPower);
+  event Withdraw(address indexed user, uint256 indexed tokenId);
 
   /// @notice info of each user
   struct UserInfo {
-    uint256 hashPower;  // sum of dig powers of all users staked tokens
-    uint256 numOfTokens;  // amount of tokens staked
-    mapping (uint256 => bool) tokenIds;  // ids of staked tokens
+    uint256 hashPower; // sum of dig powers of all users staked tokens
+    uint256 numOfTokens; // amount of tokens staked
+    mapping(uint256 => bool) tokenIds; // ids of staked tokens
     uint256 rewardDebt;
   }
 
@@ -46,7 +39,7 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
   /// @notice initial pbl reward per block
   uint256 public pblPerBlock;
   /// @notice User address => UserInfo
-  mapping (address => UserInfo) public userInfo;
+  mapping(address => UserInfo) public userInfo;
   /// @notice deposit fee address
   address payable public feeAddress;
   /// @notice Accumulative PBL tokens per hash power unit
@@ -56,15 +49,13 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
   /// @notice Last block number that PBL distribution occurs.
   uint256 public lastRewardBlock;
 
-
   /// @notice Constructor of the contract
-  constructor (
+  constructor(
     PebbleToken _pbl,
     DatapointLoot _pNFT,
     uint256 _pblPerBlock,
     address payable _feeAddress
-  )
-  {
+  ) {
     pbl = _pbl;
     pNFT = _pNFT;
     pblPerBlock = _pblPerBlock;
@@ -75,11 +66,7 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
   }
 
   /// @notice View function to see pending PBL on frontend.
-  function pendingPbl(address _user)
-  public
-  view
-  returns (uint256 pending)
-  {
+  function pendingPbl(address _user) public view returns (uint256 pending) {
     UserInfo storage user = userInfo[_user];
     return user.hashPower.mul(accPblPerHashPowerUnit).div(1e12).sub(user.rewardDebt);
   }
@@ -98,7 +85,7 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
 
   /// @notice Deposit Pebble NFTs for PBL allocation.
   function deposit(uint256 _tokenId) public {
-    require(pNFT.ownerOf(_tokenId) == _msgSender(), "Deposit: not owning item");
+    require(pNFT.ownerOf(_tokenId) == _msgSender(), 'Deposit: not owning item');
     updatePool();
 
     UserInfo storage user = userInfo[_msgSender()];
@@ -107,11 +94,7 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
       pbl.transfer(_msgSender(), pending);
     }
 
-    pNFT.safeTransferFrom(
-      _msgSender(),
-      address(this),
-      _tokenId
-    );
+    pNFT.safeTransferFrom(_msgSender(), address(this), _tokenId);
 
     totalHashPower = totalHashPower.add(pNFT.tokenToHashPower(_tokenId));
     user.numOfTokens = user.numOfTokens.add(1);
@@ -124,7 +107,7 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
   /// @notice Withdraw Pebble NFTs from Loot Stash
   function withdraw(uint256 _tokenId) public {
     UserInfo storage user = userInfo[_msgSender()];
-    require(user.tokenIds[_tokenId], "Withdraw: not good");
+    require(user.tokenIds[_tokenId], 'Withdraw: not good');
     updatePool();
     uint256 pending = pendingPbl(_msgSender());
     pbl.transfer(_msgSender(), pending);
@@ -133,11 +116,7 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
     user.hashPower = user.hashPower.sub(pNFT.tokenToHashPower(_tokenId));
     user.rewardDebt = user.hashPower.mul(accPblPerHashPowerUnit).div(1e12);
     totalHashPower = totalHashPower.sub(pNFT.tokenToHashPower(_tokenId));
-    pNFT.safeTransferFrom(
-      address(this),
-      _msgSender(),
-      _tokenId
-    );
+    pNFT.safeTransferFrom(address(this), _msgSender(), _tokenId);
     emit Withdraw(_msgSender(), _tokenId);
   }
 
@@ -147,7 +126,7 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
     address,
     uint256,
     bytes calldata
-  ) external override pure returns (bytes4) {
+  ) external pure override returns (bytes4) {
     return this.onERC721Received.selector;
   }
 
@@ -156,16 +135,12 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
   ////////////
 
   /// @notice get token ids of a user
-  function getTokenIds()
-  external
-  view
-  returns (uint256[] memory)
-  {
+  function getTokenIds() external view returns (uint256[] memory) {
     uint256 count = 0;
     UserInfo storage user = userInfo[_msgSender()];
     uint256[] memory userTokenIds = new uint256[](user.numOfTokens);
 
-    for (uint256 i = 0; i < 2 ** 256 - 1; i++) {
+    for (uint256 i = 0; i < 2**256 - 1; i++) {
       if (count >= user.numOfTokens) break;
       if (user.tokenIds[i]) {
         userTokenIds[count] = i;
@@ -181,19 +156,13 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
 
   /// @notice Method for updating address of
   /// Pebble NFTs
-  function updateNftAddress(DatapointLoot _pNFT)
-  external
-  onlyOwner
-  {
+  function updateNftAddress(DatapointLoot _pNFT) external onlyOwner {
     pNFT = _pNFT;
   }
 
   /// @notice Method for updating address of
   /// PBL token
-  function updatePBL(PebbleToken _pbl)
-  external
-  onlyOwner
-  {
+  function updatePBL(PebbleToken _pbl) external onlyOwner {
     pbl = _pbl;
   }
 
@@ -202,11 +171,7 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
   /////////////////////////
 
   /// @notice Calculate reward multiplier over the given _from to _to block.
-  function getMultiplier(uint256 _from, uint256 _to)
-  internal
-  pure
-  returns (uint256)
-  {
+  function getMultiplier(uint256 _from, uint256 _to) internal pure returns (uint256) {
     return _to.sub(_from);
   }
 }

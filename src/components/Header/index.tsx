@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, Box, Flex, Container, Stack, useDisclosure,Button, IconButton, useColorModeValue, Icon, useColorMode, Heading, Alert, AlertIcon, Text } from '@chakra-ui/react';
+import { Image, Box, Flex, Container, Stack, useDisclosure, Button, IconButton, useColorModeValue, Icon, useColorMode, Heading, Alert, AlertIcon, Text } from '@chakra-ui/react';
 import { CloseIcon, HamburgerIcon } from '@chakra-ui/icons';
 import { IoMoon, IoSunny } from 'react-icons/io5';
 import { Link } from 'react-router-dom';

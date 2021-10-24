@@ -20,7 +20,7 @@ export const theme = extendTheme({
       300: 'rgba(26, 32, 44, 0.32)',
       400: 'rgba(26, 32, 44, 0.64)',
       500: 'rgba(26, 32, 44, 0.8)'
-    },
+    }
   },
   shadows: {
     largeSoft: 'rgba(60, 64, 67, 0.15) 0px 2px 10px 6px;'

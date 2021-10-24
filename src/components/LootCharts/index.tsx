@@ -36,7 +36,7 @@ export const LootCharts = observer(() => {
     setLoaded(newLoaded: boolean) {
       this.loaded.setValue(newLoaded);
     }
-  }))
+  }));
 
   useEffect(() => {
     if (ploot.god.currentNetwork.account) {
@@ -48,13 +48,13 @@ export const LootCharts = observer(() => {
     if (observable.chainId === IOTX_TEST_CHAINID) {
       updateBalance();
     }
-  }, [ploot.god.currentNetwork.account])
+  }, [ploot.god.currentNetwork.account]);
 
   useEffect(() => {
     if (observable.chainId === IOTX_TEST_CHAINID) {
       updateBalance();
     }
-  }, [observable.chainId])
+  }, [observable.chainId]);
 
   useEffect(() => {
     if (observable.balance) {
@@ -64,31 +64,33 @@ export const LootCharts = observer(() => {
 
   useEffect(() => {
     if (pebble.imei) {
-      queryRecords(pebble.imei)
+      queryRecords(pebble.imei);
     }
-  }, [pebble.imei])
+  }, [pebble.imei]);
 
   const queryRecords = async (imei: string) => {
     observable.setLoading(true);
-    console.log("querying data for: ", imei);
+    console.log('querying data for: ', imei);
     const data = await axios.get(`https://protoreader.herokuapp.com/api/devices/${imei}`);
     // const data = await axios.get(`http://localhost:3001/api/devices/${imei}`);
     rec.setDecodedRecords(data.data.decoded);
-    console.log(data.data)
+    console.log(data.data);
     observable.setLoading(false);
-  }
+  };
 
   async function fetchLoots() {
-    observable.setLoading(true)
+    observable.setLoading(true);
     const tokenIds = Array(observable.balance);
 
     for (let i = 0; i < observable.balance; i++) {
-      tokenIds[i] = await ploot.contracts[observable.chainId].tokenOfOwnerByIndex({params: [ploot.god.currentNetwork.account, i]})
+      tokenIds[i] = await ploot.contracts[observable.chainId].tokenOfOwnerByIndex({ params: [ploot.god.currentNetwork.account, i] });
     }
-    const tokenUris = await Promise.all(tokenIds.map(async (tid) => {
-      const uri = await ploot.contracts[observable.chainId].getTokenUri({params: [tid.toNumber()]});
-      return await axios.get(uri.toString());
-    }))
+    const tokenUris = await Promise.all(
+      tokenIds.map(async (tid) => {
+        const uri = await ploot.contracts[observable.chainId].getTokenUri({ params: [tid.toNumber()] });
+        return await axios.get(uri.toString());
+      })
+    );
 
     ploot.setTokenUris(tokenUris);
     observable.setLoading(false);
@@ -96,18 +98,13 @@ export const LootCharts = observer(() => {
   }
 
   async function updateBalance() {
-    const balance = await ploot.contracts[observable.chainId].balanceOf({params: [ploot.god.currentNetwork.account]});
+    const balance = await ploot.contracts[observable.chainId].balanceOf({ params: [ploot.god.currentNetwork.account] });
     observable.setBalance(balance);
   }
 
-  return(
+  return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <ChartsFrame
-        balance={observable.balance}
-        loading={observable.loading}
-        loaded={observable.loaded}
-        queryRecords={queryRecords}
-      />
+      <ChartsFrame balance={observable.balance} loading={observable.loading} loaded={observable.loaded} queryRecords={queryRecords} />
     </ErrorBoundary>
   );
 });
