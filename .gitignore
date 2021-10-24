@@ -14,3 +14,5 @@ cache
 /src/constants/artifacts/@openzeppelin/
 /src/constants/artifacts/build-info/
 *.dbg.json
+
+.idea/*
