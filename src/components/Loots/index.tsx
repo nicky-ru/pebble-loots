@@ -11,14 +11,7 @@ import { BigNumber } from 'ethers';
 const IOTX_TEST_CHAINID = 4690;
 
 export const MyLoots = observer(() => {
-  const { ploot, god } = useStore();
-
-  const observable = useLocalObservable(() => ({
-    loading: new BooleanState(),
-    setLoading(newLoading: boolean) {
-      this.loading.setValue(newLoading);
-    }
-  }));
+  const { ploot, god, load } = useStore();
 
   useEffect(() => {
     if (god.currentChain.chainId === IOTX_TEST_CHAINID) {
@@ -33,7 +26,7 @@ export const MyLoots = observer(() => {
   }, [ploot.balance]);
 
   async function fetchLoots() {
-    observable.setLoading(true);
+    load.setLoading(true);
     const tokenIds = Array(ploot.balance);
 
     for (let i = 0; i < ploot.balance; i++) {
@@ -47,7 +40,7 @@ export const MyLoots = observer(() => {
     );
 
     ploot.setTokenUris(tokenUris);
-    observable.setLoading(false);
+    load.setLoading(false);
   }
 
   async function updateBalance() {
@@ -58,7 +51,7 @@ export const MyLoots = observer(() => {
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <LootCards loading={observable.loading} />
+      <LootCards/>
     </ErrorBoundary>
   );
 });

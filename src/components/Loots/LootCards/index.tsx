@@ -1,18 +1,13 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { Box, Wrap, WrapItem, LinkBox, LinkOverlay, Image, Skeleton } from '@chakra-ui/react';
-import { BooleanState } from '@/store/standard/base';
 import { useStore } from '@/store/index';
 
-interface PropsType {
-  loading: BooleanState;
-}
-
-export const LootCards = observer((props: PropsType) => {
-  const { pebble, ploot, tabs } = useStore();
+export const LootCards = observer(() => {
+  const { pebble, ploot, tabs, load } = useStore();
 
   return (
-    <Skeleton isLoaded={!props.loading.value}>
+    <Skeleton isLoaded={!load.loading.value}>
       <Wrap p={2} justify="center">
         {ploot.tokenUris?.map((uri, i) => (
           <WrapItem key={i}>

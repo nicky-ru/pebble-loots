@@ -7,6 +7,7 @@ import { ContractStore } from './ploots';
 import { DatapointLootStore } from '@/store/dpLoot';
 import { LootStashStore } from '@/store/stash';
 import { TabsStore } from '@/store/tabs';
+import { LoadingStore } from '@/store/loading';
 
 export class RootStore {
   lang = new LangStore();
@@ -18,4 +19,5 @@ export class RootStore {
   dpLoot = new DatapointLootStore(this);
   stash = new LootStashStore(this);
   tabs = new TabsStore();
+  load = new LoadingStore();
 }
