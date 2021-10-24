@@ -60,6 +60,9 @@ export const Foundry = observer(() => {
               <Text align={'left'}>Used {stash.userInfo?.hashPower} - Available {availablePow}</Text>
               <Stack isInline justifyContent={'space-between'} align={'center'}>
                 <Button>Manage</Button>
+                <Button>
+                  Unstake
+                </Button>
                 <Text>APY: 520%</Text>
               </Stack>
             </Stack>
