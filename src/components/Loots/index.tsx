@@ -9,18 +9,19 @@ export const MyLoots = observer(() => {
   const { ploot, god, load } = useStore();
 
   useEffect(() => {
+    fetchLoots();
+  }, [ploot.god.currentNetwork.account, god.currentChain.chainId]);
+
+  const fetchLoots = async () => {
+    load.setLoading(true);
     if (god.isIotxTestnet) {
-      ploot.updateBalance();
+      await ploot.updateBalance();
     } else {
       ploot.setBalance(0);
     }
-  }, [ploot.god.currentNetwork.account, god.currentChain.chainId]);
-
-  useEffect(() => {
-    load.setLoading(true);
-    ploot.fetchLoots();
+    await ploot.fetchLoots();
     load.setLoading(false);
-  }, [ploot.balance]);
+  }
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
