@@ -1,5 +1,6 @@
 const { PEBBLE_TOKEN_ADDRESS, DATAPOINT_LOOT_ADDRESS, TREASURY_ADDRESS } = require('./constants');
-const pebblePerBlock = 10;
+const { BigNumber } = require('ethers');
+const pebblePerBlock = BigNumber.from("1000000000000000000");
 
 async function main() {
   const [deployer] = await ethers.getSigners();
