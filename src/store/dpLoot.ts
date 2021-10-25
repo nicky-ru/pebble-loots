@@ -119,6 +119,7 @@ export class DatapointLootStore {
       });
       await tx.wait(1);
       this.updateBalance();
+      this.rootStore.stash.updateUserInfo();
     } catch (e) {
       alert(JSON.stringify(e.data.message));
     }
