@@ -20,6 +20,7 @@ export class LootStashStore {
   contracts: { [key: number]: LootStashState } = {};
   tokenUris: any[];
   userInfo: UserInfo;
+  pending: BigNumber = BigNumber.from(0);
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
@@ -49,5 +50,16 @@ export class LootStashStore {
       hashPower: hashPower,
       numOfTokens: numOfTokens
     });
+  }
+
+  async updatePending() {
+    const pending = await this.contracts[this.god.currentChain.chainId]
+      .getPending({ params: [this.god.currentNetwork.account] });
+    this.setPending(BigNumber.from(JSON.parse(JSON.stringify(pending))));
+  }
+
+  setPending(pending: BigNumber) {
+    console.log("pending: ", pending.toString());
+    this.pending = BigNumber.from(pending);
   }
 }
