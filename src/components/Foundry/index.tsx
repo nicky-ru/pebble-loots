@@ -6,24 +6,15 @@ import { PlasmaInfoBox } from '@/components/Foundry/PlasmaInfoBox';
 import { HashpowerInfoBox } from '@/components/Foundry/HashpowerInfoBox';
 
 export const Foundry = observer(() => {
-  const { tabs, dpLoot, stash, god } = useStore();
+  const { tabs, stash, god } = useStore();
 
   useEffect(() => {
     if (god.isIotxTestnet) {
       stash.updateUserInfo();
+    } else {
+      stash.setUser(0, 0);
     }
   }, [god.currentNetwork.account, god.currentChain.chainId])
-
-  useEffect(() => {
-    if (stash.userInfo?.numOfTokens) {
-      updatePending();
-    }
-  }, [stash.userInfo]);
-
-  const updatePending = async () => {
-    const pen = await stash.contracts[god.currentChain.chainId].getPending({ params: [god.currentNetwork.account] });
-    // setPending(BigNumber.from(JSON.parse(JSON.stringify(pen))).toNumber());
-  };
 
   return (
     <Container minW={'full'} align={'center'}>
