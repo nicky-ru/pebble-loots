@@ -14,6 +14,7 @@ export class ContractStore {
   balance: number;
   contracts: { [key: number]: PebbleLootState } = {};
   tokenUris: any[];
+  tokenIds: Array<string>;
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
@@ -42,24 +43,46 @@ export class ContractStore {
   }
 
   async fetchLoots() {
-    const tokenIds = Array(this.balance);
+    await this.updateTokenIds();
+    await this.updateTokenUris();
+  }
 
-    for (let i = 0; i < this.balance; i++) {
-      tokenIds[i] = await this.contracts[this.god.currentChain.chainId]
-        .tokenOfOwnerByIndex({ params: [this.god.currentNetwork.account, i] });
+  async updateTokenIds() {
+    const tokenIds = Array<string>(this.balance);
+
+    try {
+      for (let i = 0; i < this.balance; i++) {
+        const tid = await this.contracts[this.god.currentChain.chainId]
+          .tokenOfOwnerByIndex({ params: [this.god.currentNetwork.account, i] });
+        tokenIds[i] = BigNumber.from(JSON.parse(JSON.stringify(tid)).hex).toString()
+      }
+      this.setTokenIds(tokenIds);
+    } catch (e) {
+      console.log("Contract Store: updateTokenIds ", e)
     }
-    const tokenUris = await Promise.all(
-      tokenIds.map(async (tid) => {
-        const uri = await this.contracts[this.god.currentChain.chainId]
-          .getTokenUri({ params: [tid.toNumber()] });
-        return await axios.get(uri.toString());
-      })
-    );
+  }
 
-    this.setTokenUris(tokenUris);
+  async updateTokenUris() {
+    try {
+      const tokenUris = await Promise.all(
+        this.tokenIds.map(async (tid) => {
+          const uri = await this.contracts[this.god.currentChain.chainId]
+            .getTokenUri({ params: [tid] });
+          return await axios.get(uri.toString());
+        })
+      );
+
+      this.setTokenUris(tokenUris);
+    } catch (e) {
+      console.log("Contract Store: updateTokenUris ", e);
+    }
   }
 
   setTokenUris(uris: any[]) {
     this.tokenUris = uris;
+  }
+
+  setTokenIds(ids: Array<string>) {
+    this.tokenIds = [...ids];
   }
 }

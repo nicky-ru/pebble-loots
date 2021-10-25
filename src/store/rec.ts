@@ -1,13 +1,11 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, observable } from 'mobx';
 import BigNumber from 'bignumber.js';
 import { RootStore } from '@/store/root';
 import { utils } from 'ethers';
+import { MappingState } from '@/store/standard/MappingState';
+import { RecordState } from '@/store/lib/RecordState';
+import axios from 'axios';
 
-// class DeviceRecord {
-//   imei: "103381234567402"
-//   raw: "0x0894b901105618e0e8fa4e20d5e2b1d20528c8c61b38bc9c0940d73a50ff2e5a04811e131a6206821ec20bea186a1031383964386463643766373635633931"
-//   signature: "0xe7166f3af88bb1f75d0e54c0faa64cc9274ba6ee8154ffdd5083babd135f8d1e176ad488251f7839739c126f1c45403b3be0fbdaa433fc517031d4bcf18f3a271c"
-// }
 
 class DecodedRecord {
   snr: 1100;
@@ -29,14 +27,30 @@ export class RecordStore {
   rootStore: RootStore;
   decodedRecords = Array<DecodedRecord>();
   recordPowers = Array<number>();
+  imeis = Array<string>();
+  records: MappingState<RecordState> = new MappingState<RecordState>({
+    currentId: '',
+    map: {}
+  })
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
-    makeAutoObservable(this);
+    makeAutoObservable(
+      this,
+      {imeis: observable}
+    );
   }
 
   setDecodedRecords(decrecords: Array<DecodedRecord>) {
     this.decodedRecords = decrecords.map((record) => {
+      record.latitude = new BigNumber(record.latitude);
+      record.longitude = new BigNumber(record.longitude);
+      return record;
+    });
+  }
+
+  parseRecords(decrecords: Array<DecodedRecord>) {
+    return decrecords.map((record) => {
       record.latitude = new BigNumber(record.latitude);
       record.longitude = new BigNumber(record.longitude);
       return record;
@@ -109,4 +123,28 @@ export class RecordStore {
       alert(JSON.stringify(e.data.message));
     }
   }
+
+  addRecords(imei: string, data: any) {
+    this.records.map[imei] = new RecordState({
+      currentImei: imei,
+      decodedRecords: this.parseRecords(data.decoded),
+      encodedRecords: data.encoded,
+    });
+  }
+
+  addImei(imei: string) {
+    if (this.imeis.indexOf(imei) < 0) {
+      this.setImeis([...this.imeis, ...[imei]]);
+    }
+  }
+
+  setImeis(imeis: Array<string>) {
+    this.imeis = [...imeis];
+  }
+
+  async queryRecords(imei: string) {
+    console.log('querying data for: ', imei);
+    const data = await axios.get(`https://protoreader.herokuapp.com/api/devices/${imei}`);
+    this.addRecords(imei, data.data);
+  };
 }

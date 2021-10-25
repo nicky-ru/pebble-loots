@@ -1,43 +1,33 @@
 import React, { useEffect } from 'react';
-import { observer, useLocalObservable } from 'mobx-react-lite';
+import { observer } from 'mobx-react-lite';
 import { Box, Button, Container, Heading, Text } from '@chakra-ui/react';
 import { useStore } from '@/store/index';
-import { BooleanState } from '@/store/standard/base';
-import axios from 'axios';
 import { VaporCards } from '@/components/Vapor/VaporCards';
 
 export const Vapor = observer(() => {
-  const { tabs, pebble, rec, god } = useStore();
-
-  const observable = useLocalObservable(() => ({
-    loaded: new BooleanState(),
-    loading: new BooleanState(),
-    setLoading(newLoading: boolean) {
-      this.loading.setValue(newLoading);
-    },
-    setLoaded(newLoaded: boolean) {
-      this.loaded.setValue(newLoaded);
-    }
-  }));
+  const { tabs, pebble, rec, load, ploot } = useStore();
 
   useEffect(() => {
     if (pebble.imei) {
-      queryRecords(pebble.imei);
+      rec.records.setCurrentId(pebble.imei);
     }
   }, [pebble.imei]);
 
   useEffect(() => {
-    fetchDevices();
-  }, [god.currentNetwork.account]);
+    ploot.tokenIds.map((tid) => {
+      queryRecords(tid);
+    });
+    rec.setImeis(ploot.tokenIds)
+  }, [ploot.tokenIds])
 
-  useEffect(() => {
-    if (rec.decodedRecords) {
-      updatePowers();
-    }
-  }, [rec.decodedRecords]);
+  // useEffect(() => {
+  //   if (rec.decodedRecords) {
+  //     updatePowers();
+  //   }
+  // }, [rec.decodedRecords]);
 
   async function updatePowers() {
-    observable.setLoading(true);
+    load.setLoading(true);
     const powers = await Promise.all(
       rec.decodedRecords.map(async (record, i) => {
         const pow = await rec.calculateHashPower(i);
@@ -46,24 +36,13 @@ export const Vapor = observer(() => {
     );
 
     rec.setPowers(powers);
-    observable.setLoading(false);
-  }
-
-  async function fetchDevices() {
-    observable.setLoading(true);
-    const owner = god.currentNetwork.account;
-    const url = 'https://protoreader.herokuapp.com/api/my-devices/' + owner.toLowerCase();
-    const axiosResponse = await axios.get(url);
-    pebble.setDevices(axiosResponse.data);
-    observable.setLoading(false);
+    load.setLoading(false);
   }
 
   const queryRecords = async (imei: string) => {
-    observable.setLoading(true);
-    console.log('querying data for: ', imei);
-    const data = await axios.get(`https://protoreader.herokuapp.com/api/devices/${imei}`);
-    rec.setDecodedRecords(data.data.decoded);
-    observable.setLoading(false);
+    load.setLoading(true);
+    rec.queryRecords(imei);
+    load.setLoading(false);
   };
 
   return (
