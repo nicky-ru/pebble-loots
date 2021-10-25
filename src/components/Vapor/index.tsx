@@ -22,7 +22,7 @@ export const Vapor = observer(() => {
 
   const queryRecords = async (imei: string) => {
     load.setLoading(true);
-    rec.queryRecords(imei);
+    await rec.queryRecords(imei);
     load.setLoading(false);
   };
 

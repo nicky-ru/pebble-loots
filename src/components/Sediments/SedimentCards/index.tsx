@@ -1,14 +1,9 @@
 import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Grid,
-  GridItem,
   Box,
-  Heading,
-  Stack,
   Wrap,
   WrapItem,
-  LinkBox,
   Image,
   Skeleton,
   Button,
@@ -23,53 +18,56 @@ import {
   Modal,
   useDisclosure
 } from '@chakra-ui/react';
-import { BooleanState } from '@/store/standard/base';
 import { useStore } from '@/store/index';
 
-interface PropsType {
-  loading: BooleanState;
-  loaded: BooleanState;
-}
-
-export const SedimentCards = observer((props: PropsType) => {
-  const { dpLoot } = useStore();
+export const SedimentCards = observer(() => {
+  const { dpLoot, load } = useStore();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [sedimentTid, setTid] = useState<number>(0);
 
+  const wrapItem = (balance: number, tokenIds: Array<number>, hashPower: Array<number>) => {
+    if (balance > 0) {
+      if (tokenIds && hashPower && tokenIds.length === hashPower.length) {
+        return(
+          tokenIds.map((tid, i) => (
+            <WrapItem key={tid}>
+              <Box w={'200px'} h={'200px'} m={4}>
+                <Image src={'./images/sediment/3d.svg'} />
+                <Text mt={-8}>Power: {hashPower[i]}</Text>
+                <Button
+                  variant={'outline'}
+                  mt={1}
+                  onClick={() => {
+                    setTid(tid);
+                    onOpen();
+                  }}
+                >
+                  Put in the Foundry
+                </Button>
+              </Box>
+            </WrapItem>
+          ))
+        )
+      }
+    } else {
+      return (
+        <WrapItem>
+          <Center h={'200px'} flexDirection={'column'}>
+            <Text>Empty list</Text>
+          </Center>
+        </WrapItem>
+      )
+    }
+  }
+
   return (
     <>
-      <Skeleton isLoaded={!props.loading.value}>
+      <Skeleton isLoaded={!load.loading.value}>
         <Wrap m={4} justify="start">
-          {dpLoot.balance ? (
-            <>
-              {dpLoot.tokenIds?.map((tid, i) => (
-                <WrapItem key={tid}>
-                  <Box w={'200px'} h={'200px'} m={4}>
-                    <Image src={'./images/sediment/3d.svg'} />
-                    <Text mt={-8}>Power: {dpLoot.hashPow?.[i]}</Text>
-                    <Button
-                      variant={'outline'}
-                      mt={1}
-                      onClick={() => {
-                        setTid(tid);
-                        onOpen();
-                      }}
-                    >
-                      Put in the Foundry
-                    </Button>
-                  </Box>
-                </WrapItem>
-              ))}
-            </>
-          ) : (
-            <WrapItem>
-              <Center h={'200px'} flexDirection={'column'}>
-                <Text>Empty list</Text>
-              </Center>
-            </WrapItem>
-          )}
+          {wrapItem(dpLoot.balance, dpLoot.tokenIds, dpLoot.hashPow)}
         </Wrap>
       </Skeleton>
+
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>

@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, observable } from 'mobx';
 import { NetworkState } from '@/store/lib/NetworkState';
 import { DatapointLootState } from '@/store/lib/DatapointLootState';
 import datapointLoot from '../constants/contracts/datapoint_loot.json';
@@ -6,6 +6,7 @@ import { RootStore } from '@/store/root';
 import { EthNetworkConfig } from '../config/NetworkConfig';
 import { IotexTestnetConfig } from '../config/IotexTestnetConfig';
 import { BigNumber } from 'ethers';
+import axios from 'axios';
 
 export class DatapointLootStore {
   rootStore: RootStore;
@@ -13,8 +14,8 @@ export class DatapointLootStore {
   balance: number;
   contracts: { [key: number]: DatapointLootState } = {};
   tokenUris: any[];
-  tokenIds: number[];
-  hashPow: any[];
+  tokenIds: Array<number>;
+  hashPow: Array<number>;
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
@@ -23,7 +24,8 @@ export class DatapointLootStore {
     };
 
     makeAutoObservable(this, {
-      rootStore: false
+      rootStore: false,
+      hashPow: observable
     });
   }
 
@@ -36,16 +38,51 @@ export class DatapointLootStore {
     this.setBalance(BigNumber.from(JSON.parse(JSON.stringify(bal))).toNumber());
   }
 
+  async fetchLoots() {
+    await this.updateTokenIds();
+    await this.updateTokenUris();
+  }
+
   async updateHashPow() {
     try {
       const newHashPowers = await Promise.all(
         this.tokenIds.map(async (tid) => {
-          return await this.contracts[this.god.currentChain.chainId].getTokenHashPower({ params: [tid] });
+          const pow = await this.contracts[this.god.currentChain.chainId].getTokenHashPower({ params: [tid] });
+          return BigNumber.from(JSON.parse(JSON.stringify(pow))).toNumber()
         })
       );
       this.setHashPower(newHashPowers);
     } catch (e) {
-      console.log(e)
+      console.log("DatapointLootStore: updateHashPow ", e)
+    }
+  }
+
+  async updateTokenIds() {
+    const tokenIds = Array(this.balance);
+    try {
+      for (let i = 0; i < this.balance; i++) {
+        const tid = await this.contracts[this.god.currentChain.chainId]
+          .tokenOfOwnerByIndex({ params: [this.god.currentNetwork.account, i] });
+        tokenIds[i] = BigNumber.from(JSON.parse(JSON.stringify(tid)).hex).toString()
+      }
+      this.setTokenIds(tokenIds);
+    } catch (e) {
+      console.log("DatapointLootStore: updateTokenIds ", e);
+    }
+  }
+
+  async updateTokenUris() {
+    try {
+      const tokenUris = await Promise.all(
+        this.tokenIds.map(async (tid) => {
+          const uri = await this.contracts[this.god.currentChain.chainId].getTokenUri({ params: [tid] });
+          return await axios.get(uri.toString());
+        })
+      );
+
+      this.setTokenUris(tokenUris);
+    } catch (e) {
+      console.log("DatapointLootStore: updateTokenUris ", e);
     }
   }
 
@@ -53,7 +90,7 @@ export class DatapointLootStore {
     this.balance = newBal;
   }
 
-  setHashPower(hashpowers: any[]) {
+  setHashPower(hashpowers: Array<number>) {
     this.hashPow = [...hashpowers];
   }
 
@@ -61,7 +98,7 @@ export class DatapointLootStore {
     this.tokenUris = [...uris];
   }
 
-  setTokenIds(ids: number[]) {
+  setTokenIds(ids: Array<number>) {
     this.tokenIds = [...ids];
   }
 
