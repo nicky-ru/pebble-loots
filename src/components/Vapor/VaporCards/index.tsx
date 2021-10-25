@@ -14,7 +14,7 @@ export const VaporCards = observer(() => {
     recordId: 0,
     setRecordToMint(imei: string, id: number) {
       this.deviceImei = imei;
-      this.recordToMint = id;
+      this.recordId = id;
     }
   }));
 
