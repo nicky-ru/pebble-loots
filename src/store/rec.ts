@@ -98,9 +98,11 @@ export class RecordStore {
     console.log('Minting dp', dataPoint);
 
     try {
-      await dpLoot.contracts[god.currentChain.chainId].claim({
+      const tx = await dpLoot.contracts[god.currentChain.chainId].claim({
         params: [god.currentNetwork.account, dataPoint]
       });
+      await tx.wait(1);
+      this.rootStore.dpLoot.updateBalance();
     } catch (e) {
       alert(JSON.stringify(e.data.message));
     }
