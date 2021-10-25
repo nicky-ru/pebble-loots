@@ -20,25 +20,6 @@ export const Vapor = observer(() => {
     rec.setImeis(ploot.tokenIds)
   }, [ploot.tokenIds])
 
-  // useEffect(() => {
-  //   if (rec.decodedRecords) {
-  //     updatePowers();
-  //   }
-  // }, [rec.decodedRecords]);
-
-  async function updatePowers() {
-    load.setLoading(true);
-    const powers = await Promise.all(
-      rec.decodedRecords.map(async (record, i) => {
-        const pow = await rec.calculateHashPower(i);
-        return pow;
-      })
-    );
-
-    rec.setPowers(powers);
-    load.setLoading(false);
-  }
-
   const queryRecords = async (imei: string) => {
     load.setLoading(true);
     rec.queryRecords(imei);

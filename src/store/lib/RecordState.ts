@@ -49,13 +49,15 @@ export class RecordState {
   currentImei: string;
   encodedRecords: Array<EncodedRecord>;
   decodedRecords: Array<DecodedRecord>;
+  powers: Array<number>;
 
   constructor(args: Partial<RecordState>) {
     Object.assign(this, args);
     makeObservable(this,
       {
         decodedRecords: observable,
-        encodedRecords: observable
+        encodedRecords: observable,
+        powers: observable
       });
   }
 }

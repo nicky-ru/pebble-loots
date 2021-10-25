@@ -3,30 +3,11 @@ import BigNumber from 'bignumber.js';
 import { RootStore } from '@/store/root';
 import { utils } from 'ethers';
 import { MappingState } from '@/store/standard/MappingState';
-import { RecordState } from '@/store/lib/RecordState';
+import { DecodedRecord, RecordState } from '@/store/lib/RecordState';
 import axios from 'axios';
-
-
-class DecodedRecord {
-  snr: 1100;
-  vbat: 162;
-  latitude: BigNumber;
-  longitude: BigNumber;
-  gasResistance: 556300;
-  temperature: 3006;
-  pressure: 11915;
-  humidity: 7213;
-  light: 166950;
-  temperature2: 3818;
-  gyroscope: [6, -5, -4021];
-  accelerometer: [2115, 4304, 4021];
-  random: '323799a2aa47a007';
-}
 
 export class RecordStore {
   rootStore: RootStore;
-  decodedRecords = Array<DecodedRecord>();
-  recordPowers = Array<number>();
   imeis = Array<string>();
   records: MappingState<RecordState> = new MappingState<RecordState>({
     currentId: '',
@@ -41,14 +22,6 @@ export class RecordStore {
     );
   }
 
-  setDecodedRecords(decrecords: Array<DecodedRecord>) {
-    this.decodedRecords = decrecords.map((record) => {
-      record.latitude = new BigNumber(record.latitude);
-      record.longitude = new BigNumber(record.longitude);
-      return record;
-    });
-  }
-
   parseRecords(decrecords: Array<DecodedRecord>) {
     return decrecords.map((record) => {
       record.latitude = new BigNumber(record.latitude);
@@ -57,28 +30,28 @@ export class RecordStore {
     });
   }
 
-  setPowers(powers: Array<number>) {
-    this.recordPowers = [...powers];
+  setPowers(imei: string, powers: Array<number>) {
+    this.records.map[imei].powers = [...powers];
   }
 
-  async calculateHashPower(id: number) {
-    const rec = this.rootStore.rec;
+  async calculateHashPower(imei: string, id: number) {
+    const decodedRecords = this.records.map[imei].decodedRecords;
     const dpLoot = this.rootStore.dpLoot;
     const god = this.rootStore.god;
 
     let hashPower;
-    const snr = rec.decodedRecords[id].snr.toString();
-    const vbat = rec.decodedRecords[id].vbat.toString();
-    const latitude = rec.decodedRecords[id].latitude.toString();
-    const longitude = rec.decodedRecords[id].longitude.toString();
-    const gasResistance = rec.decodedRecords[id].gasResistance.toString();
-    const temperature = rec.decodedRecords[id].temperature.toString();
-    const pressure = rec.decodedRecords[id].pressure.toString();
-    const humidity = rec.decodedRecords[id].humidity.toString();
-    const light = rec.decodedRecords[id].light.toString();
-    const gyroscope = rec.decodedRecords[id].gyroscope.toString();
-    const accelerometer = rec.decodedRecords[id].accelerometer.toString();
-    const random = rec.decodedRecords[id].random.toString();
+    const snr = decodedRecords[id].snr.toString();
+    const vbat = decodedRecords[id].vbat.toString();
+    const latitude = decodedRecords[id].latitude.toString();
+    const longitude = decodedRecords[id].longitude.toString();
+    const gasResistance = decodedRecords[id].gasResistance.toString();
+    const temperature = decodedRecords[id].temperature.toString();
+    const pressure = decodedRecords[id].pressure.toString();
+    const humidity = decodedRecords[id].humidity.toString();
+    const light = decodedRecords[id].light.toString();
+    const gyroscope = decodedRecords[id].gyroscope.toString();
+    const accelerometer = decodedRecords[id].accelerometer.toString();
+    const random = decodedRecords[id].random.toString();
 
     const dataPoint = [snr, vbat, latitude, longitude, gasResistance, temperature, pressure, humidity, light, gyroscope, accelerometer, random];
 
@@ -93,23 +66,32 @@ export class RecordStore {
     return hashPower;
   }
 
-  async mint(id: number) {
-    const rec = this.rootStore.rec;
+  async updateHashPowers(imei: string) {
+    const powers = await Promise.all(
+      this.records.map[imei].decodedRecords.map(async (rec, i) => {
+        return await this.calculateHashPower(imei, i);
+      })
+    )
+    this.setPowers(imei, powers);
+  }
+
+  async mint(imei:string, id: number) {
+    const decodedRecords = this.records.map[imei].decodedRecords;
     const dpLoot = this.rootStore.dpLoot;
     const god = this.rootStore.god;
 
-    const snr = rec.decodedRecords[id].snr.toString();
-    const vbat = rec.decodedRecords[id].vbat.toString();
-    const latitude = rec.decodedRecords[id].latitude.toString();
-    const longitude = rec.decodedRecords[id].longitude.toString();
-    const gasResistance = rec.decodedRecords[id].gasResistance.toString();
-    const temperature = rec.decodedRecords[id].temperature.toString();
-    const pressure = rec.decodedRecords[id].pressure.toString();
-    const humidity = rec.decodedRecords[id].humidity.toString();
-    const light = rec.decodedRecords[id].light.toString();
-    const gyroscope = rec.decodedRecords[id].gyroscope.toString();
-    const accelerometer = rec.decodedRecords[id].accelerometer.toString();
-    const random = rec.decodedRecords[id].random.toString();
+    const snr = decodedRecords[id].snr.toString();
+    const vbat = decodedRecords[id].vbat.toString();
+    const latitude = decodedRecords[id].latitude.toString();
+    const longitude = decodedRecords[id].longitude.toString();
+    const gasResistance = decodedRecords[id].gasResistance.toString();
+    const temperature = decodedRecords[id].temperature.toString();
+    const pressure = decodedRecords[id].pressure.toString();
+    const humidity = decodedRecords[id].humidity.toString();
+    const light = decodedRecords[id].light.toString();
+    const gyroscope = decodedRecords[id].gyroscope.toString();
+    const accelerometer = decodedRecords[id].accelerometer.toString();
+    const random = decodedRecords[id].random.toString();
 
     const dataPoint = [snr, vbat, latitude, longitude, gasResistance, temperature, pressure, humidity, light, gyroscope, accelerometer, random];
 
@@ -130,6 +112,7 @@ export class RecordStore {
       decodedRecords: this.parseRecords(data.decoded),
       encodedRecords: data.encoded,
     });
+    this.updateHashPowers(imei);
   }
 
   addImei(imei: string) {

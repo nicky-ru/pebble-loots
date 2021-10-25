@@ -18,25 +18,34 @@ export const VaporCards = observer(() => {
 
   const vaporColor = (pow: number) => {
     let color;
-    if (pow === 1) {
+    if (pow === 0) {
+      color = './images/vapor/grey.svg';
+    } else if (pow === 1) {
       color = './images/vapor/green.svg';
     } else if (pow === 2) {
       color = './images/vapor/blue.svg';
+    } else if (pow === 4) {
+      color = './images/vapor/eggplant.svg';
+    } else if (pow === 8) {
+      color = './images/vapor/lila.svg';
+    } else if (pow === 16) {
+      color = './images/vapor/pink.svg';
+    } else if (pow === 32) {
+      color = './images/vapor/sea.svg';
     }
     return color;
   };
 
-  const wrapItem = (record: DecodedRecord, i: number) => {
+  const wrapItem = (record: DecodedRecord, power: number, i: number) => {
     return(
       <WrapItem key={i}>
         <Center w={'full'}>
           <Stack>
-            {/*<Image h={32} w={32} src={rec.recordPowers ? vaporColor(rec.recordPowers[i]) : './images/vapor/green.svg'} />*/}
-            <Image h={32} w={32} src={'./images/vapor/green.svg'} />
+            <Image h={32} w={32} src={vaporColor(power)} />
             <Text>
               {record.temperature}°C - {record.humidity}% - {record.pressure}hPa
             </Text>
-            <Text>Power: {rec.recordPowers?.[i]}</Text>
+            <Text>Power: {power}</Text>
             <Button
               onClick={() => {
                 observable.setRecordToMint(i);
@@ -54,7 +63,8 @@ export const VaporCards = observer(() => {
   const oneDevice = (imei: string) => {
     return(
       rec.records.map[imei]?.decodedRecords?.map((record, i) => {
-          return wrapItem(record, i);
+        const power = rec.records.map[imei].powers ? rec.records.map[imei].powers[i] : 0;
+        return wrapItem(record, power, i);
         })
     )
   }
@@ -62,7 +72,8 @@ export const VaporCards = observer(() => {
   const allDevices = () => {
     return rec.imeis.map((imei) => {
       return rec.records.map[imei]?.decodedRecords?.map((record, i) => {
-        return wrapItem(record, i);
+        const power = rec.records.map[imei].powers ? rec.records.map[imei].powers[i] : 0;
+        return wrapItem(record, power, i);
       })
     })
   }
