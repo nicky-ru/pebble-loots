@@ -37,7 +37,8 @@ export class LootStashStore {
   }
 
   async updateUserInfo() {
-    const userInfo = await this.contracts[this.god.currentChain.chainId].getUserInfo({ params: [this.god.currentNetwork.account] });
+    const userInfo = await this.contracts[this.god.currentChain.chainId]
+      .getUserInfo({ params: [this.god.currentNetwork.account] });
     const userInfoParsed = JSON.parse(JSON.stringify(userInfo));
     this.setUser(BigNumber.from(userInfoParsed[0]).toNumber(), BigNumber.from(userInfoParsed[1]).toNumber());
   }
@@ -49,12 +50,4 @@ export class LootStashStore {
       numOfTokens: numOfTokens
     });
   }
-
-  // async updateBalance() {
-  //   const ids = await this.contracts[this.god.currentChain.chainId].getMyStashedTokens();
-  //   // @ts-ignore
-  //   this.balance = ids.length();
-  //   // @ts-ignore
-  //   this.tokenIds = ids;
-  // }
 }

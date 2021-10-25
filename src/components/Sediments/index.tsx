@@ -8,23 +8,18 @@ export const Sediments = observer(() => {
   const { dpLoot, god, load } = useStore();
 
   useEffect(() => {
-    if (god.isIotxTestnet) {
-      dpLoot.updateBalance();
-    } else {
-      dpLoot.setBalance(0);
-    }
+    fetchLoots();
   }, [god.currentNetwork.account, god.currentChain.chainId]);
-
-  useEffect(() => {
-    if (dpLoot.balance) {
-      fetchLoots();
-    }
-  }, [dpLoot.balance]);
 
   async function fetchLoots() {
     load.setLoading(true);
+    if (god.isIotxTestnet) {
+      await dpLoot.updateBalance();
+    } else {
+      dpLoot.setBalance(0);
+    }
     await dpLoot.fetchLoots();
-    await dpLoot.updateHashPow()
+    await dpLoot.updateHashPow();
     load.setLoading(false);
   }
 
