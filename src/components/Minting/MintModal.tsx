@@ -6,7 +6,8 @@ import { useStore } from '@/store/index';
 interface PropsType {
   isOpen: boolean;
   onClose: any;
-  recordToMint: number;
+  deviceImei: string;
+  recordId: number;
 }
 
 export const MintModal = observer((props: PropsType) => {
@@ -32,7 +33,7 @@ export const MintModal = observer((props: PropsType) => {
         <ModalCloseButton />
 
         <ModalBody>
-          Do you want to mint {props.recordToMint}?
+          Do you want to mint {props.recordId} of {props.deviceImei}?
           <Button
             onClick={() => {
               approve();
@@ -42,7 +43,7 @@ export const MintModal = observer((props: PropsType) => {
           </Button>
           <Button
             onClick={() => {
-              rec.mint(props.recordToMint);
+              rec.mint(props.deviceImei, props.recordId);
             }}
           >
             Mint

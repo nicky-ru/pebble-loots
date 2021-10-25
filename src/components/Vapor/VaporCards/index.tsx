@@ -10,9 +10,11 @@ export const VaporCards = observer(() => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const observable = useLocalObservable(() => ({
-    recordToMint: 0,
-    setRecordToMint(value: number) {
-      this.recordToMint = value;
+    deviceImei: '',
+    recordId: 0,
+    setRecordToMint(imei: string, id: number) {
+      this.deviceImei = imei;
+      this.recordToMint = id;
     }
   }));
 
@@ -32,11 +34,13 @@ export const VaporCards = observer(() => {
       color = './images/vapor/pink.svg';
     } else if (pow === 32) {
       color = './images/vapor/sea.svg';
+    } else {
+      color = './images/vapor/grey.svg';
     }
     return color;
   };
 
-  const wrapItem = (record: DecodedRecord, power: number, i: number) => {
+  const wrapItem = (imei: string, record: DecodedRecord, power: number, i: number) => {
     return(
       <WrapItem key={i}>
         <Center w={'full'}>
@@ -48,7 +52,7 @@ export const VaporCards = observer(() => {
             <Text>Power: {power}</Text>
             <Button
               onClick={() => {
-                observable.setRecordToMint(i);
+                observable.setRecordToMint(imei, i);
                 onOpen();
               }}
             >
@@ -64,7 +68,7 @@ export const VaporCards = observer(() => {
     return(
       rec.records.map[imei]?.decodedRecords?.map((record, i) => {
         const power = rec.records.map[imei].powers ? rec.records.map[imei].powers[i] : 0;
-        return wrapItem(record, power, i);
+        return wrapItem(imei, record, power, i);
         })
     )
   }
@@ -73,7 +77,7 @@ export const VaporCards = observer(() => {
     return rec.imeis.map((imei) => {
       return rec.records.map[imei]?.decodedRecords?.map((record, i) => {
         const power = rec.records.map[imei].powers ? rec.records.map[imei].powers[i] : 0;
-        return wrapItem(record, power, i);
+        return wrapItem(imei, record, power, i);
       })
     })
   }
@@ -89,7 +93,7 @@ export const VaporCards = observer(() => {
             allDevices()
         }
       </Wrap>
-      <MintModal isOpen={isOpen} onClose={onClose} recordToMint={observable.recordToMint} />
+      <MintModal isOpen={isOpen} onClose={onClose} deviceImei={observable.deviceImei} recordId={observable.recordId} />
     </Box>
   );
 });
