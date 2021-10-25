@@ -13,7 +13,7 @@ export const Sediments = observer(() => {
     } else {
       dpLoot.setBalance(0);
     }
-  }, [dpLoot.god.currentNetwork.account, god.currentChain.chainId]);
+  }, [god.currentNetwork.account, god.currentChain.chainId]);
 
   useEffect(() => {
     if (dpLoot.balance) {
@@ -21,13 +21,10 @@ export const Sediments = observer(() => {
     }
   }, [dpLoot.balance]);
 
-  useEffect(() => {
-    dpLoot.updateHashPow();
-  }, [dpLoot.tokenIds]);
-
   async function fetchLoots() {
     load.setLoading(true);
     await dpLoot.fetchLoots();
+    await dpLoot.updateHashPow()
     load.setLoading(false);
   }
 
