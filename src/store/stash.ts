@@ -58,8 +58,27 @@ export class LootStashStore {
     this.setPending(BigNumber.from(JSON.parse(JSON.stringify(pending))));
   }
 
+  async updatePool() {
+    await this.contracts[this.god.currentChain.chainId]
+      .updatePool();
+  }
+
+  async calculateAPY() {
+    const year = 365 * 24 * 60 * 60;
+    const blocksAmount = year / 5;
+    const pow = this.userInfo.hashPower;
+    const pricePerPower = BigNumber.from("10000000000000000000");
+    const spentForPower = pricePerPower.mul(pow);
+
+    const accPblPerHashPowerReceipt = await this.contracts[this.god.currentChain.chainId]
+      .getAccPblPerHashPowerUnit();
+    const accPblPerHashPower = BigNumber.from(JSON.parse(JSON.stringify(accPblPerHashPowerReceipt)));
+    const yearReward = accPblPerHashPower.mul(blocksAmount).mul(pow).div(1e12);
+    return yearReward.mul(100).div(spentForPower);
+  }
+
   setPending(pending: BigNumber) {
-    console.log("pending: ", pending.toString());
+    console.log("pending: ", pending);
     this.pending = BigNumber.from(pending);
   }
 }

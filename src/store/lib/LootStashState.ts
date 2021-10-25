@@ -41,6 +41,28 @@ export class LootStashState {
     );
   }
 
+  updatePool() {
+    return this.network.execContract(
+      Object.assign(
+        {
+          address: this.address,
+          abi: this.abi,
+          method: 'updatePool'
+        }
+      )
+    )
+  }
+
+  getAccPblPerHashPowerUnit() {
+    return this.network.execContract(
+      Object.assign({
+        address: this.address,
+        abi: this.abi,
+        method: 'accPblPerHashPowerUnit'
+      })
+    )
+  }
+
   withdraw(args: Partial<CallParams>) {
     return this.network.execContract(
       Object.assign(

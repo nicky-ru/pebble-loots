@@ -6,14 +6,21 @@ import { useStore } from '@/store/index';
 export const HashpowerInfoBox = observer(() => {
   const { stash, dpLoot } = useStore();
   const [availablePow, setAvailablePow] = useState<number>(0);
+  const [apy, setApy] = useState<string>('');
 
   useEffect(() => {
     if (dpLoot.hashPow) {
       const powers = [...dpLoot.hashPow];
       const sum = powers.reduce(add, 0);
       setAvailablePow(sum);
+      updateAPY();
     }
   }, [dpLoot.hashPow]);
+
+  const updateAPY = async () => {
+    const _apy = await stash.calculateAPY();
+    setApy(_apy.toString());
+  }
 
   const add = (accumulator: number, a: number) => {
     return accumulator + a;
@@ -29,7 +36,7 @@ export const HashpowerInfoBox = observer(() => {
         <Stack isInline justifyContent={'space-between'} align={'center'}>
           <Button>Manage</Button>
           <Button>Unstake</Button>
-          <Text>APY: 520%</Text>
+          <Text>APY: {apy}%</Text>
         </Stack>
       </Stack>
     </Box>
