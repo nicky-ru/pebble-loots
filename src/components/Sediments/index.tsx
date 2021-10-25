@@ -9,7 +9,7 @@ export const Sediments = observer(() => {
 
   useEffect(() => {
     fetchLoots();
-  }, [god.currentNetwork.account, god.currentChain.chainId]);
+  }, [god.currentNetwork.account, god.currentChain.chainId, dpLoot.balance]);
 
   async function fetchLoots() {
     load.setLoading(true);
