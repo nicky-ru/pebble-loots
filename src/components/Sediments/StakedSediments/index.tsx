@@ -5,7 +5,6 @@ import {
   WrapItem,
   Image,
   Button,
-  Center,
   Text,
   ModalOverlay,
   ModalContent,
@@ -18,8 +17,8 @@ import {
 } from '@chakra-ui/react';
 import { useStore } from '@/store/index';
 
-export const SedimentCards = observer(() => {
-  const { dpLoot } = useStore();
+export const StakedSediments = observer(() => {
+  const { dpLoot, stash } = useStore();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [sedimentTid, setTid] = useState<number>(0);
 
@@ -30,7 +29,7 @@ export const SedimentCards = observer(() => {
           tokenIds?.map((tid, i) => (
             <WrapItem key={tid}>
               <Box w={'200px'} h={'200px'} m={4}>
-                <Image src={'./images/sediment/3d.svg'} />
+                <Image src={'./images/sediment/gold.svg'} />
                 <Text mt={-8}>Power: {hashPower[i]}</Text>
                 <Button
                   variant={'outline'}
@@ -40,52 +39,35 @@ export const SedimentCards = observer(() => {
                     onOpen();
                   }}
                 >
-                  Put in the Foundry
+                  Unstake
                 </Button>
               </Box>
             </WrapItem>
           ))
         )
       }
-    } else {
-      return (
-        <WrapItem>
-          <Center h={'200px'} flexDirection={'column'}>
-            <Text>Empty list</Text>
-          </Center>
-        </WrapItem>
-      )
     }
   }
 
   return (
     <>
-      {wrapItem(dpLoot.balance, dpLoot.tokenIds, dpLoot.hashPow)}
+      {wrapItem(stash.balance, stash.tokenIds, stash.hashPower)}
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Put Sediment in the Foundry</ModalHeader>
+          <ModalHeader>Remove Sediment From the Foundry</ModalHeader>
           <ModalCloseButton />
           <ModalBody></ModalBody>
 
           <ModalFooter>
             <Button
-              colorScheme="blue"
-              mr={3}
-              onClick={() => {
-                dpLoot.approve();
-              }}
-            >
-              Approve
-            </Button>
-            <Button
               variant="ghost"
               onClick={() => {
-                dpLoot.deposit(sedimentTid);
+                dpLoot.withdraw(sedimentTid);
               }}
             >
-              Put
+              Remove
             </Button>
           </ModalFooter>
         </ModalContent>

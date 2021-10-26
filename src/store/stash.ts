@@ -16,7 +16,8 @@ export class LootStashStore {
   rootStore: RootStore;
   network: NetworkState;
   balance: number = 0;
-  tokenIds: [];
+  tokenIds: Array<number>;
+  hashPower: Array<number>;
   contracts: { [key: number]: LootStashState } = {};
   tokenUris: any[];
   userInfo: UserInfo;
@@ -42,6 +43,9 @@ export class LootStashStore {
       .getUserInfo({ params: [this.god.currentNetwork.account] });
     const userInfoParsed = JSON.parse(JSON.stringify(userInfo));
     this.setUser(BigNumber.from(userInfoParsed[0]).toNumber(), BigNumber.from(userInfoParsed[1]).toNumber());
+    await this.updateTokenIds();
+    await this.updateHashPow();
+    this.setBalance(this.tokenIds.length);
   }
 
   setUser(hashPower: number, numOfTokens: number) {
@@ -78,7 +82,46 @@ export class LootStashStore {
   }
 
   setPending(pending: BigNumber) {
-    console.log("pending: ", pending);
     this.pending = BigNumber.from(pending);
+  }
+
+  async updateTokenIds() {
+    try {
+      const tokenIdsRaw = await this.contracts[this.god.currentChain.chainId]
+        .getMyStashedTokens();
+      const tokenIds = JSON.parse(JSON.stringify(tokenIdsRaw)).map((tid) => {
+        return BigNumber.from(tid).toNumber();
+      });
+      this.setTokenIds(tokenIds);
+    } catch (e) {
+      console.log("LootStashStore: updateTokenIds ", e)
+    }
+  }
+
+  setTokenIds(tokenIds: Array<number>) {
+    this.tokenIds = [...tokenIds];
+  }
+
+  async updateHashPow() {
+    try {
+      const newHashPowers = await Promise.all(
+        this.tokenIds?.map(async (tid) => {
+          const pow = await this.rootStore.dpLoot.contracts[this.god.currentChain.chainId]
+            .getTokenHashPower({ params: [tid] });
+          return BigNumber.from(JSON.parse(JSON.stringify(pow))).toNumber()
+        })
+      );
+      this.setHashPower(newHashPowers);
+    } catch (e) {
+      console.log("LootStashStore: updateHashPow ", e)
+    }
+  }
+
+  setHashPower(newHashPowers: Array<number>) {
+    this.hashPower = [...newHashPowers];
+  }
+
+  setBalance(newBal: number) {
+    this.balance = newBal;
   }
 }
