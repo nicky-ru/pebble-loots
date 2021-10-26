@@ -4,7 +4,7 @@ import { Box, Button, Container, Stack, Text } from '@chakra-ui/react';
 import { useStore } from '@/store/index';
 
 export const HashpowerInfoBox = observer(() => {
-  const { stash, dpLoot } = useStore();
+  const { stash, dpLoot, tabs } = useStore();
   const [availablePow, setAvailablePow] = useState<number>(0);
   const [apy, setApy] = useState<string>('');
 
@@ -34,8 +34,13 @@ export const HashpowerInfoBox = observer(() => {
           Used {stash.userInfo?.hashPower} - Available {availablePow}
         </Text>
         <Stack isInline justifyContent={'space-between'} align={'center'}>
-          <Button>Manage</Button>
-          <Button>Unstake</Button>
+          <Button
+            onClick={() => {
+              tabs.setTabIndex(3);
+            }}
+          >
+            Manage
+          </Button>
           <Text>APY: {apy}%</Text>
         </Stack>
       </Stack>
