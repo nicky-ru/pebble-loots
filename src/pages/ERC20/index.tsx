@@ -1,18 +1,29 @@
 import React from 'react';
 import { observer, useLocalStore } from 'mobx-react-lite';
-import { Container, FormControl, Input, Button, Image, InputGroup, InputRightElement, Flex, Box } from '@chakra-ui/react';
-import { useStore } from '../../store/index';
-import { StringState, BooleanState } from '../../store/standard/base';
-import { TokenListModal } from '../../components/TokenListModal/index';
-import { TokenState } from '../../store/lib/TokenState';
+import {
+  Container,
+  FormControl,
+  Input,
+  Button,
+  Image,
+  InputGroup,
+  InputRightElement,
+  Flex,
+  Box,
+  Wrap, Heading, Stack
+} from '@chakra-ui/react';
+import { useStore } from '@/store/index';
+import { StringState, BooleanState } from '@/store/standard/base';
+import { TokenListModal } from '@/components/TokenListModal';
+import { TokenState } from '@/store/lib/TokenState';
 import { Icon } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
-import { BigNumberInputState } from '../../store/standard/BigNumberInputState';
+import { BigNumberInputState } from '@/store/standard/BigNumberInputState';
 import { useEffect } from 'react';
 import { Center, Text } from '@chakra-ui/layout';
 import toast from 'react-hot-toast';
-import { eventBus } from '../../lib/event';
-import { helper } from '../../lib/helper';
+import { eventBus } from '@/lib/event';
+import { helper } from '@/lib/helper';
 
 export const ERC20 = observer(() => {
   const { god, token, lang } = useStore();
@@ -21,6 +32,7 @@ export const ERC20 = observer(() => {
     amount: new BigNumberInputState({}),
     receiverAdderss: new StringState(),
     curToken: null as TokenState,
+    curToken2: null as TokenState,
 
     isOpenTokenList: new BooleanState(),
     loading: new BooleanState(),
@@ -34,11 +46,24 @@ export const ERC20 = observer(() => {
         msg: valid ? lang.t('submit') : lang.t('invalid.input')
       };
     },
+    selector: 0,
     openTokenList() {
+      this.setSelector(0);
+      store.isOpenTokenList.setValue(true);
+    },
+    openTokenList2() {
+      this.setSelector(1);
       store.isOpenTokenList.setValue(true);
     },
     onSelectToken(token: TokenState) {
-      store.curToken = token;
+      if (this.selector) {
+        store.curToken2 = token;
+      } else {
+        store.curToken = token;
+      }
+    },
+    setSelector(value: number) {
+      this.selector = value;
     },
 
     async onSubmit() {
@@ -72,43 +97,70 @@ export const ERC20 = observer(() => {
       store.curToken = null;
     });
   }, []);
+
   return (
     <Container maxW="md">
-      <form>
-        <FormControl mt={20}>
-          <Box border="1px solid" borderRadius="md" borderColor="inherit">
-            <Flex justify="space-between" p={2}>
-              <Text fontSize="sm">Token Amount</Text>
-              <Text fontSize="sm">{store.curToken ? `Balance ${store.curToken.balance.format} ` : '...'}</Text>
-            </Flex>
-            <InputGroup>
-              <Input border="none" placeholder="0.0" type="number" value={store.amount.format} onChange={(e) => store.amount.setFormat(e.target.value)} />
-              <InputRightElement onClick={store.openTokenList} width="4rem" cursor="pointer" flexDir="column">
-                {/* {store.curToken && <Text fontSize="sm">Balance: {store.curToken.balance.format}</Text>} */}
-                <Flex alignItems="center" pr={2} w="100%">
-                  <Image borderRadius="full" boxSize="24px" src={store.curToken?.logoURI} fallbackSrc="/images/token.svg" />
-                  <Icon as={ChevronDownIcon} ml={1} />
-                </Flex>
-              </InputRightElement>
-            </InputGroup>
-          </Box>
-
-          <Box border="1px solid" borderRadius="md" borderColor="inherit" mt={4}>
-            <Flex justify="space-between" p={2}>
-              <Text fontSize="sm">Receiver Address</Text>
-            </Flex>
-            <InputGroup>
-              <Input border="none" placeholder={god.currentNetwork.info.token.tokenExample} value={store.receiverAdderss.value} onChange={(e) => store.receiverAdderss.setValue(e.target.value)} />
-            </InputGroup>
-          </Box>
-
-          <Center>
-            <Button type="button" mt="4" disabled={!store.state.valid || store.loading.value} onClick={store.onSubmit} isLoading={store.loading.value}>
-              {store.state.msg}
-            </Button>
+      <Center w={'full'} h={'70vh'}>
+        <Box w={'full'} border="1px solid" borderRadius="md" borderColor="inherit">
+          <Center h={24} borderBottom={'1px'} borderColor="inherit">
+            <Stack w={'full'} ml={4}>
+              <Heading w={'full'} size={'md'}>
+                Exchange
+              </Heading>
+              <Heading w={'full'} size={'xs'}>
+                Trade tokens in an instant
+              </Heading>
+            </Stack>
           </Center>
-        </FormControl>
-      </form>
+          <Box my={8} mx={4}>
+            <form>
+              <FormControl>
+                <Stack spacing={4}>
+                  <Box border="1px solid" borderRadius="md" borderColor="inherit">
+                    <Flex justify="space-between" p={2}>
+                      <Text fontSize="sm">From</Text>
+                      <Text fontSize="sm">{store.curToken ? `Balance ${store.curToken.balance.format} ` : '...'}</Text>
+                    </Flex>
+                    <InputGroup>
+                      <Input border="none" placeholder="0.0" type="number" value={store.amount.format} onChange={(e) => store.amount.setFormat(e.target.value)} />
+                      <InputRightElement onClick={store.openTokenList} width="4rem" cursor="pointer" flexDir="column">
+                        {/* {store.curToken && <Text fontSize="sm">Balance: {store.curToken.balance.format}</Text>} */}
+                        <Flex alignItems="center" pr={2} w="100%">
+                          <Image borderRadius="full" boxSize="24px" src={store.curToken?.logoURI} fallbackSrc="/images/token.svg" />
+                          <Icon as={ChevronDownIcon} ml={1} />
+                        </Flex>
+                      </InputRightElement>
+                    </InputGroup>
+                  </Box>
+
+                  <Box border="1px solid" borderRadius="md" borderColor="inherit">
+                    <Flex justify="space-between" p={2}>
+                      <Text fontSize="sm">To</Text>
+                      <Text fontSize="sm">{store.curToken2 ? `Balance ${store.curToken2.balance.format} ` : '...'}</Text>
+                    </Flex>
+                    <InputGroup>
+                      <Input border="none" placeholder="0.0" type="number" value={store.amount.format} onChange={(e) => store.amount.setFormat(e.target.value)} />
+                      <InputRightElement onClick={store.openTokenList2} width="4rem" cursor="pointer" flexDir="column">
+                        {/* {store.curToken && <Text fontSize="sm">Balance: {store.curToken.balance.format}</Text>} */}
+                        <Flex alignItems="center" pr={2} w="100%">
+                          <Image borderRadius="full" boxSize="24px" src={store.curToken2?.logoURI} fallbackSrc="/images/token.svg" />
+                          <Icon as={ChevronDownIcon} ml={1} />
+                        </Flex>
+                      </InputRightElement>
+                    </InputGroup>
+                  </Box>
+
+                  <Center>
+                    <Button type="button" mt="4" disabled={!store.state.valid || store.loading.value} onClick={store.onSubmit} isLoading={store.loading.value}>
+                      {store.state.msg}
+                    </Button>
+                  </Center>
+                </Stack>
+              </FormControl>
+            </form>
+          </Box>
+        </Box>
+      </Center>
       <TokenListModal isOpen={store.isOpenTokenList.value} onClose={() => store.isOpenTokenList.setValue(false)} onSelect={store.onSelectToken} />
     </Container>
   );
