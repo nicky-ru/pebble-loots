@@ -83,7 +83,7 @@ export const VaporCards = observer(() => {
   }
 
   return (
-    <Box maxH={'500px'} overflowY={'scroll'}>
+    <Box maxH={'60vh'} overflowY={'scroll'}>
       <Wrap mx={4} spacing="45px">
         {
           rec.records.currentId
