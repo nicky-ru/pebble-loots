@@ -28,7 +28,7 @@ export const Sediments = observer(() => {
     <Container minW={'full'} align={'center'}>
       <Heading>Your Sediments</Heading>
       <Text my={4}>Put your Sediments into the Foundry to increase the production of Plasma.</Text>
-      <Box borderWidth={'thin'} borderColor={'teal'} borderRadius={'3xl'} p={8} m={8}>
+      <Box borderWidth={'thin'} borderColor={'teal'} borderRadius={'3xl'} p={8} m={8} maxH={'70vh'} overflowY={'scroll'}>
         <Skeleton isLoaded={!load.loading.value}>
           <Wrap m={4} justify="start">
             <SedimentCards/>
