@@ -1,9 +1,9 @@
 import React from 'react';
 import { observer, useLocalObservable } from 'mobx-react-lite';
-import { Modal, ModalContent, ModalHeader, ModalOverlay, ModalCloseButton, ListItem, Image, Button, Box, Input, Img, Flex, useColorModeValue } from '@chakra-ui/react';
-import { useStore } from '../../store/index';
-import { TokenState } from '../../store/lib/TokenState';
-import { StringState } from '../../store/standard/base';
+import { Modal, ModalContent, ModalHeader, ModalOverlay, ModalCloseButton, ListItem, Image, Button, Box, Input, useColorModeValue } from '@chakra-ui/react';
+import { useStore } from '@/store/index';
+import { TokenState } from '@/store/lib/TokenState';
+import { StringState } from '@/store/standard/base';
 import { Text } from '@chakra-ui/layout';
 import VirtualList from 'react-tiny-virtual-list';
 import { useEffect } from 'react';
@@ -24,7 +24,7 @@ export const TokenListModal = observer((props: PropsType) => {
       if (!token.currentTokens) return [];
       if (store.newToken) return [store.newToken];
       if (store.keyword) {
-        return token.currentTokens.filter((i) => {
+        const xrc20 = token.currentTokens.filter((i) => {
           if (store.keyword.value.length == 42 && i.address.toLowerCase() == store.keyword.value.toLowerCase()) {
             return true;
           }
@@ -32,9 +32,10 @@ export const TokenListModal = observer((props: PropsType) => {
             return true;
           }
           return false;
-        });
+        })
+        return [god.Coin, ...xrc20];
       }
-      return token.currentTokens;
+      return [god.Coin, ...token.currentTokens];
     },
     onClose() {
       store.keyword.setValue('');
