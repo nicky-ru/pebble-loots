@@ -54,6 +54,7 @@ export const MintModal = observer((props: PropsType) => {
     if (err) {
       toast({
         title: "Transaction reverted.",
+        // @ts-ignore
         description: err.data.message,
         status: 'warning',
         duration: 9000,
@@ -80,6 +81,7 @@ export const MintModal = observer((props: PropsType) => {
     if (err) {
       toast({
         title: "Transaction reverted.",
+        // @ts-ignore
         description: err.data.message,
         status: 'warning',
         duration: 9000,

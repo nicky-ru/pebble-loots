@@ -24,7 +24,7 @@ export const SedimentCards = observer(() => {
   const toast = useToast();
   const { dpLoot, stash } = useStore();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [sedimentTid, setTid] = useState<number>(0);
+  const [sedimentTid, setTid] = useState<string>('0');
   const [uriId, setUriId] = useState<number>(0);
 
   const store = useLocalStore(() => ({
@@ -47,7 +47,7 @@ export const SedimentCards = observer(() => {
                   mt={1}
                   onClick={() => {
                     setUriId(i);
-                    setTid(tid);
+                    setTid(tid.toString());
                     onOpen();
                   }}
                 >
@@ -79,6 +79,7 @@ export const SedimentCards = observer(() => {
     if (err) {
       toast({
         title: "Transaction reverted.",
+        // @ts-ignore
         description: err.data.message,
         status: 'warning',
         duration: 9000,
@@ -109,6 +110,7 @@ export const SedimentCards = observer(() => {
     if (err) {
       toast({
         title: "Transaction reverted.",
+        // @ts-ignore
         description: err.data.message,
         status: 'warning',
         duration: 9000,

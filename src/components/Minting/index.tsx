@@ -36,8 +36,10 @@ export const Minting = observer(() => {
     )
 
     if (err) {
+
       toast({
         title: "Transaction reverted.",
+        // @ts-ignore
         description: err.data.message,
         status: 'warning',
         duration: 9000,
