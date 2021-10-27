@@ -97,15 +97,16 @@ export class RecordStore {
 
     console.log('Minting dp', dataPoint);
 
-    try {
-      const tx = await dpLoot.contracts[god.currentChain.chainId].claim({
-        params: [god.currentNetwork.account, dataPoint]
-      });
-      await tx.wait(1);
-      this.rootStore.dpLoot.updateBalance();
-    } catch (e) {
-      alert(JSON.stringify(e.data.message));
-    }
+    return dpLoot.contracts[god.currentChain.chainId].claim({
+      params: [god.currentNetwork.account, dataPoint]
+    });
+    // try {
+    //   const tx =
+    //   await tx.wait(1);
+    //   this.rootStore.dpLoot.updateBalance();
+    // } catch (e) {
+    //   alert(JSON.stringify(e.data.message));
+    // }
   }
 
   addRecords(imei: string, data: any) {
