@@ -47,7 +47,13 @@ export const VaporCards = observer(() => {
           <Stack>
             <Image h={32} w={32} src={vaporColor(power)} />
             <Text>
-              {record.temperature}°C - {record.humidity}% - {record.pressure}hPa
+              {record.temperature / 100}°C -
+              {record.humidity / 100}% -
+              {record.pressure / 100}hPa
+            </Text>
+            <Text>
+              {record.latitude.div(10000000).toNumber().toPrecision(5)}°N,{" "}
+              {record.longitude.div(10000000).toNumber().toPrecision(5)}°W
             </Text>
             <Text>Power: {power}</Text>
             <Button
