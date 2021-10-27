@@ -11,12 +11,7 @@ import {
   ModalCloseButton,
   Button,
   Spinner,
-  Text
-} from '@chakra-ui/react';
-import { useStore } from '@/store/index';
-import { helper } from '@/lib/helper';
-import { BooleanState } from '@/store/standard/base';
-import {
+  Text,
   Table,
   Thead,
   Tbody,
@@ -24,7 +19,10 @@ import {
   Th,
   Td,
   TableCaption,
-} from "@chakra-ui/react"
+} from '@chakra-ui/react';
+import { useStore } from '@/store/index';
+import { helper } from '@/lib/helper';
+import { BooleanState } from '@/store/standard/base';
 
 interface PropsType {
   isOpen: boolean;
@@ -96,7 +94,7 @@ export const MintModal = observer((props: PropsType) => {
           duration: 9000,
           isClosable: true,
         })
-        store.isApproved.setValue(true);
+        dpLoot.updateBalance();
       }
     }
     store.minting.setValue(false)
