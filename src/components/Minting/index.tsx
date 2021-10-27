@@ -52,7 +52,6 @@ export const Minting = observer(() => {
           duration: 9000,
           isClosable: true,
         })
-        toast.success('Transfer Succeeded');
         ploot.updateBalance();
       }
     }
