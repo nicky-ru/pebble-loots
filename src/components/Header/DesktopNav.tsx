@@ -61,14 +61,14 @@ export const DesktopNav = observer((props: BoxProps) => {
             {
               token.currentTokens.filter((t) => {
                 if (t.symbol === 'PBL') return true;
-              })[0].balance.format
+              })[0]?.balance.format
             }
           </chakra.span>
           <chakra.span mr={1}>
             {
               token.currentTokens.filter((t) => {
                 if (t.symbol === 'PBL') return true;
-              })[0].symbol
+              })[0]?.symbol
             }
           </chakra.span>
         </Text>
