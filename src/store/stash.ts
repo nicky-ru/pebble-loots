@@ -6,6 +6,7 @@ import { RootStore } from '@/store/root';
 import { EthNetworkConfig } from '../config/NetworkConfig';
 import { IotexTestnetConfig } from '../config/IotexTestnetConfig';
 import { BigNumber } from 'ethers';
+import axios from 'axios';
 
 class UserInfo {
   hashPower: number;
@@ -45,6 +46,7 @@ export class LootStashStore {
     this.setUser(BigNumber.from(userInfoParsed[0]).toNumber(), BigNumber.from(userInfoParsed[1]).toNumber());
     await this.updateTokenIds();
     await this.updateHashPow();
+    await this.updateTokenUris();
     this.setBalance(this.tokenIds.length);
   }
 
@@ -98,6 +100,21 @@ export class LootStashStore {
     }
   }
 
+  async updateTokenUris() {
+    try {
+      const tokenUris = await Promise.all(
+        this.tokenIds.map(async (tid) => {
+          const uri = await this.rootStore.dpLoot.contracts[this.god.currentChain.chainId].getTokenUri({ params: [tid] });
+          return await axios.get(uri.toString());
+        })
+      );
+
+      this.setTokenUris(tokenUris);
+    } catch (e) {
+      console.log("LootStashStore: updateTokenUris ", e);
+    }
+  }
+
   setTokenIds(tokenIds: Array<number>) {
     this.tokenIds = [...tokenIds];
   }
@@ -123,5 +140,9 @@ export class LootStashStore {
 
   setBalance(newBal: number) {
     this.balance = newBal;
+  }
+
+  setTokenUris(uris: any[]) {
+    this.tokenUris = [...uris];
   }
 }

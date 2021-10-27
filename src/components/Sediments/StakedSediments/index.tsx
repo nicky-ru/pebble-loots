@@ -12,41 +12,81 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
-  Modal,
-  useDisclosure
+  Modal, useToast,
+  useDisclosure, ListItem, Spinner
 } from '@chakra-ui/react';
 import { useStore } from '@/store/index';
+import VirtualList from 'react-tiny-virtual-list';
+import { helper } from '@/lib/helper';
 
 export const StakedSediments = observer(() => {
+  const toast = useToast();
   const { dpLoot, stash } = useStore();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [sedimentTid, setTid] = useState<number>(0);
+  const [uriId, setUriId] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const wrapItem = (balance: number, tokenIds: Array<number>, hashPower: Array<number>) => {
     if (balance > 0) {
       if (tokenIds && hashPower && tokenIds.length === hashPower.length) {
         return(
-          tokenIds?.map((tid, i) => (
-            <WrapItem key={tid}>
-              <Box w={'200px'} h={'200px'} m={4}>
-                <Image src={'./images/sediment/gold.svg'} />
-                <Text mt={-8}>Power: {hashPower[i]}</Text>
-                <Button
-                  variant={'outline'}
-                  mt={1}
-                  onClick={() => {
-                    setTid(tid);
-                    onOpen();
-                  }}
-                >
-                  Unstake
-                </Button>
-              </Box>
-            </WrapItem>
-          ))
+          <VirtualList width={'full'} height={600} itemCount={tokenIds.length} itemSize={50} renderItem={({index}) => {
+
+            return(
+              <ListItem
+                size={'xl'}
+                my={2}
+                key={index}
+                cursor="pointer"
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+                onClick={() => {
+                  setUriId(index);
+                  setTid(tokenIds[index]);
+                  onOpen();
+                }}
+              >
+                <Button variant={'link'}>Sediment #{tokenIds[index]}, Power: {hashPower[index]}</Button>
+              </ListItem>
+            )
+          }}/>
         )
       }
     }
+  }
+
+  const withdraw = async (sedimentTid: number) => {
+    setLoading(true);
+
+    const [err, res] = await helper.promise.runAsync(
+      dpLoot.withdraw(sedimentTid)
+    )
+
+    if (err) {
+      toast({
+        title: "Transaction reverted.",
+        description: err.data.message,
+        status: 'warning',
+        duration: 9000,
+        isClosable: true,
+      })
+    } else {
+      const receipt = await res.wait();
+      if (receipt.status) {
+        toast({
+          title: "Sediment has been withdrawn",
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+        })
+        dpLoot.updateBalance();
+        stash.updateUserInfo();
+      }
+    }
+
+    setLoading(false);
   }
 
   return (
@@ -56,19 +96,27 @@ export const StakedSediments = observer(() => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Remove Sediment From the Foundry</ModalHeader>
+          <ModalHeader>Sediment info</ModalHeader>
           <ModalCloseButton />
-          <ModalBody></ModalBody>
+          <ModalBody>
+            {stash.tokenUris?.length > uriId ? <Image src={stash.tokenUris[uriId].data.image}/> : <Text>No token info</Text>}
+          </ModalBody>
 
           <ModalFooter>
-            <Button
-              variant="ghost"
-              onClick={() => {
-                dpLoot.withdraw(sedimentTid);
-              }}
-            >
-              Remove
-            </Button>
+            {
+              loading ?
+                <Button>
+                  <Spinner />
+                </Button> :
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    withdraw(sedimentTid);
+                  }}
+                >
+                  Remove from the foundry
+                </Button>
+            }
           </ModalFooter>
         </ModalContent>
       </Modal>

@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Container, Heading, Text, Button, Box, Stack } from '@chakra-ui/react';
+import { Container, Heading, Text, Button, Box, Stack, Wrap } from '@chakra-ui/react';
 import { useStore } from '@/store/index';
 import { PlasmaInfoBox } from '@/components/Foundry/PlasmaInfoBox';
 import { HashpowerInfoBox } from '@/components/Foundry/HashpowerInfoBox';
+import { StakedSediments } from '@/components/Sediments/StakedSediments';
 
 export const Foundry = observer(() => {
   const { tabs, stash, god } = useStore();
@@ -36,6 +37,10 @@ export const Foundry = observer(() => {
           Visit your Machinaverse
         </Button>
 
+      </Box>
+      <Box borderWidth={'thin'} borderColor={'teal'} borderRadius={'3xl'} p={8} m={8} maxH={'32vh'} overflowY={'hidden'}>
+        <Heading align={'left'} size={'md'}>Your staked sediments</Heading>
+        <StakedSediments/>
       </Box>
     </Container>
   );
