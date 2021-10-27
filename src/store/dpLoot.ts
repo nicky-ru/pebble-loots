@@ -102,27 +102,34 @@ export class DatapointLootStore {
     this.tokenIds = [...ids];
   }
 
-  async approve() {
-    try {
-      await this.contracts[this.god.currentChain.chainId].setApprovalForAll({
-        params: [this.rootStore.stash.contracts[this.god.currentChain.chainId].address, true]
-      });
-    } catch (e) {
-      alert(JSON.stringify(e.data.message));
-    }
+  approve() {
+    return this.contracts[this.god.currentChain.chainId].setApprovalForAll({
+      params: [this.rootStore.stash.contracts[this.god.currentChain.chainId].address, true]
+    });
+    // try {
+    //   await this.contracts[this.god.currentChain.chainId].setApprovalForAll({
+    //     params: [this.rootStore.stash.contracts[this.god.currentChain.chainId].address, true]
+    //   });
+    // } catch (e) {
+    //   alert(JSON.stringify(e.data.message));
+    // }
   }
 
-  async deposit(tokenId) {
-    try {
-      const tx = await this.rootStore.stash.contracts[this.god.currentChain.chainId].deposit({
-        params: [tokenId]
-      });
-      await tx.wait(1);
-      this.updateBalance();
-      this.rootStore.stash.updateUserInfo();
-    } catch (e) {
-      alert(JSON.stringify(e.data.message));
-    }
+  deposit(tokenId) {
+    return this.rootStore.stash.contracts[this.god.currentChain.chainId].deposit({
+      params: [tokenId]
+    });
+
+    // try {
+    //   const tx = await this.rootStore.stash.contracts[this.god.currentChain.chainId].deposit({
+    //     params: [tokenId]
+    //   });
+    //   await tx.wait(1);
+    //   this.updateBalance();
+    //   this.rootStore.stash.updateUserInfo();
+    // } catch (e) {
+    //   alert(JSON.stringify(e.data.message));
+    // }
   }
 
   async withdraw(tokenId) {
