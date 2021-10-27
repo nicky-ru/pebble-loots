@@ -32,7 +32,7 @@ export const Sediments = observer(() => {
         <Skeleton isLoaded={!load.loading.value}>
           <Wrap m={4} justify="start">
             <SedimentCards/>
-            <StakedSediments/>
+            {/*<StakedSediments/>*/}
           </Wrap>
         </Skeleton>
       </Box>
