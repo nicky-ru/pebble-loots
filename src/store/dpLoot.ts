@@ -133,15 +133,18 @@ export class DatapointLootStore {
   }
 
   async withdraw(tokenId) {
-    try {
-      const tx = await this.rootStore.stash.contracts[this.god.currentChain.chainId].withdraw({
-        params: [tokenId]
-      });
-      await tx.wait(1);
-      this.updateBalance();
-      this.rootStore.stash.updateUserInfo();
-    } catch (e) {
-      alert(JSON.stringify(e.data.message));
-    }
+    return this.rootStore.stash.contracts[this.god.currentChain.chainId].withdraw({
+      params: [tokenId]
+    });
+    // try {
+    //   const tx = await this.rootStore.stash.contracts[this.god.currentChain.chainId].withdraw({
+    //     params: [tokenId]
+    //   });
+    //   await tx.wait(1);
+    //   this.updateBalance();
+    //   this.rootStore.stash.updateUserInfo();
+    // } catch (e) {
+    //   alert(JSON.stringify(e.data.message));
+    // }
   }
 }
