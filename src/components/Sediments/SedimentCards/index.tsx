@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { observer } from 'mobx-react-lite';
+import { observer, useLocalStore } from 'mobx-react-lite';
 import {
   Box,
   WrapItem,
@@ -14,14 +14,24 @@ import {
   ModalBody,
   ModalFooter,
   Modal,
-  useDisclosure
+  useDisclosure, useToast, Spinner
 } from '@chakra-ui/react';
 import { useStore } from '@/store/index';
+import { BooleanState } from '@/store/standard/base';
+import { helper } from '@/lib/helper';
 
 export const SedimentCards = observer(() => {
-  const { dpLoot } = useStore();
+  const toast = useToast();
+  const { dpLoot, stash } = useStore();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [sedimentTid, setTid] = useState<number>(0);
+  const [uriId, setUriId] = useState<number>(0);
+
+  const store = useLocalStore(() => ({
+    loading: new BooleanState(),
+    staking: new BooleanState(),
+    isApproved: new BooleanState()
+  }))
 
   const wrapItem = (balance: number, tokenIds: Array<number>, hashPower: Array<number>) => {
     if (balance > 0) {
@@ -36,6 +46,7 @@ export const SedimentCards = observer(() => {
                   variant={'outline'}
                   mt={1}
                   onClick={() => {
+                    setUriId(i);
                     setTid(tid);
                     onOpen();
                   }}
@@ -58,6 +69,67 @@ export const SedimentCards = observer(() => {
     }
   }
 
+  const approve = async () => {
+    store.loading.setValue(true);
+
+    const [err, res] = await helper.promise.runAsync(
+      dpLoot.approve()
+    )
+
+    if (err) {
+      toast({
+        title: "Transaction reverted.",
+        description: err.data.message,
+        status: 'warning',
+        duration: 9000,
+        isClosable: true,
+      })
+    } else {
+      const receipt = await res.wait();
+      if (receipt.status) {
+        toast({
+          title: "NFT has been approved",
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+        })
+        store.isApproved.setValue(true);
+      }
+    }
+    store.loading.setValue(false);
+  }
+
+  const deposit = async (sedimentTid: string) => {
+    store.staking.setValue(true);
+
+    const [err, res] = await helper.promise.runAsync(
+      dpLoot.deposit(sedimentTid)
+    )
+
+    if (err) {
+      toast({
+        title: "Transaction reverted.",
+        description: err.data.message,
+        status: 'warning',
+        duration: 9000,
+        isClosable: true,
+      })
+    } else {
+      const receipt = await res.wait();
+      if (receipt.status) {
+        toast({
+          title: "Sediment has been put into Foundry",
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+        })
+        dpLoot.updateBalance();
+        stash.updateUserInfo();
+      }
+    }
+    store.staking.setValue(false);
+  }
+
   return (
     <>
       {wrapItem(dpLoot.balance, dpLoot.tokenIds, dpLoot.hashPow)}
@@ -67,26 +139,59 @@ export const SedimentCards = observer(() => {
         <ModalContent>
           <ModalHeader>Put Sediment in the Foundry</ModalHeader>
           <ModalCloseButton />
-          <ModalBody></ModalBody>
+          <ModalBody>
+            You are about to stake:
+            {dpLoot.tokenUris?.length > uriId ? <Image src={dpLoot.tokenUris[uriId].data.image}/> : <Text>No token info</Text>}
+          </ModalBody>
 
           <ModalFooter>
-            <Button
-              colorScheme="blue"
-              mr={3}
-              onClick={() => {
-                dpLoot.approve();
-              }}
-            >
-              Approve
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={() => {
-                dpLoot.deposit(sedimentTid);
-              }}
-            >
-              Put
-            </Button>
+            {
+              store.isApproved.value ?
+                <Button colorScheme="blue" disabled={true} mr={3}>
+                  Approved
+                </Button> :
+                <>
+                  {
+                    store.loading.value ?
+                      <Button colorScheme="blue" mr={3}>
+                        <Spinner />
+                      </Button> :
+                      <Button
+                        colorScheme="blue"
+                        mr={3}
+                        onClick={approve}
+                      >
+                        Approve
+                      </Button>
+                  }
+                </>
+            }
+            {
+              store.isApproved.value ?
+                <>
+                  {
+                    store.staking.value ?
+                      <Button variant={'ghost'}>
+                        <Spinner />
+                      </Button>
+                      :
+                      <Button
+                        variant="ghost"
+                        onClick={() => {
+                          deposit(sedimentTid)}
+                        }
+                      >
+                        Put
+                      </Button>
+                  }
+                </> :
+                <Button
+                  variant="ghost"
+                  disabled={true}
+                >
+                  Put
+                </Button>
+            }
           </ModalFooter>
         </ModalContent>
       </Modal>
