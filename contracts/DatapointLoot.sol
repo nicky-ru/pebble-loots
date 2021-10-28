@@ -14,7 +14,7 @@ import './PebbleToken.sol';
 contract DatapointLoot is ERC721, ERC721Enumerable, Ownable {
   using SafeMath for uint256;
   using SafeMath for uint32;
-  using SafeMath for uint8;
+  using SafeMath for uint16;
   using Counters for Counters.Counter;
 
   /// @notice events for the contract
@@ -45,26 +45,25 @@ contract DatapointLoot is ERC721, ERC721Enumerable, Ownable {
   mapping(uint256 => DataPoint) public tokenToDataPoint;
   /// @notice Token Id => Token hash power
   /// Hash power will be used in calculating rewards in NFT Staking
-  mapping(uint256 => uint8) public tokenToHashPower;
+  mapping(uint256 => uint16) public tokenToHashPower;
   /// @notice counter for auto incrementing id's
   Counters.Counter private _tokenIdCounter;
 
   constructor(
     PebbleToken _pbl,
-    uint256 _burnMultiplier,
     address payable _feeReceipient
   ) ERC721('Datapoint Loot', 'DLT') {
     pbl = _pbl;
-    burnMultiplier = _burnMultiplier;
+    burnMultiplier = 1 ether;
     feeReceipient = _feeReceipient;
   }
 
   function safeMint(address to, DataPoint memory dataPoint) public {
-    uint8 hashPower = calculateHashPower(dataPoint);
+    uint16 hashPower = calculateHashPower(dataPoint);
     uint256 pblToBurn = hashPower.mul(burnMultiplier);
-    require(pbl.balanceOf(_msgSender()) >= pblToBurn + hashPower, 'Minting: insufficient balance for minting NFT');
+    require(pbl.allowance(_msgSender(), address(this)) >= pblToBurn.add(1 ether), 'Minting: insufficient balance for minting NFT');
     pbl.burnFrom(_msgSender(), pblToBurn);
-    pbl.transferFrom(_msgSender(), feeReceipient, hashPower);
+    pbl.transferFrom(_msgSender(), feeReceipient, 1 ether);
 
     _safeMint(to, _tokenIdCounter.current());
     tokenToDataPoint[_tokenIdCounter.current()] = dataPoint;
@@ -149,7 +148,7 @@ contract DatapointLoot is ERC721, ERC721Enumerable, Ownable {
   /////////////////////////
 
   /// @notice Method for calculating hash power of NFT
-  function calculateHashPower(DataPoint memory dataPoint) public pure returns (uint8 hashPower) {
+  function calculateHashPower(DataPoint memory dataPoint) public pure returns (uint16 hashPower) {
     bytes4 hash = bytes4(
       keccak256(
         abi.encodePacked(
@@ -170,10 +169,20 @@ contract DatapointLoot is ERC721, ERC721Enumerable, Ownable {
     );
 
     if (uint32(hash).mod(1e9) == 0) {
-      hashPower = 16;
+      hashPower = 512;
+    } else if (uint32(hash).mod(1e8) == 0) {
+      hashPower = 256;
+    } else if (uint32(hash).mod(1e7) == 0) {
+      hashPower = 128;
     } else if (uint32(hash).mod(1e6) == 0) {
-      hashPower = 8;
+      hashPower = 64;
+    } else if (uint32(hash).mod(1e5) == 0) {
+      hashPower = 32;
+    } else if (uint32(hash).mod(1e4) == 0) {
+      hashPower = 16;
     } else if (uint32(hash).mod(1e3) == 0) {
+      hashPower = 8;
+    } else if (uint32(hash).mod(100) == 0) {
       hashPower = 4;
     } else if (uint32(hash).mod(10) == 0) {
       hashPower = 2;

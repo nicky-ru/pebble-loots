@@ -1,4 +1,5 @@
 const { expect } = require('chai');
+const { ether } = require('@openzeppelin/test-helpers')
 
 describe('Datapoint Loot', () => {
   const name = 'Datapoint Loot';
@@ -72,7 +73,7 @@ describe('Datapoint Loot', () => {
   beforeEach('deploy contract', async () => {
     this.pbl = await this.PBL.connect(admin).deploy();
     await this.pbl.deployed();
-    this.dlt = await this.DLT.connect(admin).deploy(this.pbl.address, burnMultiplier, feeReceipient.address);
+    this.dlt = await this.DLT.connect(admin).deploy(this.pbl.address, feeReceipient.address);
     await this.dlt.deployed();
   });
 
@@ -90,16 +91,16 @@ describe('Datapoint Loot', () => {
       await expect(this.dlt.connect(minter).safeMint(minter.address, dataPoint)).to.be.revertedWith('Minting: insufficient balance for minting NFT');
     });
     it('should mint token if enough pbl', async () => {
-      await this.pbl.connect(admin).transfer(minter.address, 1000);
-      await this.pbl.connect(minter).approve(this.dlt.address, 1000);
+      await this.pbl.connect(admin).transfer(minter.address, ether('10').toString());
+      await this.pbl.connect(minter).approve(this.dlt.address, ether('10').toString());
       await expect(this.dlt.connect(minter).safeMint(minter.address, dataPoint)).to.emit(this.dlt, 'TokenMinted').withArgs(minter.address, 0);
     });
   });
 
   describe('getters', () => {
     beforeEach(async () => {
-      await this.pbl.connect(admin).transfer(minter.address, 1000);
-      await this.pbl.connect(minter).approve(this.dlt.address, 1000);
+      await this.pbl.connect(admin).transfer(minter.address, ether('10').toString());
+      await this.pbl.connect(minter).approve(this.dlt.address, ether('10').toString());
       await this.dlt.connect(minter).safeMint(minter.address, dataPoint);
     });
 
@@ -111,10 +112,10 @@ describe('Datapoint Loot', () => {
 
   describe('enumeration', () => {
     beforeEach(async () => {
-      await this.pbl.connect(admin).transfer(minter.address, 1000);
-      await this.pbl.connect(admin).transfer(minter2.address, 1000);
-      await this.pbl.connect(minter).approve(this.dlt.address, 1000);
-      await this.pbl.connect(minter2).approve(this.dlt.address, 1000);
+      await this.pbl.connect(admin).transfer(minter.address, ether('10').toString());
+      await this.pbl.connect(admin).transfer(minter2.address, ether('10').toString());
+      await this.pbl.connect(minter).approve(this.dlt.address, ether('10').toString());
+      await this.pbl.connect(minter2).approve(this.dlt.address, ether('10').toString());
       await this.dlt.connect(minter).safeMint(minter.address, dataPoint);
       await this.dlt.connect(minter2).safeMint(minter2.address, dataPoint1);
       await this.dlt.connect(minter).safeMint(minter.address, dataPoint2);
