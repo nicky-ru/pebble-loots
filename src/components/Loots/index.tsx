@@ -10,7 +10,7 @@ export const MyLoots = observer(() => {
 
   useEffect(() => {
     fetchLoots();
-  }, [ploot.god.currentNetwork.account, god.currentChain.chainId]);
+  }, [ploot.god.currentNetwork.account, god.currentChain.chainId, ploot.balance]);
 
   const fetchLoots = async () => {
     load.setLoading(true);
