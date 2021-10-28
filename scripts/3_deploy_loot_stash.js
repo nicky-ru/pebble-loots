@@ -1,6 +1,7 @@
 const { PEBBLE_TOKEN_ADDRESS, DATAPOINT_LOOT_ADDRESS, TREASURY_ADDRESS } = require('./constants');
 const { BigNumber } = require('ethers');
-const pebblePerBlock = BigNumber.from("1000000000000000000");
+const { ether } = require("@openzeppelin/test-helpers");
+const pebblePerBlock = BigNumber.from(ether('1').toString());
 
 async function main() {
   const [deployer] = await ethers.getSigners();

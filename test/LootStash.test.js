@@ -23,7 +23,7 @@ describe('Loot Stash', () => {
     this.pbl = await this.PBL.connect(admin).deploy();
     await this.pbl.deployed();
 
-    this.dpl = await this.DPL.connect(admin).deploy(this.pbl.address, burnMultiplier, feeReceipient.address);
+    this.dpl = await this.DPL.connect(admin).deploy(this.pbl.address, feeReceipient.address);
     await this.dpl.deployed();
 
     this.stash = await this.LootStash.connect(admin).deploy(this.pbl.address, this.dpl.address, pebblePerBlock, feeReceipient.address);
