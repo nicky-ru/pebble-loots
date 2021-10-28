@@ -74,14 +74,19 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
     return user.hashPower.mul(accPblPerHashPowerUnit).div(1e12).sub(user.rewardDebt);
   }
 
-  /// @notice Update reward variables to be up-to-date
   function updatePool() public {
+    uint256 multiplier = getMultiplier(lastRewardBlock, block.number);
+    _updatePool();
+    safePlasmaTransfer(_msgSender(), multiplier.mul(updateRewardPblPerBlock));
+  }
+
+  /// @notice Update reward variables to be up-to-date
+  function _updatePool() internal {
     if (totalHashPower == 0) {
       lastRewardBlock = block.number;
       return;
     }
     uint256 multiplier = getMultiplier(lastRewardBlock, block.number);
-    safePlasmaTransfer(_msgSender(), multiplier.mul(updateRewardPblPerBlock));
     uint256 pblReward = multiplier.mul(pblPerBlock);
     accPblPerHashPowerUnit = accPblPerHashPowerUnit.add(pblReward.mul(1e12).div(totalHashPower));
     lastRewardBlock = block.number;
@@ -90,7 +95,7 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
   /// @notice Deposit Pebble NFTs for PBL allocation.
   function deposit(uint256 _tokenId) public {
     require(pNFT.ownerOf(_tokenId) == _msgSender(), 'Deposit: not owning item');
-    updatePool();
+    _updatePool();
 
     UserInfo storage user = userInfo[_msgSender()];
     if (user.hashPower > 0) {
@@ -112,7 +117,7 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
   function withdraw(uint256 _tokenId) public {
     UserInfo storage user = userInfo[_msgSender()];
     require(user.tokenIds[_tokenId], 'Withdraw: not good');
-    updatePool();
+    _updatePool();
     uint256 pending = pendingPbl(_msgSender());
     safePlasmaTransfer(_msgSender(), pending);
     user.numOfTokens = user.numOfTokens.sub(1);

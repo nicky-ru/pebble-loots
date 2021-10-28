@@ -29,7 +29,7 @@ describe('Loot Stash', () => {
     this.stash = await this.LootStash.connect(admin).deploy(this.pbl.address, this.dpl.address, pebblePerBlock, feeReceipient.address);
     await this.stash.deployed();
 
-    await this.pbl.connect(admin).transfer(this.stash.address, ether('5000000').toString());
+    await this.pbl.connect(admin).transfer(this.stash.address, ether('1000000').toString());
 
     // preminting nfts
     await this.pbl.connect(admin).transfer(nftHolder1.address, ether('10').toString());
@@ -99,7 +99,6 @@ describe('Loot Stash', () => {
 
   describe('rewards', () => {
     beforeEach(async () => {
-
     });
     it('should reward staker, one user', async () => {
       await this.dpl.connect(nftHolder2).setApprovalForAll(this.stash.address, true);
@@ -150,9 +149,8 @@ describe('Loot Stash', () => {
 
       await this.stash.connect(nftHolder1).withdraw(tokenId1);
 
-      const fiveBlocksUpdateReward = updateRewards.mul(5);
       const fiveBlocksReward = pebblePerBlock.mul(5)
-      expectedReward1 = expectedReward1.add((fiveBlocksReward).div(2).add(fiveBlocksUpdateReward));
+      expectedReward1 = expectedReward1.add((fiveBlocksReward).div(2));
       expectedReward2 = fiveBlocksReward.div(2);
 
       // mine another four blocks
@@ -163,7 +161,7 @@ describe('Loot Stash', () => {
 
       await this.stash.connect(nftHolder2).withdraw(tokenId2);
 
-      expectedReward2 = expectedReward2.add(fiveBlocksUpdateReward.add(fiveBlocksReward))
+      expectedReward2 = expectedReward2.add(fiveBlocksReward)
 
       const initBal3 = await this.pbl.balanceOf(nftHolder1.address);
       const initBal4 = await this.pbl.balanceOf(nftHolder2.address);

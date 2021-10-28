@@ -73,7 +73,8 @@ export class LootStashStore {
     const year = 365 * 24 * 60 * 60;
     const blocksAmount = year / 5;
     const pow = this.userInfo.hashPower;
-    const pricePerPower = BigNumber.from("10000000000000000000");
+    if (pow === 0) return 0;
+    const pricePerPower = BigNumber.from("1000000000000000000");
     const spentForPower = pricePerPower.mul(pow);
 
     const accPblPerHashPowerReceipt = await this.contracts[this.god.currentChain.chainId]
@@ -103,7 +104,7 @@ export class LootStashStore {
   async updateTokenUris() {
     try {
       const tokenUris = await Promise.all(
-        this.tokenIds.map(async (tid) => {
+        this.tokenIds?.map(async (tid) => {
           const uri = await this.rootStore.dpLoot.contracts[this.god.currentChain.chainId].getTokenUri({ params: [tid] });
           return await axios.get(uri.toString());
         })
