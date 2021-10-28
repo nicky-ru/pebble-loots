@@ -21,7 +21,7 @@ export const PlasmaInfoBox = observer(() => {
           new BigNumber(stash.pending.toString()).div('1000000000000000000').toString()
         } PMT</Text>
         <Stack isInline justifyContent={'space-between'} align={'center'}>
-          <Button>Collect</Button>
+          <Button onClick={() => {stash.collect()}}>Collect</Button>
           <Button onClick={() => {stash.updatePending()}}>Refresh</Button>
           <Button onClick={() => {stash.updatePool()}}>Update Pool</Button>
           <Text>10$</Text>

@@ -69,6 +69,11 @@ export class LootStashStore {
       .updatePool();
   }
 
+  async collect() {
+    await this.contracts[this.god.currentChain.chainId]
+      .collect();
+  }
+
   async calculateAPY() {
     const year = 365 * 24 * 60 * 60;
     const blocksAmount = year / 5;

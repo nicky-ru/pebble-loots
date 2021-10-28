@@ -53,6 +53,16 @@ export class LootStashState {
     )
   }
 
+  collect() {
+    return this.network.execContract(
+      Object.assign({
+        address: this.address,
+        abi: this.abi,
+        method: 'collect'
+      })
+    )
+  }
+
   getAccPblPerHashPowerUnit() {
     return this.network.execContract(
       Object.assign({
