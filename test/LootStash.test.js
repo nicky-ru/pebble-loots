@@ -5,7 +5,7 @@ const { ether } = require("@openzeppelin/test-helpers")
 describe('Loot Stash', () => {
   let admin, nftHolder1, nftHolder2, feeReceipient;
   const burnMultiplier = BigNumber.from(ether('1').toString());
-  const pebblePerBlock = BigNumber.from(ether('10').toString());
+  const pebblePerBlock = BigNumber.from(ether('1').toString());
   const updateRewards = BigNumber.from(ether('0.000000001').toString());
   const [tokenId1, tokenId2, tokenId3] = [0, 1, 2];
   const dataPoint1 = ['1', '', '', '', '', '', '', '', '', '', '', '', '', ''];
