@@ -94,7 +94,7 @@ contract PebbleLoot is ERC721, ReentrancyGuard, ERC721Enumerable, Ownable {
     require(tokenId > (10**14 - 1) && tokenId < 10**15, 'Claim: Token ID is invalid');
     (, address deviceOwner) = registration.find(toString(tokenId));
     require(_msgSender() == deviceOwner, 'You should own the device to mint this loot');
-    require(msg.value > mintingFee, 'Claim: not enough minting fee');
+    require(msg.value >= mintingFee, 'Claim: not enough minting fee');
     _safeMint(_msgSender(), tokenId);
     emit TokenMinted(_msgSender(), tokenId);
   }

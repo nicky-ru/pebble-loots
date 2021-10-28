@@ -34,7 +34,7 @@ export class ContractStore {
   async updateBalance() {
     const balance = await this.contracts[this.god.currentChain.chainId]
       .balanceOf({ params: [this.god.currentNetwork.account] });
-    const bal = BigNumber.from(JSON.parse(JSON.stringify(balance)).hex);
+    const bal = BigNumber.from(JSON.parse(JSON.stringify(balance)));
     this.setBalance(bal.toNumber());
   }
 
