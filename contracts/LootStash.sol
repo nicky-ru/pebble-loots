@@ -38,6 +38,8 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
   DatapointLoot public pNFT;
   /// @notice initial pbl reward per block
   uint256 public pblPerBlock;
+  /// @notice plasma rewards for pool updates
+  uint256 public updateRewardPblPerBlock;
   /// @notice User address => UserInfo
   mapping(address => UserInfo) public userInfo;
   /// @notice deposit fee address
@@ -59,6 +61,7 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
     pbl = _pbl;
     pNFT = _pNFT;
     pblPerBlock = _pblPerBlock;
+    updateRewardPblPerBlock = 1000000000;
     feeAddress = _feeAddress;
     accPblPerHashPowerUnit = 0;
     totalHashPower = 0;
@@ -78,6 +81,7 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
       return;
     }
     uint256 multiplier = getMultiplier(lastRewardBlock, block.number);
+    safePlasmaTransfer(_msgSender(), multiplier.mul(updateRewardPblPerBlock));
     uint256 pblReward = multiplier.mul(pblPerBlock);
     accPblPerHashPowerUnit = accPblPerHashPowerUnit.add(pblReward.mul(1e12).div(totalHashPower));
     lastRewardBlock = block.number;
@@ -91,7 +95,7 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
     UserInfo storage user = userInfo[_msgSender()];
     if (user.hashPower > 0) {
       uint256 pending = pendingPbl(_msgSender());
-      pbl.transfer(_msgSender(), pending);
+      safePlasmaTransfer(_msgSender(), pending);
     }
 
     pNFT.safeTransferFrom(_msgSender(), address(this), _tokenId);
@@ -110,7 +114,7 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
     require(user.tokenIds[_tokenId], 'Withdraw: not good');
     updatePool();
     uint256 pending = pendingPbl(_msgSender());
-    pbl.transfer(_msgSender(), pending);
+    safePlasmaTransfer(_msgSender(), pending);
     user.numOfTokens = user.numOfTokens.sub(1);
     delete user.tokenIds[_tokenId];
     user.hashPower = user.hashPower.sub(pNFT.tokenToHashPower(_tokenId));
@@ -118,6 +122,15 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
     totalHashPower = totalHashPower.sub(pNFT.tokenToHashPower(_tokenId));
     pNFT.safeTransferFrom(address(this), _msgSender(), _tokenId);
     emit Withdraw(_msgSender(), _tokenId);
+  }
+
+  /// @notice Function for collecting pending rewards
+  function collect() external nonReentrant {
+    UserInfo storage user = userInfo[_msgSender()];
+    require(user.hashPower > 0, "Collect: not good");
+    uint256 pending = pendingPbl(_msgSender());
+    user.rewardDebt = user.hashPower.mul(accPblPerHashPowerUnit).div(1e12);
+    safePlasmaTransfer(_msgSender(), pending);
   }
 
   // Implementing `onERC721Received` so this contract can receive custody of erc721 tokens
@@ -166,9 +179,29 @@ contract LootStash is Ownable, ReentrancyGuard, IERC721Receiver {
     pbl = _pbl;
   }
 
+  /// @notice Method for updating block rewards
+  function updatePblPerBlock(uint256 _pblPerBlock) external onlyOwner {
+    pblPerBlock = _pblPerBlock;
+  }
+
+  /// @notice Method for updating pool update rewards
+  function setPoolUpdateReward(uint256 _pblPerBlock) external onlyOwner {
+    updateRewardPblPerBlock = _pblPerBlock;
+  }
+
   /////////////////////////
   // Internal and Private /
   /////////////////////////
+
+  // Safe plasma transfer function, just in case if rounding error causes pool to not have enough Plasma.
+  function safePlasmaTransfer(address _to, uint256 _amount) internal {
+    uint256 plasmaBal = pbl.balanceOf(address(this));
+    if (_amount > plasmaBal) {
+      pbl.transfer(_to, plasmaBal);
+    } else {
+      pbl.transfer(_to, _amount);
+    }
+  }
 
   /// @notice Calculate reward multiplier over the given _from to _to block.
   function getMultiplier(uint256 _from, uint256 _to) internal pure returns (uint256) {

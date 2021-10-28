@@ -1,9 +1,12 @@
 const { expect } = require('chai');
+const { BigNumber } = require('ethers');
+const { ether } = require("@openzeppelin/test-helpers")
 
 describe('Loot Stash', () => {
   let admin, nftHolder1, nftHolder2, feeReceipient;
-  const burnMultiplier = 10;
-  const pebblePerBlock = 10;
+  const burnMultiplier = BigNumber.from(ether('1').toString());
+  const pebblePerBlock = BigNumber.from(ether('10').toString());
+  const updateRewards = BigNumber.from(ether('0.000000001').toString());
   const [tokenId1, tokenId2, tokenId3] = [0, 1, 2];
   const dataPoint1 = ['1', '', '', '', '', '', '', '', '', '', '', '', '', ''];
   const dataPoint2 = ['2', '', '', '', '', '', '', '', '', '', '', '', '', ''];
@@ -26,14 +29,14 @@ describe('Loot Stash', () => {
     this.stash = await this.LootStash.connect(admin).deploy(this.pbl.address, this.dpl.address, pebblePerBlock, feeReceipient.address);
     await this.stash.deployed();
 
-    await this.pbl.connect(admin).transfer(this.stash.address, 1000000000000000);
+    await this.pbl.connect(admin).transfer(this.stash.address, ether('5000000').toString());
 
     // preminting nfts
-    await this.pbl.connect(admin).transfer(nftHolder1.address, 1000);
-    await this.pbl.connect(admin).transfer(nftHolder2.address, 1000);
+    await this.pbl.connect(admin).transfer(nftHolder1.address, ether('10').toString());
+    await this.pbl.connect(admin).transfer(nftHolder2.address, ether('10').toString());
 
-    await this.pbl.connect(nftHolder1).approve(this.dpl.address, 1000);
-    await this.pbl.connect(nftHolder2).approve(this.dpl.address, 1000);
+    await this.pbl.connect(nftHolder1).approve(this.dpl.address, ether('10').toString());
+    await this.pbl.connect(nftHolder2).approve(this.dpl.address, ether('10').toString());
 
     await this.dpl.connect(nftHolder1).safeMint(nftHolder1.address, dataPoint1);
     await this.dpl.connect(nftHolder2).safeMint(nftHolder2.address, dataPoint2);
@@ -98,16 +101,42 @@ describe('Loot Stash', () => {
     beforeEach(async () => {
 
     });
-    it('should reward staker', async () => {
+    it('should reward staker, one user', async () => {
+      await this.dpl.connect(nftHolder2).setApprovalForAll(this.stash.address, true);
+      await this.stash.connect(nftHolder2).deposit(tokenId2);
+      await this.stash.connect(nftHolder2).deposit(tokenId3);
+
+      await network.provider.send('evm_mine');
+      await network.provider.send('evm_mine');
+      await network.provider.send('evm_mine');
+      await network.provider.send('evm_mine');
+
+      const zeroPending = BigNumber.from('0')
+      expect(await this.stash.pendingPbl(nftHolder2.address))
+        .to.be.equal(zeroPending);
+
+      await this.stash.updatePool();
+      const accRewards = pebblePerBlock.mul(5);
+      expect(await this.stash.pendingPbl(nftHolder2.address))
+        .to.be.equal(accRewards);
+
+      const bal = await this.pbl.balanceOf(nftHolder2.address);
+      await this.stash.connect(nftHolder2).collect();
+      const bal2 = await this.pbl.balanceOf(nftHolder2.address)
+      expect(bal2)
+        .to.be.equal(bal.add(accRewards))
+
+      await this.stash.connect(nftHolder2).collect();
+      const bal3 = await this.pbl.balanceOf(nftHolder2.address)
+      expect(bal3).to.be.equal(bal2);
+    });
+    it('should reward staker, two users', async () => {
       await this.dpl.connect(nftHolder1).setApprovalForAll(this.stash.address, true);
       await this.stash.connect(nftHolder1).deposit(tokenId1);
       await this.dpl.connect(nftHolder2).setApprovalForAll(this.stash.address, true);
       await this.stash.connect(nftHolder2).deposit(tokenId2);
 
-      console.log(await this.stash.pendingPbl(nftHolder1.address));
-      console.log(await this.stash.pendingPbl(nftHolder2.address));
-
-      let expectedReward1 = pebblePerBlock * 2; // two blocks for deposits
+      let expectedReward1 = pebblePerBlock.mul(2)  // two blocks for deposits
       let expectedReward2;
 
       const initBal1 = await this.pbl.balanceOf(nftHolder1.address);
@@ -121,8 +150,10 @@ describe('Loot Stash', () => {
 
       await this.stash.connect(nftHolder1).withdraw(tokenId1);
 
-      expectedReward1 += (pebblePerBlock * 5) / 2;
-      expectedReward2 = (pebblePerBlock * 5) / 2;
+      const fiveBlocksUpdateReward = updateRewards.mul(5);
+      const fiveBlocksReward = pebblePerBlock.mul(5)
+      expectedReward1 = expectedReward1.add((fiveBlocksReward).div(2).add(fiveBlocksUpdateReward));
+      expectedReward2 = fiveBlocksReward.div(2);
 
       // mine another four blocks
       await network.provider.send('evm_mine');
@@ -132,25 +163,13 @@ describe('Loot Stash', () => {
 
       await this.stash.connect(nftHolder2).withdraw(tokenId2);
 
-      expectedReward2 += pebblePerBlock * 5;
+      expectedReward2 = expectedReward2.add(fiveBlocksUpdateReward.add(fiveBlocksReward))
 
       const initBal3 = await this.pbl.balanceOf(nftHolder1.address);
       const initBal4 = await this.pbl.balanceOf(nftHolder2.address);
 
-      await expect(initBal3 - initBal1).to.be.equal(expectedReward1);
-      await expect(initBal4 - initBal2).to.be.equal(expectedReward2);
-    });
-    it('should reward staker', async () => {
-      await this.dpl.connect(nftHolder2).setApprovalForAll(this.stash.address, true);
-      await this.stash.connect(nftHolder2).deposit(tokenId2);
-      await this.stash.connect(nftHolder2).deposit(tokenId3);
-
-      await network.provider.send('evm_mine');
-      await network.provider.send('evm_mine');
-      await network.provider.send('evm_mine');
-      await network.provider.send('evm_mine');
-
-      console.log(await this.stash.pendingPbl(nftHolder2.address));
+      await expect(initBal3.sub(initBal1)).to.be.equal(expectedReward1);
+      await expect(initBal4.sub(initBal2)).to.be.equal(expectedReward2);
     });
   });
 });
