@@ -1,5 +1,4 @@
 const { REGISTRATION_ADDRESS, TREASURY_ADDRESS } = require('./constants');
-const mintingFee = 10;
 
 async function main() {
   const [deployer] = await ethers.getSigners();
@@ -7,7 +6,7 @@ async function main() {
   console.log('Deploying Pebble Loot with address:', deployerAddress);
 
   const PebbleLoot = await ethers.getContractFactory('PebbleLoot');
-  const plt = await PebbleLoot.deploy(REGISTRATION_ADDRESS, mintingFee, TREASURY_ADDRESS);
+  const plt = await PebbleLoot.deploy(REGISTRATION_ADDRESS, TREASURY_ADDRESS);
   await plt.deployed();
 
   console.log('Pebble Loot contract deployed to:', plt.address);

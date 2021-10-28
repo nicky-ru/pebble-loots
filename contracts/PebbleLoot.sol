@@ -30,11 +30,10 @@ contract PebbleLoot is ERC721, ReentrancyGuard, ERC721Enumerable, Ownable {
   /// @notice Contract constructor
   constructor(
     address _registration,
-    uint16 _mintingFee,
     address payable _feeReceipient
   ) ERC721('Pebble Loot', 'PLT') Ownable() {
     registration = IRegistration(_registration);
-    mintingFee = _mintingFee;
+    mintingFee = 0;
     feeReceipient = _feeReceipient;
   }
 
@@ -91,10 +90,11 @@ contract PebbleLoot is ERC721, ReentrancyGuard, ERC721Enumerable, Ownable {
 
   /// @notice Method for minting NFT
   /// @param tokenId IMEI of pebble device
-  function claim(uint256 tokenId) public nonReentrant {
+  function claim(uint256 tokenId) external payable nonReentrant {
     require(tokenId > (10**14 - 1) && tokenId < 10**15, 'Claim: Token ID is invalid');
     (, address deviceOwner) = registration.find(toString(tokenId));
     require(_msgSender() == deviceOwner, 'You should own the device to mint this loot');
+    require(msg.value > mintingFee, 'Claim: not enough minting fee');
     _safeMint(_msgSender(), tokenId);
     emit TokenMinted(_msgSender(), tokenId);
   }

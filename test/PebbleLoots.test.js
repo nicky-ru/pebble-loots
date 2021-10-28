@@ -2,6 +2,7 @@ const { constants } = require('@openzeppelin/test-helpers');
 
 const { ZERO_ADDRESS } = constants;
 const { expect } = require('chai');
+const { BigNumber } = require('ethers');
 
 describe('Pebble Loots', () => {
   const name = 'Pebble Loot';
@@ -28,7 +29,7 @@ describe('Pebble Loots', () => {
   });
 
   beforeEach('deploy contract', async () => {
-    this.pebbleLoot = await this.PebbleLoot.connect(admin).deploy(registrationAddress, mintingFee, feeReceipient.address);
+    this.pebbleLoot = await this.PebbleLoot.connect(admin).deploy(registrationAddress, feeReceipient.address);
   });
 
   describe('metadata', () => {
@@ -39,7 +40,7 @@ describe('Pebble Loots', () => {
       expect(await this.pebbleLoot.symbol()).to.be.equal(symbol);
     });
     it('has minting fee', async () => {
-      expect(await this.pebbleLoot.mintingFee()).to.be.equal(mintingFee);
+      expect(await this.pebbleLoot.mintingFee()).to.be.equal(BigNumber.from('0'));
     });
     it('has fee receipient', async () => {
       expect(await this.pebbleLoot.feeReceipient()).to.be.equal(feeReceipient.address);
