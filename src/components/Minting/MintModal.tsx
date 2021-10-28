@@ -23,6 +23,7 @@ import {
 import { useStore } from '@/store/index';
 import { helper } from '@/lib/helper';
 import { BooleanState } from '@/store/standard/base';
+import { BigNumber } from 'ethers';
 
 interface PropsType {
   isOpen: boolean;
@@ -45,9 +46,12 @@ export const MintModal = observer((props: PropsType) => {
     store.loading.setValue(true);
     const pbl = token.tokens[god.currentChain.chainId].filter((token) => token.symbol == 'PBL')[0];
 
+    let toApprove = BigNumber.from(rec.records.map[props.deviceImei].powers[props.recordId].toString());
+    toApprove = toApprove.mul('1000000000000000000').add('1000000000000000000')
+
     const [err, res] = await helper.promise.runAsync(
       pbl.approve({
-        params: [dpLoot.contracts[god.currentChain.chainId].address, 1000]
+        params: [dpLoot.contracts[god.currentChain.chainId].address, toApprove]
       })
     )
 
