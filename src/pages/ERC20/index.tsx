@@ -24,13 +24,14 @@ import { Center, Text } from '@chakra-ui/layout';
 import toast from 'react-hot-toast';
 import { eventBus } from '@/lib/event';
 import { helper } from '@/lib/helper';
+import { BigNumber } from 'ethers';
 
 export const ERC20 = observer(() => {
-  const { god, token, lang } = useStore();
+  const { god, token, lang, mimoRV2 } = useStore();
 
   const store = useLocalStore(() => ({
-    amount: new BigNumberInputState({}),
-    receiverAdderss: new StringState(),
+    amountA: new BigNumberInputState({}),
+    amountB: new BigNumberInputState({}),
     curToken: null as TokenState,
     curToken2: null as TokenState,
 
@@ -40,7 +41,7 @@ export const ERC20 = observer(() => {
       if (!god.isConnect) {
         return { valid: true, msg: lang.t('connect.wallet'), connectWallet: true };
       }
-      const valid = store.curToken && store.amount.value && store.receiverAdderss.value;
+      const valid = store.curToken && store.curToken2 && store.amountA.value.gt(0);
       return {
         valid,
         msg: valid ? lang.t('submit') : lang.t('invalid.input')
@@ -72,8 +73,9 @@ export const ERC20 = observer(() => {
       }
 
       store.loading.setValue(true);
-      const [err, res] = await helper.promise.runAsync(store.curToken.transfer({ params: [store.receiverAdderss.value, store.amount.value.toFixed(0, 1)] }));
 
+      const withSlippage = this.amountB.value.multipliedBy(0.5);
+      const [err, res] = await helper.promise.runAsync(mimoRV2.swapExactETHForTokens(withSlippage, this.amountA.value));
       if (err) {
         toast.error(err.message);
       } else {
@@ -97,6 +99,26 @@ export const ERC20 = observer(() => {
       store.curToken = null;
     });
   }, []);
+  useEffect(() => {
+    if (store.state.valid && store.amountA.value.gt(0)) {
+      getAmountOut();
+    }
+  }, [store.amountA.value])
+
+  const getAmountOut = async () => {
+    store.loading.setValue(true);
+
+    const [err, res] = await helper.promise.runAsync(mimoRV2.getAmountsOut(store.amountA.format, store.curToken.address, store.curToken2.address));
+
+    if (err) {
+      toast.error(err.message);
+    } else {
+      store.amountB.setFormat(BigNumber.from(res[1]).toString());
+      console.log(res);
+    }
+
+    store.loading.setValue(false);
+  }
 
   return (
     <Container maxW="md">
@@ -122,7 +144,7 @@ export const ERC20 = observer(() => {
                       <Text fontSize="sm">{store.curToken ? `Balance ${store.curToken.balance.format} ` : '...'}</Text>
                     </Flex>
                     <InputGroup>
-                      <Input border="none" placeholder="0.0" type="number" value={store.amount.format} onChange={(e) => store.amount.setFormat(e.target.value)} />
+                      <Input border="none" placeholder="0.0" type="number" value={store.amountA.format} onChange={(e) => store.amountA.setFormat(e.target.value)} />
                       <InputRightElement onClick={store.openTokenList} width="4rem" cursor="pointer" flexDir="column">
                         {/* {store.curToken && <Text fontSize="sm">Balance: {store.curToken.balance.format}</Text>} */}
                         <Flex alignItems="center" pr={2} w="100%">
@@ -139,7 +161,7 @@ export const ERC20 = observer(() => {
                       <Text fontSize="sm">{store.curToken2 ? `Balance ${store.curToken2.balance.format} ` : '...'}</Text>
                     </Flex>
                     <InputGroup>
-                      <Input border="none" placeholder="0.0" type="number" value={store.amount.format} onChange={(e) => store.amount.setFormat(e.target.value)} />
+                      <Input border="none" placeholder="0.0" disabled={true} type="number" value={store.amountB.format} onChange={(e) => store.amountB.setFormat(e.target.value)} />
                       <InputRightElement onClick={store.openTokenList2} width="4rem" cursor="pointer" flexDir="column">
                         {/* {store.curToken && <Text fontSize="sm">Balance: {store.curToken.balance.format}</Text>} */}
                         <Flex alignItems="center" pr={2} w="100%">
