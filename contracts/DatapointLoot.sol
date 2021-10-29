@@ -4,7 +4,6 @@ pragma solidity ^0.8.2;
 import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
 import '@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
-import '@openzeppelin/contracts/utils/math/SafeMath.sol';
 import '@openzeppelin/contracts/utils/Counters.sol';
 import './Base64.sol';
 
@@ -12,9 +11,6 @@ import './PebbleToken.sol';
 
 /// @notice Contract for minting Pebble Data points NFTs
 contract DatapointLoot is ERC721, ERC721Enumerable, Ownable {
-  using SafeMath for uint256;
-  using SafeMath for uint32;
-  using SafeMath for uint16;
   using Counters for Counters.Counter;
 
   /// @notice events for the contract
@@ -60,8 +56,8 @@ contract DatapointLoot is ERC721, ERC721Enumerable, Ownable {
 
   function safeMint(address to, DataPoint memory dataPoint) public {
     uint16 hashPower = calculateHashPower(dataPoint);
-    uint256 pblToBurn = hashPower.mul(burnMultiplier);
-    require(pbl.allowance(_msgSender(), address(this)) >= pblToBurn.add(1 ether), 'Minting: insufficient balance for minting NFT');
+    uint256 pblToBurn = hashPower * burnMultiplier;
+    require(pbl.allowance(_msgSender(), address(this)) >= pblToBurn + 1 ether, 'Minting: insufficient balance for minting NFT');
     pbl.burnFrom(_msgSender(), pblToBurn);
     pbl.transferFrom(_msgSender(), feeReceipient, 1 ether);
 
@@ -168,23 +164,23 @@ contract DatapointLoot is ERC721, ERC721Enumerable, Ownable {
       )
     );
 
-    if (uint32(hash).mod(1e9) == 0) {
+    if (uint32(hash) % 1e9 == 0) {
       hashPower = 512;
-    } else if (uint32(hash).mod(1e8) == 0) {
+    } else if (uint32(hash) % 1e8 == 0) {
       hashPower = 256;
-    } else if (uint32(hash).mod(1e7) == 0) {
+    } else if (uint32(hash) % 1e7 == 0) {
       hashPower = 128;
-    } else if (uint32(hash).mod(1e6) == 0) {
+    } else if (uint32(hash) % 1e6 == 0) {
       hashPower = 64;
-    } else if (uint32(hash).mod(1e5) == 0) {
+    } else if (uint32(hash) % 1e5 == 0) {
       hashPower = 32;
-    } else if (uint32(hash).mod(1e4) == 0) {
+    } else if (uint32(hash) % 1e4 == 0) {
       hashPower = 16;
-    } else if (uint32(hash).mod(1e3) == 0) {
+    } else if (uint32(hash) % 1e3 == 0) {
       hashPower = 8;
-    } else if (uint32(hash).mod(100) == 0) {
+    } else if (uint32(hash) % 100 == 0) {
       hashPower = 4;
-    } else if (uint32(hash).mod(10) == 0) {
+    } else if (uint32(hash) % 10 == 0) {
       hashPower = 2;
     } else {
       hashPower = 1;
