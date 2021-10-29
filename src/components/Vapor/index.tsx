@@ -28,8 +28,12 @@ export const Vapor = observer(() => {
 
   return (
     <Container maxW={'Full'} align={'center'}>
-      <Heading>Vapor clouds produced</Heading>
-      <Text my={4}>Your Pebble produce Vapor clouds in the Machinaverse</Text>
+      <Heading>Discovered Treasures</Heading>
+      <Text my={4}>
+        Your Pebble Soul traverses Machinaverse with ultra sound and uses it's extra powers to find treasures hidden in its vastness.
+        Only last 100 discovered treasures are available of being picked up.
+
+      </Text>
       <Button
         onClick={() => {
           tabs.setTabIndex(1);
