@@ -8,6 +8,7 @@ import { DatapointLootStore } from '@/store/dpLoot';
 import { LootStashStore } from '@/store/stash';
 import { TabsStore } from '@/store/tabs';
 import { LoadingStore } from '@/store/loading';
+import { MimoRouterStore } from '@/store/mimoRV2';
 
 export class RootStore {
   lang = new LangStore();
@@ -20,4 +21,5 @@ export class RootStore {
   stash = new LootStashStore(this);
   tabs = new TabsStore();
   load = new LoadingStore();
+  mimoRV2 = new MimoRouterStore(this);
 }
