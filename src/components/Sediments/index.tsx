@@ -25,10 +25,10 @@ export const Sediments = observer(() => {
   }
 
   return (
-    <Container minW={'full'} align={'center'}>
-      <Heading>Your Sediments</Heading>
-      <Text my={4}>Put your Sediments into the Foundry to increase the production of Plasma.</Text>
-      <Box borderWidth={'thin'} borderColor={'teal'} borderRadius={'3xl'} p={8} m={8} maxH={'70vh'} overflowY={'scroll'}>
+    <Container minW={'full'} align={'center'} py={16}>
+      <Heading textColor={'green.500'}>Your Sediments</Heading>
+      <Text fontWeight={'semibold'} fontSize={'xl'} textColor={'green.800'}>Put your Sediments into the Foundry to increase the production of Plasma.</Text>
+      <Box borderRadius={'3xl'} p={8} m={8} maxH={'70vh'} overflowY={'scroll'} bg={'rgba(228, 249, 255, 0.9)'} boxShadow={'base'}>
         <Skeleton isLoaded={!load.loading.value}>
           <Wrap m={4} justify="start">
             <SedimentCards/>

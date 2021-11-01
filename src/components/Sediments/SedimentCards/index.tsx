@@ -38,12 +38,14 @@ export const SedimentCards = observer(() => {
       if (tokenIds && hashPower && tokenIds.length === hashPower.length) {
         return(
           tokenIds?.map((tid, i) => (
-            <WrapItem key={tid}>
+            <WrapItem key={tid} _hover={{transform: "scale(1.1)"}}>
               <Box w={'200px'} h={'200px'} m={4}>
                 <Image src={'./images/sediment/3d.svg'} />
                 <Text mt={-8}>Power: {hashPower[i]}</Text>
                 <Button
+                  boxShadow={'base'}
                   variant={'outline'}
+                  colorScheme={'green'}
                   mt={1}
                   onClick={() => {
                     setUriId(i);
@@ -149,17 +151,17 @@ export const SedimentCards = observer(() => {
           <ModalFooter>
             {
               store.isApproved.value ?
-                <Button colorScheme="blue" disabled={true} mr={3}>
+                <Button colorScheme="green" disabled={true} mr={3}>
                   Approved
                 </Button> :
                 <>
                   {
                     store.loading.value ?
-                      <Button colorScheme="blue" mr={3}>
+                      <Button colorScheme="green" mr={3}>
                         <Spinner />
                       </Button> :
                       <Button
-                        colorScheme="blue"
+                        colorScheme="green"
                         mr={3}
                         onClick={approve}
                       >

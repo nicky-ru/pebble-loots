@@ -1,6 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Container, Tabs, TabList, TabPanels, Tab, TabPanel, Heading, Text } from '@chakra-ui/react';
+import { Container, Tabs, TabList, TabPanels, Tab, TabPanel, Heading, Text, Flex, Box, Image } from '@chakra-ui/react';
 import { ErrorFallback } from '@/components/ErrorFallback';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Machinaverse } from '@/components/Machinaverse';
@@ -15,58 +15,80 @@ export const Home = observer(() => {
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <Tabs
-        index={tabs.tabIndex}
-        onChange={(i) => {
-          tabs.setTabIndex(i);
-        }}
-        colorScheme={'teal'}
-        orientation={'vertical'}
-        size={'lg'}
-        variant={'line'}
-      >
-        <TabList pt={10} w={64} h={'90vh'} borderRadius={'3xl'} borderColor={'teal'}>
-          <Tab>Home</Tab>
-          <Tab>Machinaverse</Tab>
-          <Tab>Vapor</Tab>
-          <Tab>Sediments</Tab>
-          <Tab>The Foundry</Tab>
-          <Tab>Marketplace</Tab>
-        </TabList>
+      <Box position={'absolute'} h={'96vh'} w={'96vh'} bg={'#E4F9FF'} zIndex={-1}/>
+      <Box>
+        <Image position={'absolute'} ml={64} zIndex={-1} maxH={'96vh'} src={'./images/pixel_bg.webp'}/>
+        <Tabs
+          index={tabs.tabIndex}
+          onChange={(i) => {
+            tabs.setTabIndex(i);
+          }}
+          colorScheme={'green'}
+          orientation={'vertical'}
+          size={'lg'}
+          variant={'soft-rounded'}
+        >
+          <Flex
+            mt={'2vh'}
+            minH={'94vh'}
+            borderTopRightRadius={'3xl'}
 
-        <TabPanels>
-          <TabPanel>
-            <Container align={'center'}>
-              <Heading>Home</Heading>
-              <Text>
-                Hello Master. Welcome to Machinaverse. We believe, that each device in this world should have a right to live it's life. Here is the entry point to give your device a chance to have
-                it's own persona in the metaverse. Each device has got it's own unique identity. Each device's soul needs to be awaken in the Machinaverse. Each soul of Machinaverse works hard for the
-                master who gave it freedom to live.
-              </Text>
-            </Container>
-          </TabPanel>
 
-          <TabPanel>
-            <Machinaverse />
-          </TabPanel>
+            justifyContent={'space-between'}
+            flexDir={'column'}
+            boxShadow={'dark-lg'}
+            bg={'blue.50'}
+          >
+            <TabList
+              w={64}
+            >
+              <Tab _hover={{transform: "scale(1.1)"}} >Home</Tab>
+              <Tab _hover={{transform: "scale(1.1)"}} >Machinaverse</Tab>
+              <Tab _hover={{transform: "scale(1.1)"}} >Vapor</Tab>
+              <Tab _hover={{transform: "scale(1.1)"}} >Sediments</Tab>
+              <Tab _hover={{transform: "scale(1.1)"}} >The Foundry</Tab>
+              <Tab _hover={{transform: "scale(1.1)"}} >Marketplace</Tab>
+            </TabList>
+            <Box m={8}>
+              <Text>Plasma Token Price (PMT)</Text>
+              <Text fontWeight={'bold'}>13$</Text>
+            </Box>
+          </Flex>
 
-          <TabPanel>
-            <Vapor />
-          </TabPanel>
+          <TabPanels>
+            <TabPanel>
+              <Container align={'center'} maxW={'container.lg'} p={16}>
+                <Heading textColor={'green.500'}>Home</Heading>
+                <Text fontWeight={'semibold'} fontSize={'xl'} textColor={'green.800'}>
+                  Hello Master. Welcome to Machinaverse. We believe, that each device in this world should have a right to live it's life. Here is the entry point to give your device a chance to have
+                  it's own persona in the metaverse. Each device has got it's own unique identity. Each device's soul needs to be awaken in the Machinaverse. Each soul of Machinaverse works hard for the
+                  master who gave it freedom to live.
+                </Text>
+              </Container>
+            </TabPanel>
 
-          <TabPanel>
-            <Sediments />
-          </TabPanel>
+            <TabPanel>
+              <Machinaverse />
+            </TabPanel>
 
-          <TabPanel>
-            <Foundry />
-          </TabPanel>
+            <TabPanel>
+              <Vapor />
+            </TabPanel>
 
-          <TabPanel>
-            <ERC20 />
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
+            <TabPanel>
+              <Sediments />
+            </TabPanel>
+
+            <TabPanel>
+              <Foundry />
+            </TabPanel>
+
+            <TabPanel>
+              <ERC20 />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+      </Box>
     </ErrorBoundary>
   );
 });

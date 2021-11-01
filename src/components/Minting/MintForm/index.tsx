@@ -38,7 +38,7 @@ export const MintForm = observer((props: PropsType) => {
                   <FormLabel htmlFor="imei">Device IMEI to awake</FormLabel>
                   <Stack isInline>
                     <Input {...field} id="imei" placeholder="e.g 100000000000001" />
-                    <Button mt={4} colorScheme="teal" isLoading={props.isSubmitting} type="submit">
+                    <Button mt={4} colorScheme="green" isLoading={props.isSubmitting} type="submit">
                       Awake
                     </Button>
                   </Stack>

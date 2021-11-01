@@ -27,7 +27,7 @@ export const HashpowerInfoBox = observer(() => {
   };
 
   return(
-    <Box borderWidth={'thin'} w={'45%'} p={4} borderRadius={'md'}>
+    <Box borderWidth={'thin'} w={'45%'} p={4} borderRadius={'md'} borderColor={'teal'} bg={'rgba(228, 249, 255, 0.9)'} boxShadow={'base'}>
       <Stack>
         <Text align={'left'}>Your production power</Text>
         <Text align={'left'}>
@@ -35,6 +35,10 @@ export const HashpowerInfoBox = observer(() => {
         </Text>
         <Stack isInline justifyContent={'space-between'} align={'center'}>
           <Button
+            _hover={{transform: "scale(1.1)"}}
+            boxShadow={'base'}
+            colorScheme={'teal'}
+            variant={'outline'}
             onClick={() => {
               tabs.setTabIndex(3);
             }}

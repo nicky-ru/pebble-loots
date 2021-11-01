@@ -10,7 +10,7 @@ export const LootCards = observer(() => {
     <Skeleton isLoaded={!load.loading.value}>
       <Wrap p={2} justify="center">
         {ploot.tokenUris?.map((uri, i) => (
-          <WrapItem key={i}>
+          <WrapItem key={i} boxShadow={'base'} _hover={{transform: "scale(1.1)", cursor: 'pointer'}}>
             <LinkBox as="article" p={5} pb={10} borderWidth="1px" rounded="md">
               <Box align={'right'} w={'200px'} h={'200px'}>
                 <LinkOverlay

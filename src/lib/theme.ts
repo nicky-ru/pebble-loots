@@ -2,8 +2,8 @@ import { extendTheme, IconButton } from '@chakra-ui/react';
 
 export const theme = extendTheme({
   fonts: {
-    body: 'Inter, system-ui, sans-serif',
-    heading: 'Work Sans, system-ui, sans-serif'
+    body: 'Arial, system-ui, sans-serif',
+    heading: 'Arial, system-ui, sans-serif'
   },
   colors: {
     discord: '#7289da',
@@ -28,7 +28,7 @@ export const theme = extendTheme({
   components: {
     Button: {
       baseStyle: {
-        borderRadius: 12
+        borderRadius: 12,
       }
     }
   },
@@ -58,7 +58,8 @@ export const theme = extendTheme({
         left: 0,
         width: '100%',
         height: '2px'
-      }
+      },
+
     }
   }
 });

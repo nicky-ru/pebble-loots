@@ -62,16 +62,18 @@ export class RecordStore {
     } catch (e) {
       alert(JSON.stringify(e.data.message));
     }
-
     return hashPower;
   }
 
   async updateHashPowers(imei: string) {
     const powers = await Promise.all(
-      this.records.map[imei].decodedRecords.map(async (rec, i) => {
-        return await this.calculateHashPower(imei, i);
+      this.records.map[imei].decodedRecords?.map(async (rec, i) => {
+        const pow = await this.calculateHashPower(imei, i);
+        console.log(pow);
+        return pow;
       })
     )
+    console.log(powers)
     this.setPowers(imei, powers);
   }
 
@@ -109,13 +111,13 @@ export class RecordStore {
     // }
   }
 
-  addRecords(imei: string, data: any) {
+  async addRecords(imei: string, data: any) {
     this.records.map[imei] = new RecordState({
       currentImei: imei,
       decodedRecords: this.parseRecords(data.decoded),
       encodedRecords: data.encoded,
     });
-    this.updateHashPowers(imei);
+    await this.updateHashPowers(imei);
   }
 
   addImei(imei: string) {

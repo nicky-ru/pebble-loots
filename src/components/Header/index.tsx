@@ -19,16 +19,17 @@ export const Header = observer(() => {
         // pos="fixed"
         // top="0"
         // w={'full'}
-        minH={'60px'}
-        boxShadow={'sm'}
+        minH={'6vh'}
+        boxShadow={'base'}
         zIndex="999"
         justify={'center'}
-        css={{
-          backdropFilter: 'saturate(180%) blur(5px)',
-          backgroundColor: useColorModeValue('rgba(255, 255, 255, 0.8)', 'rgba(26, 32, 44, 0.8)')
-        }}
+        bg={'green.500'}
+        // css={{
+        //   backdropFilter: 'saturate(180%) blur(5px)',
+        //   backgroundColor: useColorModeValue('rgba(255, 255, 255, 0.8)', 'rgba(26, 32, 44, 0.8)')
+        // }}
       >
-        <Container as={Flex} maxW={'7xl'} align={'center'}>
+        <Container as={Flex} maxW={'full'} align={'center'}>
           <Flex flex={{ base: 1, md: 'auto' }} ml={{ base: -2 }} display={{ base: 'flex', md: 'none' }}>
             <IconButton onClick={onToggle} icon={isMobileNavOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />} variant={'ghost'} size={'sm'} aria-label={'Toggle Navigation'} />
           </Flex>
@@ -37,7 +38,7 @@ export const Header = observer(() => {
             <Link to={'/'}>
               <Stack as={'a'} direction={'row'} alignItems={'center'} spacing={{ base: 2, sm: 4 }}>
                 {/*<Image src={useColorModeValue("/images/pebbleglitch.svg", "/images/pebblelogo.svg")} h={12} py={2}/>*/}
-                <Button>Buy a Pebble</Button>
+                <Button boxShadow={'base'} colorScheme={'pink'} w={56}>Buy a Pebble</Button>
               </Stack>
             </Link>
           </Flex>
@@ -46,7 +47,7 @@ export const Header = observer(() => {
             <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
               <DesktopNav />
             </Flex>
-            <IconButton borderRadius="12" aria-label={'Toggle Color Mode'} onClick={toggleColorMode} icon={colorMode == 'light' ? <IoMoon size={18} /> : <IoSunny size={18} />} />
+            {/*<IconButton borderRadius="12" aria-label={'Toggle Color Mode'} onClick={toggleColorMode} icon={colorMode == 'light' ? <IoMoon size={18} /> : <IoSunny size={18} />} />*/}
           </Stack>
         </Container>
       </Flex>

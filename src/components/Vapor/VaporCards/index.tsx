@@ -25,7 +25,7 @@ export const VaporCards = observer(() => {
     } else if (pow === 1) {
       color = './images/vapor/green.svg';
     } else if (pow === 2) {
-      color = './images/vapor/blue.svg';
+      color = './images/vapor/sea.svg';
     } else if (pow === 4) {
       color = './images/vapor/eggplant.svg';
     } else if (pow === 8) {
@@ -42,7 +42,7 @@ export const VaporCards = observer(() => {
 
   const wrapItem = (imei: string, record: DecodedRecord, power: number, i: number) => {
     return(
-      <WrapItem key={i}>
+      <WrapItem key={i} _hover={{transform: "scale(1.1)"}}>
         <Center w={'full'}>
           <Stack>
             <Image h={32} w={32} src={vaporColor(power)} />
@@ -57,6 +57,9 @@ export const VaporCards = observer(() => {
             </Text>
             <Text>Power: {power}</Text>
             <Button
+              boxShadow={'base'}
+              colorScheme={'green'}
+              variant={'outline'}
               onClick={() => {
                 observable.setRecordToMint(imei, i);
                 onOpen();
@@ -89,7 +92,7 @@ export const VaporCards = observer(() => {
   }
 
   return (
-    <Box maxH={'60vh'} overflowY={'scroll'}>
+    <Box maxH={'full'} overflowY={'scroll'}>
       <Wrap mx={4} spacing="45px">
         {
           rec.records.currentId

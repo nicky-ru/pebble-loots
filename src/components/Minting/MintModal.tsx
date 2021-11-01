@@ -195,7 +195,7 @@ export const MintModal = observer((props: PropsType) => {
           {
             store.isApproved.value
               ?
-              <Button colorScheme="blue" disabled={true} mr={3}>
+              <Button colorScheme="green" disabled={true} mr={3}>
                 Approved
               </Button>
               :
@@ -203,12 +203,12 @@ export const MintModal = observer((props: PropsType) => {
                 {
                   store.loading.value
                     ?
-                    <Button colorScheme="blue" mr={3}>
+                    <Button colorScheme="green" mr={3}>
                       <Spinner />
                     </Button>
                     :
                     <Button
-                      colorScheme="blue" mr={3}
+                      colorScheme="green" mr={3}
                       onClick={() => {
                         approve();
                       }}

@@ -36,6 +36,7 @@ export const StakedSediments = observer(() => {
             return(
               <ListItem
                 size={'xl'}
+                pl={2}
                 my={2}
                 key={index}
                 cursor="pointer"
@@ -48,7 +49,7 @@ export const StakedSediments = observer(() => {
                   onOpen();
                 }}
               >
-                <Button variant={'link'}>Sediment #{tokenIds[index]}, Power: {hashPower[index]}</Button>
+                <Button _hover={{transform: "scale(1.1)"}} variant={'link'}>Sediment #{tokenIds[index]}, Power: {hashPower[index]}</Button>
               </ListItem>
             )
           }}/>

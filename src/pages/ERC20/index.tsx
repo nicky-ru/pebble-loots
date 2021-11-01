@@ -123,13 +123,13 @@ export const ERC20 = observer(() => {
   return (
     <Container maxW="md">
       <Center w={'full'} h={'70vh'}>
-        <Box w={'full'} border="1px solid" borderRadius="md" borderColor="inherit">
-          <Center h={24} borderBottom={'1px'} borderColor="inherit">
+        <Box w={'full'} borderWidth={0} borderRadius="md" borderColor="teal" bg={'rgba(228, 249, 255, 0.9)'} boxShadow={'base'}>
+          <Center h={24} borderTopRadius={'md'} boxShadow={'xs'} borderColor="grey">
             <Stack w={'full'} ml={4}>
-              <Heading w={'full'} size={'md'}>
+              <Heading size={'md'} textColor={'teal.500'}>
                 Exchange
               </Heading>
-              <Heading w={'full'} size={'xs'}>
+              <Heading size={'xs'} textColor={'teal.800'}>
                 Trade tokens in an instant
               </Heading>
             </Stack>
@@ -138,7 +138,7 @@ export const ERC20 = observer(() => {
             <form>
               <FormControl>
                 <Stack spacing={4}>
-                  <Box border="1px solid" borderRadius="md" borderColor="inherit">
+                  <Box borderRadius="md" boxShadow={'inner'} bg={'rgba(208, 217, 219, 0.9)'}>
                     <Flex justify="space-between" p={2}>
                       <Text fontSize="sm">From</Text>
                       <Text fontSize="sm">{store.curToken ? `Balance ${store.curToken.balance.format} ` : '...'}</Text>
@@ -155,7 +155,7 @@ export const ERC20 = observer(() => {
                     </InputGroup>
                   </Box>
 
-                  <Box border="1px solid" borderRadius="md" borderColor="inherit">
+                  <Box borderRadius="md" boxShadow={'inner'} bg={'rgba(208, 217, 219, 0.9)'}>
                     <Flex justify="space-between" p={2}>
                       <Text fontSize="sm">To</Text>
                       <Text fontSize="sm">{store.curToken2 ? `Balance ${store.curToken2.balance.format} ` : '...'}</Text>
@@ -173,7 +173,7 @@ export const ERC20 = observer(() => {
                   </Box>
 
                   <Center>
-                    <Button type="button" mt="4" disabled={!store.state.valid || store.loading.value} onClick={store.onSubmit} isLoading={store.loading.value}>
+                    <Button boxShadow={'xs'} colorScheme={'teal'} type="button" mt="4" disabled={!store.state.valid || store.loading.value} onClick={store.onSubmit} isLoading={store.loading.value}>
                       {store.state.msg}
                     </Button>
                   </Center>
