@@ -73,14 +73,13 @@ export class MimoRouterStore {
     const block = await EthNetworkConfig.ethers.getBlock(blockN);
     const deadline = block.timestamp + 100000;
 
-    const wiotxAddress = '0xff5Fae9FE685B90841275e32C348Dc4426190DB0';
     const pblAddress = '0x9a5C9878E89A0dC89d1Ee6cABcfe4E5f11EdB26c';
 
     return this.contracts[this.god.currentChain.chainId]
       .swapETHForExactTokens({
         params: [
           amountOut.toString(10),
-          [wiotxAddress, pblAddress],
+          [this.wiotxAddress, pblAddress],
           this.god.currentNetwork.account,
           deadline,
           this.god.currentNetwork.account
@@ -96,14 +95,13 @@ export class MimoRouterStore {
     const block = await EthNetworkConfig.ethers.getBlock(blockN);
     const deadline = block.timestamp + 100000;
 
-    const wiotxAddress = '0xff5Fae9FE685B90841275e32C348Dc4426190DB0';
     const pblAddress = '0x9a5C9878E89A0dC89d1Ee6cABcfe4E5f11EdB26c';
 
     return this.contracts[this.god.currentChain.chainId]
       .swapExactETHForTokens({
         params: [
           amountOutMin.toString(10),
-          [wiotxAddress, pblAddress],
+          [this.wiotxAddress, pblAddress],
           this.god.currentNetwork.account,
           deadline,
           this.god.currentNetwork.account
@@ -119,7 +117,6 @@ export class MimoRouterStore {
     const block = await EthNetworkConfig.ethers.getBlock(blockN);
     const deadline = block.timestamp + 100000;
 
-    const wiotxAddress = '0xff5Fae9FE685B90841275e32C348Dc4426190DB0';
     const pblAddress = '0x9a5C9878E89A0dC89d1Ee6cABcfe4E5f11EdB26c';
 
     return this.contracts[this.god.currentChain.chainId]
@@ -127,7 +124,7 @@ export class MimoRouterStore {
         params: [
           amountOut.toString(10),
           amountInMax.toString(10),
-          [pblAddress, wiotxAddress],
+          [pblAddress, this.wiotxAddress],
           this.god.currentNetwork.account,
           deadline,
           this.god.currentNetwork.account
@@ -140,7 +137,6 @@ export class MimoRouterStore {
     const block = await EthNetworkConfig.ethers.getBlock(blockN);
     const deadline = block.timestamp + 100000;
 
-    const wiotxAddress = '0xff5Fae9FE685B90841275e32C348Dc4426190DB0';
     const pblAddress = '0x9a5C9878E89A0dC89d1Ee6cABcfe4E5f11EdB26c';
 
     return this.contracts[this.god.currentChain.chainId]
@@ -148,7 +144,7 @@ export class MimoRouterStore {
         params: [
           amountIn.toString(10),
           amountOutMin.toString(10),
-          [pblAddress, wiotxAddress],
+          [pblAddress, this.wiotxAddress],
           this.god.currentNetwork.account,
           deadline,
           this.god.currentNetwork.account
