@@ -68,18 +68,16 @@ export class MimoRouterStore {
       })
   }
 
-  async swapETHForExactTokens(amountIn: BigNumber, amountOut: BigNumber) {
+  async swapETHForExactTokens(amountIn: BigNumber, amountOut: BigNumber, tokenOut: string) {
     const blockN = await EthNetworkConfig.ethers.getBlockNumber();
     const block = await EthNetworkConfig.ethers.getBlock(blockN);
     const deadline = block.timestamp + 100000;
-
-    const pblAddress = '0x9a5C9878E89A0dC89d1Ee6cABcfe4E5f11EdB26c';
 
     return this.contracts[this.god.currentChain.chainId]
       .swapETHForExactTokens({
         params: [
           amountOut.toString(10),
-          [this.wiotxAddress, pblAddress],
+          [this.wiotxAddress, tokenOut],
           this.god.currentNetwork.account,
           deadline,
           this.god.currentNetwork.account
@@ -90,18 +88,16 @@ export class MimoRouterStore {
       })
   }
 
-  async swapExactETHForTokens(amountOutMin: BigNumber, amountIn: BigNumber) {
+  async swapExactETHForTokens(amountOutMin: BigNumber, amountIn: BigNumber, tokenOut: string) {
     const blockN = await EthNetworkConfig.ethers.getBlockNumber();
     const block = await EthNetworkConfig.ethers.getBlock(blockN);
     const deadline = block.timestamp + 100000;
-
-    const pblAddress = '0x9a5C9878E89A0dC89d1Ee6cABcfe4E5f11EdB26c';
 
     return this.contracts[this.god.currentChain.chainId]
       .swapExactETHForTokens({
         params: [
           amountOutMin.toString(10),
-          [this.wiotxAddress, pblAddress],
+          [this.wiotxAddress, tokenOut],
           this.god.currentNetwork.account,
           deadline,
           this.god.currentNetwork.account
@@ -112,19 +108,17 @@ export class MimoRouterStore {
       })
   }
 
-  async swapTokensForExactETH(amountOut: BigNumber, amountInMax: BigNumber) {
+  async swapTokensForExactETH(amountOut: BigNumber, amountInMax: BigNumber, tokenIn: string) {
     const blockN = await EthNetworkConfig.ethers.getBlockNumber();
     const block = await EthNetworkConfig.ethers.getBlock(blockN);
     const deadline = block.timestamp + 100000;
-
-    const pblAddress = '0x9a5C9878E89A0dC89d1Ee6cABcfe4E5f11EdB26c';
 
     return this.contracts[this.god.currentChain.chainId]
       .swapTokensForExactETH({
         params: [
           amountOut.toString(10),
           amountInMax.toString(10),
-          [pblAddress, this.wiotxAddress],
+          [tokenIn, this.wiotxAddress],
           this.god.currentNetwork.account,
           deadline,
           this.god.currentNetwork.account
@@ -132,19 +126,17 @@ export class MimoRouterStore {
       })
   }
 
-  async swapExactTokensForETH(amountIn: BigNumber, amountOutMin: BigNumber) {
+  async swapExactTokensForETH(amountIn: BigNumber, amountOutMin: BigNumber, tokenIn: string) {
     const blockN = await EthNetworkConfig.ethers.getBlockNumber();
     const block = await EthNetworkConfig.ethers.getBlock(blockN);
     const deadline = block.timestamp + 100000;
-
-    const pblAddress = '0x9a5C9878E89A0dC89d1Ee6cABcfe4E5f11EdB26c';
 
     return this.contracts[this.god.currentChain.chainId]
       .swapExactTokensForETH({
         params: [
           amountIn.toString(10),
           amountOutMin.toString(10),
-          [pblAddress, this.wiotxAddress],
+          [tokenIn, this.wiotxAddress],
           this.god.currentNetwork.account,
           deadline,
           this.god.currentNetwork.account

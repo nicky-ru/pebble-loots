@@ -32,15 +32,16 @@ export const ERC20 = observer(() => {
   const store = useLocalStore(() => ({
     amountIn: new BigNumberInputState({}),
     amountOut: new BigNumberInputState({}),
-    curToken: null as TokenState,
-    curToken2: null as TokenState,
+    exactIn: new BooleanState(),
+    tokenIn: null as TokenState,
+    tokenOut: null as TokenState,
     isOpenTokenList: new BooleanState(),
     loading: new BooleanState(),
     get state() {
       if (!god.isConnect) {
         return { valid: true, msg: lang.t('connect.wallet'), connectWallet: true };
       }
-      const valid = store.curToken && store.curToken2 && store.amountIn.value.gt(0);
+      const valid = store.tokenIn && store.tokenOut && store.amountIn.value.gt(0);
       return {
         valid,
         msg: valid ? lang.t('submit') : lang.t('invalid.input')
@@ -57,9 +58,9 @@ export const ERC20 = observer(() => {
     },
     onSelectToken(token: TokenState) {
       if (this.selector) {
-        store.curToken2 = token;
+        store.tokenOut = token;
       } else {
-        store.curToken = token;
+        store.tokenIn = token;
       }
     },
     setSelector(value: number) {
@@ -73,8 +74,29 @@ export const ERC20 = observer(() => {
 
       store.loading.setValue(true);
 
-      const withSlippage = this.amountOut.value.multipliedBy(0.5);
-      const [err, res] = await helper.promise.runAsync(mimoRV2.swapExactETHForTokens(withSlippage, this.amountIn.value));
+      const slippage = 0.5;
+      let withSlippage;
+      let err, res
+
+      if (store.tokenIn.address == '') {
+        if (store.exactIn.value) {
+          withSlippage = this.amountOut.value.multipliedBy(1 - slippage);
+          [err, res] = await helper.promise.runAsync(mimoRV2.swapExactETHForTokens(withSlippage, this.amountIn.value, store.tokenOut.address));
+        } else {
+          withSlippage = this.amountIn.value.multipliedBy(1 + slippage);
+          [err, res] = await helper.promise.runAsync(mimoRV2.swapETHForExactTokens(withSlippage, this.amountOut.value, store.tokenOut.address));
+        }
+      }
+      else if (store.tokenOut.address == '') {
+        if (store.exactIn.value) {
+          withSlippage = this.amountOut.value.multipliedBy(1 - slippage);
+          [err, res] = await helper.promise.runAsync(mimoRV2.swapExactTokensForETH(this.amountIn.value, withSlippage, store.tokenIn.address));
+        } else {
+          withSlippage = this.amountIn.value.multipliedBy(1 + slippage);
+          [err, res] = await helper.promise.runAsync(mimoRV2.swapTokensForExactETH(this.amountOut.value, withSlippage, store.tokenIn.address));
+        }
+      }
+
       if (err) {
         toast.error(err.message);
       } else {
@@ -95,7 +117,7 @@ export const ERC20 = observer(() => {
   }, [god.updateTicker.value]);
   useEffect(() => {
     eventBus.on('chain.switch', () => {
-      store.curToken = null;
+      store.tokenIn = null;
     });
   }, []);
 
@@ -103,7 +125,7 @@ export const ERC20 = observer(() => {
     if (store.amountIn.format == '' || store.amountIn.format == '0') return;
     store.loading.setValue(true);
 
-    const [err, res] = await helper.promise.runAsync(mimoRV2.getAmountsOut(store.amountIn.format, store.curToken.address, store.curToken2.address));
+    const [err, res] = await helper.promise.runAsync(mimoRV2.getAmountsOut(store.amountIn.format, store.tokenIn.address, store.tokenOut.address));
 
     if (err) {
       toast.error(err.message);
@@ -119,7 +141,7 @@ export const ERC20 = observer(() => {
     if (store.amountOut.format == '' || store.amountOut.format == '0') return;
     store.loading.setValue(true);
 
-    const [err, res] = await helper.promise.runAsync(mimoRV2.getAmountsIn(store.amountOut.format, store.curToken.address, store.curToken2.address));
+    const [err, res] = await helper.promise.runAsync(mimoRV2.getAmountsIn(store.amountOut.format, store.tokenIn.address, store.tokenOut.address));
 
     if (err) {
       toast.error(err.message);
@@ -152,7 +174,7 @@ export const ERC20 = observer(() => {
                   <Box borderRadius="md" boxShadow={'inner'} bg={'rgba(208, 217, 219, 0.9)'}>
                     <Flex justify="space-between" p={2}>
                       <Text fontSize="sm">From</Text>
-                      <Text fontSize="sm">{store.curToken ? `Balance ${store.curToken.balance.format} ` : '...'}</Text>
+                      <Text fontSize="sm">{store.tokenIn ? `Balance ${store.tokenIn.balance.format} ` : '...'}</Text>
                     </Flex>
                     <InputGroup>
                       <Input
@@ -161,13 +183,14 @@ export const ERC20 = observer(() => {
                         type="number"
                         value={store.amountIn.format}
                         onChange={(e) => {
+                          store.exactIn.setValue(true)
                           store.amountIn.setFormat(e.target.value)
                           getAmountOut()
                         }} />
                       <InputRightElement onClick={store.openTokenList} width="4rem" cursor="pointer" flexDir="column">
-                        {/* {store.curToken && <Text fontSize="sm">Balance: {store.curToken.balance.format}</Text>} */}
+                        {/* {store.tokenIn && <Text fontSize="sm">Balance: {store.tokenIn.balance.format}</Text>} */}
                         <Flex alignItems="center" pr={2} w="100%">
-                          <Image borderRadius="full" boxSize="24px" src={store.curToken?.logoURI} fallbackSrc="/images/token.svg" />
+                          <Image borderRadius="full" boxSize="24px" src={store.tokenIn?.logoURI} fallbackSrc="/images/token.svg" />
                           <Icon as={ChevronDownIcon} ml={1} />
                         </Flex>
                       </InputRightElement>
@@ -177,7 +200,7 @@ export const ERC20 = observer(() => {
                   <Box borderRadius="md" boxShadow={'inner'} bg={'rgba(208, 217, 219, 0.9)'}>
                     <Flex justify="space-between" p={2}>
                       <Text fontSize="sm">To</Text>
-                      <Text fontSize="sm">{store.curToken2 ? `Balance ${store.curToken2.balance.format} ` : '...'}</Text>
+                      <Text fontSize="sm">{store.tokenOut ? `Balance ${store.tokenOut.balance.format} ` : '...'}</Text>
                     </Flex>
                     <InputGroup>
                       <Input
@@ -186,13 +209,14 @@ export const ERC20 = observer(() => {
                         type="number"
                         value={store.amountOut.format}
                         onChange={(e) => {
+                          store.exactIn.setValue(false)
                           store.amountOut.setFormat(e.target.value)
                           getAmountIn()
                         }} />
                       <InputRightElement onClick={store.openTokenList2} width="4rem" cursor="pointer" flexDir="column">
-                        {/* {store.curToken && <Text fontSize="sm">Balance: {store.curToken.balance.format}</Text>} */}
+                        {/* {store.tokenIn && <Text fontSize="sm">Balance: {store.tokenIn.balance.format}</Text>} */}
                         <Flex alignItems="center" pr={2} w="100%">
-                          <Image borderRadius="full" boxSize="24px" src={store.curToken2?.logoURI} fallbackSrc="/images/token.svg" />
+                          <Image borderRadius="full" boxSize="24px" src={store.tokenOut?.logoURI} fallbackSrc="/images/token.svg" />
                           <Icon as={ChevronDownIcon} ml={1} />
                         </Flex>
                       </InputRightElement>
