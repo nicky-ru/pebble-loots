@@ -30,19 +30,17 @@ export const ERC20 = observer(() => {
   const { god, token, lang, mimoRV2 } = useStore();
 
   const store = useLocalStore(() => ({
-    amountA: new BigNumberInputState({}),
-    amountB: new BigNumberInputState({}),
+    amountIn: new BigNumberInputState({}),
+    amountOut: new BigNumberInputState({}),
     curToken: null as TokenState,
     curToken2: null as TokenState,
-    amountIn: new BooleanState(),
-    amountOut: new BooleanState(),
     isOpenTokenList: new BooleanState(),
     loading: new BooleanState(),
     get state() {
       if (!god.isConnect) {
         return { valid: true, msg: lang.t('connect.wallet'), connectWallet: true };
       }
-      const valid = store.curToken && store.curToken2 && store.amountA.value.gt(0);
+      const valid = store.curToken && store.curToken2 && store.amountIn.value.gt(0);
       return {
         valid,
         msg: valid ? lang.t('submit') : lang.t('invalid.input')
@@ -75,8 +73,8 @@ export const ERC20 = observer(() => {
 
       store.loading.setValue(true);
 
-      const withSlippage = this.amountB.value.multipliedBy(0.5);
-      const [err, res] = await helper.promise.runAsync(mimoRV2.swapExactETHForTokens(withSlippage, this.amountA.value));
+      const withSlippage = this.amountOut.value.multipliedBy(0.5);
+      const [err, res] = await helper.promise.runAsync(mimoRV2.swapExactETHForTokens(withSlippage, this.amountIn.value));
       if (err) {
         toast.error(err.message);
       } else {
@@ -102,15 +100,15 @@ export const ERC20 = observer(() => {
   }, []);
 
   const getAmountOut = async () => {
-    if (store.amountA.format == '' || store.amountA.format == '0') return;
+    if (store.amountIn.format == '' || store.amountIn.format == '0') return;
     store.loading.setValue(true);
 
-    const [err, res] = await helper.promise.runAsync(mimoRV2.getAmountsOut(store.amountA.format, store.curToken.address, store.curToken2.address));
+    const [err, res] = await helper.promise.runAsync(mimoRV2.getAmountsOut(store.amountIn.format, store.curToken.address, store.curToken2.address));
 
     if (err) {
       toast.error(err.message);
     } else {
-      store.amountB.setFormat(BigNumber.from(res[1]).toString());
+      store.amountOut.setFormat(BigNumber.from(res[1]).toString());
       console.log(res);
     }
 
@@ -118,15 +116,15 @@ export const ERC20 = observer(() => {
   }
 
   const getAmountIn = async () => {
-    if (store.amountB.format == '' || store.amountB.format == '0') return;
+    if (store.amountOut.format == '' || store.amountOut.format == '0') return;
     store.loading.setValue(true);
 
-    const [err, res] = await helper.promise.runAsync(mimoRV2.getAmountsIn(store.amountB.format, store.curToken.address, store.curToken2.address));
+    const [err, res] = await helper.promise.runAsync(mimoRV2.getAmountsIn(store.amountOut.format, store.curToken.address, store.curToken2.address));
 
     if (err) {
       toast.error(err.message);
     } else {
-      store.amountA.setFormat(BigNumber.from(res[0]).toString());
+      store.amountIn.setFormat(BigNumber.from(res[0]).toString());
       console.log(res);
     }
 
@@ -161,9 +159,9 @@ export const ERC20 = observer(() => {
                         border="none"
                         placeholder="0.0"
                         type="number"
-                        value={store.amountA.format}
+                        value={store.amountIn.format}
                         onChange={(e) => {
-                          store.amountA.setFormat(e.target.value)
+                          store.amountIn.setFormat(e.target.value)
                           getAmountOut()
                         }} />
                       <InputRightElement onClick={store.openTokenList} width="4rem" cursor="pointer" flexDir="column">
@@ -186,9 +184,9 @@ export const ERC20 = observer(() => {
                         border="none"
                         placeholder="0.0"
                         type="number"
-                        value={store.amountB.format}
+                        value={store.amountOut.format}
                         onChange={(e) => {
-                          store.amountB.setFormat(e.target.value)
+                          store.amountOut.setFormat(e.target.value)
                           getAmountIn()
                         }} />
                       <InputRightElement onClick={store.openTokenList2} width="4rem" cursor="pointer" flexDir="column">
