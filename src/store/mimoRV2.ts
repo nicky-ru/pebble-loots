@@ -12,7 +12,6 @@ export class MimoRouterStore {
   rootStore: RootStore;
   network: NetworkState;
   contracts: { [key: number]: MimoRouterState } = {};
-  wiotxAddress: string = '0xff5Fae9FE685B90841275e32C348Dc4426190DB0'
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
@@ -38,13 +37,19 @@ export class MimoRouterStore {
     return this.rootStore.god;
   }
 
+  get wiotx() {
+    return this.rootStore.token.currentTokens.filter((t) => {
+      if (t.symbol === 'WIOTX') return true;
+    })[0]
+  }
+
   async getFactory() {
     return this.contracts[this.god.currentChain.chainId].factory();
   }
 
   async getAmountsOut(amountIn: string, address1: string, address2: string) {
-    const coinIn = address1 == '' ? this.wiotxAddress : address1
-    const coinOut = address2 == '' ? this.wiotxAddress : address2
+    const coinIn = address1 == '' ? this.wiotx.address : address1
+    const coinOut = address2 == '' ? this.wiotx.address : address2
 
     return this.contracts[this.god.currentChain.chainId]
       .getAmountsOut({
@@ -56,8 +61,8 @@ export class MimoRouterStore {
   }
 
   async getAmountsIn(amountOut: string, address1: string, address2: string) {
-    const coinIn = address1 == '' ? this.wiotxAddress : address1
-    const coinOut = address2 == '' ? this.wiotxAddress : address2
+    const coinIn = address1 == '' ? this.wiotx.address : address1
+    const coinOut = address2 == '' ? this.wiotx.address : address2
 
     return this.contracts[this.god.currentChain.chainId]
       .getAmountsIn({
@@ -77,7 +82,7 @@ export class MimoRouterStore {
       .swapETHForExactTokens({
         params: [
           amountOut.toString(10),
-          [this.wiotxAddress, tokenOut],
+          [this.wiotx.address, tokenOut],
           this.god.currentNetwork.account,
           deadline,
           this.god.currentNetwork.account
@@ -97,7 +102,7 @@ export class MimoRouterStore {
       .swapExactETHForTokens({
         params: [
           amountOutMin.toString(10),
-          [this.wiotxAddress, tokenOut],
+          [this.wiotx.address, tokenOut],
           this.god.currentNetwork.account,
           deadline,
           this.god.currentNetwork.account
@@ -118,7 +123,7 @@ export class MimoRouterStore {
         params: [
           amountOut.toString(10),
           amountInMax.toString(10),
-          [tokenIn, this.wiotxAddress],
+          [tokenIn, this.wiotx.address],
           this.god.currentNetwork.account,
           deadline,
           this.god.currentNetwork.account
@@ -136,7 +141,7 @@ export class MimoRouterStore {
         params: [
           amountIn.toString(10),
           amountOutMin.toString(10),
-          [tokenIn, this.wiotxAddress],
+          [tokenIn, this.wiotx.address],
           this.god.currentNetwork.account,
           deadline,
           this.god.currentNetwork.account
