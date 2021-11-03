@@ -12,6 +12,7 @@ export class MimoRouterStore {
   rootStore: RootStore;
   network: NetworkState;
   contracts: { [key: number]: MimoRouterState } = {};
+  wiotxAddress: string = '0xff5Fae9FE685B90841275e32C348Dc4426190DB0'
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
@@ -42,14 +43,27 @@ export class MimoRouterStore {
   }
 
   async getAmountsOut(amountIn: string, address1: string, address2: string) {
-    const wiotxAddress = '0xff5Fae9FE685B90841275e32C348Dc4426190DB0';
-    const pblAddress = '0x9a5C9878E89A0dC89d1Ee6cABcfe4E5f11EdB26c';
+    const coinIn = address1 == '' ? this.wiotxAddress : address1
+    const coinOut = address2 == '' ? this.wiotxAddress : address2
 
     return this.contracts[this.god.currentChain.chainId]
       .getAmountsOut({
         params: [
           amountIn,
-          [wiotxAddress, pblAddress]
+          [coinIn, coinOut]
+        ]
+      })
+  }
+
+  async getAmountsIn(amountOut: string, address1: string, address2: string) {
+    const coinIn = address1 == '' ? this.wiotxAddress : address1
+    const coinOut = address2 == '' ? this.wiotxAddress : address2
+
+    return this.contracts[this.god.currentChain.chainId]
+      .getAmountsIn({
+        params: [
+          amountOut,
+          [coinIn, coinOut]
         ]
       })
   }
