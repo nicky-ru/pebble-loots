@@ -34,7 +34,8 @@ export const ERC20 = observer(() => {
     amountB: new BigNumberInputState({}),
     curToken: null as TokenState,
     curToken2: null as TokenState,
-
+    amountIn: new BooleanState(),
+    amountOut: new BooleanState(),
     isOpenTokenList: new BooleanState(),
     loading: new BooleanState(),
     get state() {
@@ -99,13 +100,9 @@ export const ERC20 = observer(() => {
       store.curToken = null;
     });
   }, []);
-  useEffect(() => {
-    if (store.state.valid && store.amountA.value.gt(0)) {
-      getAmountOut();
-    }
-  }, [store.amountA.value])
 
   const getAmountOut = async () => {
+    if (store.amountA.format == '' || store.amountA.format == '0') return;
     store.loading.setValue(true);
 
     const [err, res] = await helper.promise.runAsync(mimoRV2.getAmountsOut(store.amountA.format, store.curToken.address, store.curToken2.address));
@@ -114,6 +111,22 @@ export const ERC20 = observer(() => {
       toast.error(err.message);
     } else {
       store.amountB.setFormat(BigNumber.from(res[1]).toString());
+      console.log(res);
+    }
+
+    store.loading.setValue(false);
+  }
+
+  const getAmountIn = async () => {
+    if (store.amountB.format == '' || store.amountB.format == '0') return;
+    store.loading.setValue(true);
+
+    const [err, res] = await helper.promise.runAsync(mimoRV2.getAmountsIn(store.amountB.format, store.curToken.address, store.curToken2.address));
+
+    if (err) {
+      toast.error(err.message);
+    } else {
+      store.amountA.setFormat(BigNumber.from(res[0]).toString());
       console.log(res);
     }
 
@@ -144,7 +157,15 @@ export const ERC20 = observer(() => {
                       <Text fontSize="sm">{store.curToken ? `Balance ${store.curToken.balance.format} ` : '...'}</Text>
                     </Flex>
                     <InputGroup>
-                      <Input border="none" placeholder="0.0" type="number" value={store.amountA.format} onChange={(e) => store.amountA.setFormat(e.target.value)} />
+                      <Input
+                        border="none"
+                        placeholder="0.0"
+                        type="number"
+                        value={store.amountA.format}
+                        onChange={(e) => {
+                          store.amountA.setFormat(e.target.value)
+                          getAmountOut()
+                        }} />
                       <InputRightElement onClick={store.openTokenList} width="4rem" cursor="pointer" flexDir="column">
                         {/* {store.curToken && <Text fontSize="sm">Balance: {store.curToken.balance.format}</Text>} */}
                         <Flex alignItems="center" pr={2} w="100%">
@@ -161,7 +182,15 @@ export const ERC20 = observer(() => {
                       <Text fontSize="sm">{store.curToken2 ? `Balance ${store.curToken2.balance.format} ` : '...'}</Text>
                     </Flex>
                     <InputGroup>
-                      <Input border="none" placeholder="0.0" disabled={true} type="number" value={store.amountB.format} onChange={(e) => store.amountB.setFormat(e.target.value)} />
+                      <Input
+                        border="none"
+                        placeholder="0.0"
+                        type="number"
+                        value={store.amountB.format}
+                        onChange={(e) => {
+                          store.amountB.setFormat(e.target.value)
+                          getAmountIn()
+                        }} />
                       <InputRightElement onClick={store.openTokenList2} width="4rem" cursor="pointer" flexDir="column">
                         {/* {store.curToken && <Text fontSize="sm">Balance: {store.curToken.balance.format}</Text>} */}
                         <Flex alignItems="center" pr={2} w="100%">
