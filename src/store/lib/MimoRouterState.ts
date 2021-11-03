@@ -84,6 +84,17 @@ export class MimoRouterState {
     )
   }
 
+  getAmountsIn(args: Partial<CallParams>) {
+    return this.network.execContract(
+      Object.assign({
+        address: this.address,
+        abi: this.abi,
+        method: 'getAmountsIn'
+      },
+        args)
+    )
+  }
+
   //
   // updatePool() {
   //   return this.network.execContract(
