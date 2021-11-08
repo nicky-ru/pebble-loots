@@ -35,23 +35,23 @@ export class RecordStore {
   }
 
   async calculateHashPower(imei: string, id: number) {
-    const decodedRecords = this.records.map[imei].decodedRecords;
+    const decRec = this.records.map[imei].decodedRecords;
     const dpLoot = this.rootStore.dpLoot;
     const god = this.rootStore.god;
 
     let hashPower;
-    const snr = decodedRecords[id].snr.toString();
-    const vbat = decodedRecords[id].vbat.toString();
-    const latitude = decodedRecords[id].latitude.toString();
-    const longitude = decodedRecords[id].longitude.toString();
-    const gasResistance = decodedRecords[id].gasResistance.toString();
-    const temperature = decodedRecords[id].temperature.toString();
-    const pressure = decodedRecords[id].pressure.toString();
-    const humidity = decodedRecords[id].humidity.toString();
-    const light = decodedRecords[id].light.toString();
-    const gyroscope = decodedRecords[id].gyroscope.toString();
-    const accelerometer = decodedRecords[id].accelerometer.toString();
-    const random = decodedRecords[id].random.toString();
+    const snr = decRec[id].snr? decRec[id].snr.toString() : "0";
+    const vbat = decRec[id].vbat? decRec[id].vbat.toString() : "0";
+    const latitude = decRec[id].latitude? decRec[id].latitude.toString() : "0";
+    const longitude = decRec[id].longitude? decRec[id].longitude.toString() : "0";
+    const gasResistance = decRec[id].gasResistance? decRec[id].gasResistance.toString() : "0";
+    const temperature = decRec[id].temperature? decRec[id].temperature.toString() : "0";
+    const pressure = decRec[id].pressure? decRec[id].pressure.toString() : "0";
+    const humidity = decRec[id].humidity? decRec[id].humidity.toString() : "0";
+    const light = decRec[id].light? decRec[id].light.toString() : "0";
+    const gyroscope = decRec[id].gyroscope? decRec[id].gyroscope.toString() : "[0,0,0]";
+    const accelerometer = decRec[id].accelerometer? decRec[id].accelerometer.toString() : "[0,0,0]";
+    const random = decRec[id].random? decRec[id].random.toString() : "0";
 
     const dataPoint = [snr, vbat, latitude, longitude, gasResistance, temperature, pressure, humidity, light, gyroscope, accelerometer, random];
 
