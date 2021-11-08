@@ -40,6 +40,7 @@ export const Home = observer(() => {
             bg={'blue.50'}
           >
             <TabList
+              m={4}
               w={64}
             >
               <Tab _hover={{transform: "scale(1.1)"}} >Home</Tab>
