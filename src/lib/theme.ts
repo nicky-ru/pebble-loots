@@ -1,7 +1,7 @@
 import { extendTheme, IconButton } from '@chakra-ui/react';
 
 const config = {
-  initialColorMode: "dark",
+  initialColorMode: "light",
   useSystemColorMode: false,
 }
 
