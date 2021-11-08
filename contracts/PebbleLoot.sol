@@ -27,6 +27,8 @@ contract PebbleLoot is ERC721, ReentrancyGuard, ERC721Enumerable, Ownable {
   /// @notice Fee receipient
   address payable public feeReceipient;
 
+  mapping(uint256 => uint256) public awakenings;
+
   /// @notice Contract constructor
   constructor(
     address _registration,
@@ -37,9 +39,47 @@ contract PebbleLoot is ERC721, ReentrancyGuard, ERC721Enumerable, Ownable {
     feeReceipient = _feeReceipient;
   }
 
-  string[] private skins = ['Cat', 'Dog', 'Bull', 'Bear', 'Wolf', 'Fox', 'Unicorn', 'Ape', 'Shark', 'Frog', 'Whale'];
+  string[] private skins = [
+  "cat",
+  "dog",
+  "panda",
+  "grizzly",
+  "polarBear",
+  "wolf",
+  "fox",
+  "unicorn",
+  "ape",
+  "shark",
+  "frog",
+  "whale"
 
-  string[] private colors = ['Black', 'White', 'Blue', 'Red', 'Yellow', 'Pink'];
+//  unicode"Cat 😼",
+//  unicode"Dog 🐶",
+//  unicode"Panda 🐼",
+//  unicode"Grizzly 🐻",
+//  unicode"PolarBear 🐻‍❄️",
+//  unicode"Wolf 🐺",
+//  unicode"Fox 🦊",
+//  unicode"Unicorn 🦄",
+//  unicode"Ape 🐵",
+//  unicode"Shark 🦈",
+//  unicode"Frog 🐸",
+//  unicode"Whale 🐳"
+//  unicode" 😼",
+//  unicode" 🐶",
+//  unicode" 🐼",
+//  unicode" 🐻",
+//  unicode" 🐺",
+//  unicode" 🦊",
+//  unicode" 🦄",
+//  unicode" 🐵",
+//  unicode" 🦈",
+//  unicode" 🐻‍❄️",
+//  unicode" 🐸",
+//  unicode" 🐳"
+  ];
+
+  string[] private colors = ['smart', 'rekt', 'rich', 'chilled', 'golden'];
 
   function random(string memory input) internal pure returns (uint256) {
     return uint256(keccak256(abi.encodePacked(input)));
@@ -57,7 +97,7 @@ contract PebbleLoot is ERC721, ReentrancyGuard, ERC721Enumerable, Ownable {
     uint256 rand = random(string(abi.encodePacked(keyPrefix, toString(tokenId))));
     string memory output = sourceArray[rand % sourceArray.length];
     string memory color = colors[rand % colors.length];
-    output = string(abi.encodePacked(color, ' Robo', output));
+    output = string(abi.encodePacked(color, ' robo', output));
     return output;
   }
 
@@ -66,11 +106,13 @@ contract PebbleLoot is ERC721, ReentrancyGuard, ERC721Enumerable, Ownable {
   function tokenURI(uint256 tokenId) public view override returns (string memory) {
     string memory output = string(
       abi.encodePacked(
-        '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><style>.base { fill: white; font-family: serif; font-size: 14px; }</style><rect width="100%" height="100%" fill="black" /><text x="10" y="20" class="base">',
-        'Pebble Soul #',
+        '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><style>.base { fill: white; font-family: serif; font-size: 22px; }</style><rect width="100%" height="100%" fill="black" /><text x="10" y="30" class="base">',
+        unicode"pebble soul 👻 #",
         toString(tokenId),
-        '</text><text x="10" y="40" class="base">',
+        '</text><text x="10" y="60" class="base">skin: ',
         getSkin(tokenId),
+        '</text><text x="10" y="90" class="base">awaken at block ',
+        toString(awakenings[tokenId]),
         '</text></svg>'
       )
     );
@@ -93,9 +135,11 @@ contract PebbleLoot is ERC721, ReentrancyGuard, ERC721Enumerable, Ownable {
   function claim(uint256 tokenId) external payable nonReentrant {
     require(tokenId > (10**14 - 1) && tokenId < 10**15, 'Claim: Token ID is invalid');
     (, address deviceOwner) = registration.find(toString(tokenId));
+    // disable for testing purposes
     require(_msgSender() == deviceOwner, 'You should own the device to mint this loot');
     require(msg.value >= mintingFee, 'Claim: not enough minting fee');
     _safeMint(_msgSender(), tokenId);
+    awakenings[tokenId] = block.number;
     emit TokenMinted(_msgSender(), tokenId);
   }
 
