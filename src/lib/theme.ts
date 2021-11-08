@@ -1,6 +1,12 @@
 import { extendTheme, IconButton } from '@chakra-ui/react';
 
+const config = {
+  initialColorMode: "dark",
+  useSystemColorMode: false,
+}
+
 export const theme = extendTheme({
+  config,
   fonts: {
     body: 'Arial, system-ui, sans-serif',
     heading: 'Arial, system-ui, sans-serif'
