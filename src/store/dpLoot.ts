@@ -9,7 +9,7 @@ import { BigNumber } from 'ethers';
 import axios from 'axios';
 import Client from '../lib/apollo';
 import { gql } from 'graphql-tag';
-import { getMyDpLootIds } from '@/lib/queries'
+import { getMyUnstakedDpLoots } from '@/lib/queries'
 
 export class DatapointLootStore {
   rootStore: RootStore;
@@ -61,7 +61,7 @@ export class DatapointLootStore {
   }
 
   async updateTokenIds() {
-    const qry = await Client.query({query: gql(getMyDpLootIds), variables: {owner: this.god.currentNetwork.account}});
+    const qry = await Client.query({query: gql(getMyUnstakedDpLoots), variables: {owner: this.god.currentNetwork.account}});
 
     const tokenIds = Array(qry.data.loots_datapoint.length);
 
