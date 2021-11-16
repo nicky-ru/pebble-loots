@@ -7,6 +7,9 @@ import { EthNetworkConfig } from '../config/NetworkConfig';
 import { IotexTestnetConfig } from '../config/IotexTestnetConfig';
 import { BigNumber } from 'ethers';
 import axios from 'axios';
+import Client from '../lib/apollo';
+import { gql } from 'graphql-tag';
+import { getMyDpLootIds } from '@/lib/queries'
 
 export class DatapointLootStore {
   rootStore: RootStore;
@@ -58,17 +61,15 @@ export class DatapointLootStore {
   }
 
   async updateTokenIds() {
-    const tokenIds = Array(this.balance);
-    try {
-      for (let i = 0; i < this.balance; i++) {
-        const tid = await this.contracts[this.god.currentChain.chainId]
-          .tokenOfOwnerByIndex({ params: [this.god.currentNetwork.account, i] });
-        tokenIds[i] = BigNumber.from(JSON.parse(JSON.stringify(tid)).hex).toString()
-      }
-      this.setTokenIds(tokenIds);
-    } catch (e) {
-      console.log("DatapointLootStore: updateTokenIds ", e);
-    }
+    const qry = await Client.query({query: gql(getMyDpLootIds), variables: {owner: this.god.currentNetwork.account}});
+
+    const tokenIds = Array(qry.data.loots_datapoint.length);
+
+    qry.data.loots_datapoint.map((dp, i) => {
+      tokenIds[i] = BigNumber.from(dp.token_id).toString()
+    })
+
+    this.setTokenIds(tokenIds);
   }
 
   async updateTokenUris() {
