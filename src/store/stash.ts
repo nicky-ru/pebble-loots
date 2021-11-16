@@ -7,6 +7,9 @@ import { EthNetworkConfig } from '../config/NetworkConfig';
 import { IotexTestnetConfig } from '../config/IotexTestnetConfig';
 import { BigNumber } from 'ethers';
 import axios from 'axios';
+import Client from '../lib/apollo';
+import { gql } from 'graphql-tag';
+import { getMyStakedDpLoots, getMyUnstakedDpLoots } from '@/lib/queries';
 
 class UserInfo {
   hashPower: number;
@@ -45,7 +48,7 @@ export class LootStashStore {
     const userInfoParsed = JSON.parse(JSON.stringify(userInfo));
     this.setUser(BigNumber.from(userInfoParsed[0]).toNumber(), BigNumber.from(userInfoParsed[1]).toNumber());
     await this.updateTokenIds();
-    await this.updateHashPow();
+    // await this.updateHashPow();
     await this.updateTokenUris();
     this.setBalance(this.tokenIds.length);
   }
@@ -94,16 +97,21 @@ export class LootStashStore {
   }
 
   async updateTokenIds() {
-    try {
-      const tokenIdsRaw = await this.contracts[this.god.currentChain.chainId]
-        .getMyStashedTokens();
-      const tokenIds = JSON.parse(JSON.stringify(tokenIdsRaw)).map((tid) => {
-        return BigNumber.from(tid).toNumber();
-      });
-      this.setTokenIds(tokenIds);
-    } catch (e) {
-      console.log("LootStashStore: updateTokenIds ", e)
-    }
+    const qry = await Client.query({query: gql(getMyStakedDpLoots), variables: {owner: this.god.currentNetwork.account}});
+
+    const tokenIds = Array(qry.data.loots_datapoint.length);
+
+    qry.data.loots_datapoint.map((dp, i) => {
+      tokenIds[i] = BigNumber.from(dp.token_id).toString()
+    })
+
+    const hPows = qry.data.loots_datapoint.map((dp) => {
+      return dp.dig_power
+    })
+
+    this.setTokenIds(tokenIds);
+    console.log(qry.data.loots_datapoint, hPows)
+    this.setHashPower(hPows);
   }
 
   async updateTokenUris() {
